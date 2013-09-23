@@ -56,6 +56,7 @@
 		339DD1D517F0399400C3E8E6 /* CryptocatTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CryptocatTests-Info.plist"; sourceTree = "<group>"; };
 		339DD1D717F0399400C3E8E6 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		339DD1D917F0399400C3E8E6 /* CryptocatTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CryptocatTests.m; sourceTree = "<group>"; };
+		339DD1E617F03ADC00C3E8E6 /* TBMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMacros.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -130,6 +131,7 @@
 		339DD1B217F0399400C3E8E6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				339DD1E617F03ADC00C3E8E6 /* TBMacros.h */,
 				339DD1B317F0399400C3E8E6 /* Cryptocat-Info.plist */,
 				339DD1B417F0399400C3E8E6 /* InfoPlist.strings */,
 				339DD1B717F0399400C3E8E6 /* main.m */,
