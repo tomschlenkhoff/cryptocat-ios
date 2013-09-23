@@ -115,13 +115,12 @@
 		339DD1B117F0399400C3E8E6 /* Cryptocat */ = {
 			isa = PBXGroup;
 			children = (
+				339DD1E517F039F400C3E8E6 /* Models */,
+				339DD1E417F039EC00C3E8E6 /* Views */,
+				339DD1E317F039DD00C3E8E6 /* Controllers */,
 				339DD1BA17F0399400C3E8E6 /* TBAppDelegate.h */,
 				339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */,
 				339DD1BD17F0399400C3E8E6 /* Main.storyboard */,
-				339DD1C017F0399400C3E8E6 /* TBMasterViewController.h */,
-				339DD1C117F0399400C3E8E6 /* TBMasterViewController.m */,
-				339DD1C317F0399400C3E8E6 /* TBDetailViewController.h */,
-				339DD1C417F0399400C3E8E6 /* TBDetailViewController.m */,
 				339DD1C617F0399400C3E8E6 /* Images.xcassets */,
 				339DD1B217F0399400C3E8E6 /* Supporting Files */,
 			);
@@ -155,6 +154,31 @@
 				339DD1D617F0399400C3E8E6 /* InfoPlist.strings */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		339DD1E317F039DD00C3E8E6 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				339DD1C017F0399400C3E8E6 /* TBMasterViewController.h */,
+				339DD1C117F0399400C3E8E6 /* TBMasterViewController.m */,
+				339DD1C317F0399400C3E8E6 /* TBDetailViewController.h */,
+				339DD1C417F0399400C3E8E6 /* TBDetailViewController.m */,
+			);
+			name = Controllers;
+			sourceTree = "<group>";
+		};
+		339DD1E417F039EC00C3E8E6 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Views;
+			sourceTree = "<group>";
+		};
+		339DD1E517F039F400C3E8E6 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
