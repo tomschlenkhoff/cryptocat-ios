@@ -116,6 +116,7 @@
 		339DD1B117F0399400C3E8E6 /* Cryptocat */ = {
 			isa = PBXGroup;
 			children = (
+				339DD1E717F03B4D00C3E8E6 /* Vendor */,
 				339DD1E517F039F400C3E8E6 /* Models */,
 				339DD1E417F039EC00C3E8E6 /* Views */,
 				339DD1E317F039DD00C3E8E6 /* Controllers */,
@@ -181,6 +182,13 @@
 			children = (
 			);
 			name = Models;
+			sourceTree = "<group>";
+		};
+		339DD1E717F03B4D00C3E8E6 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Vendor;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
