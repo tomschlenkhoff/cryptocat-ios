@@ -34,6 +34,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
   self.XMPPManager = [[TBXMPPManager alloc] init];
   [self.XMPPManager connect];
+  //[self.XMPPManager registerUser];
   
   return YES;
 }
