@@ -10,20 +10,38 @@
 
 #import "XMPP.h"
 #import "XMPPReconnect.h"
+#import "XMPPMUC.h"
 
 #import "XMPPInBandRegistration.h"
 
+#define kFakePassword @"bar"
+#define kFakeRoom     @"cryptocatdev"
+#define kFakeNick     @"iOSTestApp"
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBXMPPManager () <XMPPStreamDelegate, XMPPInBandRegistrationDelegate>
+@interface TBXMPPManager () <
+  XMPPStreamDelegate,
+  XMPPInBandRegistrationDelegate,
+  XMPPRoomDelegate,
+  XMPPRoomStorage>
 
 @property (nonatomic, strong, readonly) XMPPStream *xmppStream;
 @property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong, readonly) XMPPInBandRegistration *xmppInBandRegistration;
+@property (nonatomic, strong, readonly) XMPPRoom *xmppRoom;
+
+@property (nonatomic, strong) NSString *username;
 
 - (void)goOnline;
 - (void)goOffline;
+
+// -- connection steps
+- (void)requestRegistrationFields;
+- (void)registerUsername;
+- (void)authenticate;
+- (void)joinRoom;
 
 @end
 
@@ -51,6 +69,8 @@
     [_xmppInBandRegistration addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
     _xmppStream.hostName = @"crypto.cat";
+    
+    _username = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
   }
   
   return self;
@@ -74,8 +94,8 @@
   TBLOGMARK;
   if (!self.xmppStream.isDisconnected) return YES;
   
-  NSString *myJID = @"ios@crypto.cat";
-	[self.xmppStream setMyJID:[XMPPJID jidWithString:myJID]];
+  XMPPJID *myJID = [XMPPJID jidWithUser:self.username domain:self.xmppStream.hostName resource:nil];
+	[self.xmppStream setMyJID:myJID];
   
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]) {
@@ -113,6 +133,48 @@
 - (void)goOffline {
 	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
 	[self.xmppStream sendElement:presence];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *  Connection Step #1 : ask for registration fields
+ */
+- (void)requestRegistrationFields {
+  [self.xmppInBandRegistration requestRegistrationFields];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *  Connection Step #2 : register username
+ */
+- (void)registerUsername {
+  [self.xmppInBandRegistration registerUsername:self.username password:kFakePassword];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *  Connection Step #3 : authenticate
+ */
+- (void)authenticate {
+  NSError *error = nil;
+  NSString *password = kFakePassword;
+	if (![self.xmppStream authenticateWithPassword:password error:&error]) {
+    TBLOG(@"Error authenticating : %@", error);
+	}
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *  Connection Step #4 : join room
+ */
+- (void)joinRoom {
+  XMPPJID *roomJID = [XMPPJID jidWithUser:kFakeRoom
+                                   domain:@"conference.crypto.cat"
+                                 resource:nil];
+  _xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
+  [_xmppRoom activate:self.xmppStream];
+  [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
+  [_xmppRoom joinRoomUsingNickname:kFakeNick history:nil password:kFakePassword];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -178,22 +240,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStreamDidConnect:(XMPPStream *)sender {
 	TBLOGMARK;
-
-  [self.xmppInBandRegistration requestRegistrationFields];
-  
-  
-//	NSError *error = nil;
-//  NSString *password = @"foo";
-//	if (![self.xmppStream authenticateWithPassword:password error:&error]) {
-//    TBLOG(@"Error authenticating : %@", error);
-//	}
+  [self requestRegistrationFields];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStreamDidAuthenticate:(XMPPStream *)sender {
 	TBLOGMARK;
 
-	//[self goOnline];
+	[self joinRoom];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -272,14 +326,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
 didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
-  TBLOG(@"-- watcha iq : %@", iq);
-  [self.xmppInBandRegistration registerUser];
+  [self registerUsername];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
            didRegisterUsername:(NSString *)username {
   TBLOG(@"-- username registered : %@", username);
+  [self authenticate];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -287,6 +341,57 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
      didFailToRegisterUsername:(NSString *)username
                  withErrorCode:(NSInteger)errorCode {
   TBLOG(@"-- username registration error %d for %@", errorCode, username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark XMPPRoomDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)xmppRoomDidJoin:(XMPPRoom *)sender {
+  TBLOGMARK;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)xmppRoomDidLeave:(XMPPRoom *)sender {
+  TBLOG(@"-- did leave room : %@", sender);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark XMPPRoomStorage
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)configureWithParent:(XMPPRoom *)aParent queue:(dispatch_queue_t)queue {
+  TBLOGMARK;
+  return YES;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
+  TBLOGMARK;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleIncomingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
+  TBLOGMARK;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleOutgoingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
+  TBLOGMARK;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleDidLeaveRoom:(XMPPRoom *)room {
+  TBLOG(@"-- did leave room : %@", room);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleDidJoinRoom:(XMPPRoom *)room withNickname:(NSString *)nickname {
+  
 }
 
 @end

@@ -14,7 +14,7 @@
 @interface XMPPInBandRegistration : XMPPModule
 
 - (void)requestRegistrationFields;
-- (void)registerUser;
+- (void)registerUsername:(NSString *)username password:(NSString *)password;
 
 @end
 

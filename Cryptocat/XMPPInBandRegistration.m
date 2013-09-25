@@ -21,8 +21,8 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)registerUser {
-  NSXMLElement *iq = [XMPPIQ registrationIQForUsername:@"foo2" password:@"bar"];
+- (void)registerUsername:(NSString *)username password:(NSString *)password {
+  NSXMLElement *iq = [XMPPIQ registrationIQForUsername:username password:password];
   [self.xmppStream sendElement:iq];
 }
 
