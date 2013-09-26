@@ -1,23 +1,21 @@
 //
-//  TBXMPPManager.h
+//  XMPPMessage+Cryptocat.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 23/09/13.
+//  Created by Thomas Balthazar on 26/09/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
+#import "XMPPMessage.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBXMPPManager : NSObject
+@interface XMPPMessage (Cryptocat)
 
-- (id)initWithUsername:(NSString *)username
-                domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain;
-
-- (BOOL)connect;
-- (void)disconnect;
+- (BOOL)tb_isArchiveMessage;
+- (BOOL)tb_isComposingMessage;
+- (BOOL)tb_isPublicKeyMessage;
+- (BOOL)tb_isPublicKeyRequestMessage;
 
 @end

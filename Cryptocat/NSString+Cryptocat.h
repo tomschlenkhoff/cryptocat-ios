@@ -1,8 +1,8 @@
 //
-//  TBXMPPManager.h
+//  NSString+Cryptocat.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 23/09/13.
+//  Created by Thomas Balthazar on 26/09/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
@@ -11,13 +11,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBXMPPManager : NSObject
+@interface NSString (Cryptocat)
 
-- (id)initWithUsername:(NSString *)username
-                domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain;
-
-- (BOOL)connect;
-- (void)disconnect;
+- (id)tb_JSONObject;
 
 @end

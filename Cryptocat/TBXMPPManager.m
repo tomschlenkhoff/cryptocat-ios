@@ -12,7 +12,10 @@
 #import "XMPPReconnect.h"
 #import "XMPPMUC.h"
 
+#import "XMPPMessage+XEP0045.h"
+
 #import "XMPPInBandRegistration.h"
+#import "XMPPMessage+Cryptocat.h"
 
 #define kFakePassword @"bar"
 #define kFakeRoom     @"cryptocatdev"
@@ -33,6 +36,8 @@
 @property (nonatomic, strong, readonly) XMPPRoom *xmppRoom;
 
 @property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *conferenceDomain;
+@property (nonatomic, strong, readonly) XMPPJID *myJID;
 
 - (void)goOnline;
 - (void)goOffline;
@@ -42,6 +47,9 @@
 - (void)registerUsername;
 - (void)authenticate;
 - (void)joinRoom;
+- (void)sendDummyMessage;
+
+- (void)handleMessage:(XMPPMessage *)message;
 
 @end
 
@@ -56,7 +64,9 @@
 #pragma mark Initializer
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (id)init {
+- (id)initWithUsername:(NSString *)username
+                domain:(NSString *)domain
+      conferenceDomain:(NSString *)conferenceDomain {
   if (self=[super init]) {
     _xmppStream = [[XMPPStream alloc] init];
     _xmppReconnect = [[XMPPReconnect alloc] init];
@@ -68,9 +78,12 @@
     [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [_xmppInBandRegistration addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    _xmppStream.hostName = @"crypto.cat";
+    _xmppStream.hostName = domain;
     
-    _username = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
+    _username = username;
+    _conferenceDomain = conferenceDomain;
+    _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
+    _xmppStream.myJID = _myJID;
   }
   
   return self;
@@ -93,9 +106,6 @@
 - (BOOL)connect {
   TBLOGMARK;
   if (!self.xmppStream.isDisconnected) return YES;
-  
-  XMPPJID *myJID = [XMPPJID jidWithUser:self.username domain:self.xmppStream.hostName resource:nil];
-	[self.xmppStream setMyJID:myJID];
   
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]) {
@@ -169,12 +179,66 @@
  */
 - (void)joinRoom {
   XMPPJID *roomJID = [XMPPJID jidWithUser:kFakeRoom
-                                   domain:@"conference.crypto.cat"
+                                   domain:self.conferenceDomain
                                  resource:nil];
   _xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
   [_xmppRoom activate:self.xmppStream];
   [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
   [_xmppRoom joinRoomUsingNickname:kFakeNick history:nil password:kFakePassword];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendDummyMessage {
+  [self.xmppRoom sendMessageWithBody:@"Hello Crypto World!"];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleMessage:(XMPPMessage *)message {
+  if ([message tb_isArchiveMessage]) return;
+  if (message.from==self.myJID) return;
+
+  // TODO: If message is from someone not on buddy list, ignore.
+  
+  // -- composing
+  if ([message tb_isComposingMessage]) {
+    TBLOG(@"-- %@ is composing", message.fromStr);
+  }
+  
+  // TODO : Check if message has an "active" (stopped writing) notification.
+  
+  // -- publicKey
+  else if ([message tb_isPublicKeyMessage]) {
+    TBLOG(@"-- this is a public key message : %@", [message body]);
+  }
+
+  // -- publicKey request
+  else if ([message tb_isPublicKeyRequestMessage]) {
+    TBLOG(@"-- this is a public key request message : %@", [message body]);
+  }
+
+  // -- group chat
+  else if ([message isGroupChatMessage]) {
+    TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+  }
+  
+  // -- private chat
+  else if ([message isChatMessage]) {
+    TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+  }
+  
+  // -- other messages
+  else {
+    TBLOG(@"-- message : %@", message);
+  }
+
+//  - (BOOL)isChatMessage;
+//  - (BOOL)isChatMessageWithBody;
+//  - (BOOL)isErrorMessage;
+//  - (BOOL)isMessageWithBody;
+//  - (BOOL)isGroupChatMessage;
+//  - (BOOL)isGroupChatMessageWithBody;
+//  - (BOOL)isGroupChatMessageWithSubject;
+
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +328,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
-	TBLOG(@"-- stream : %@ | message : %@", sender, message);
+  [self handleMessage:message];
   
 	// A simple example of inbound message handling.
   /*
@@ -351,6 +415,8 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender {
   TBLOGMARK;
+  
+  //[self sendDummyMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -371,7 +437,17 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handlePresence:(XMPPPresence *)presence room:(XMPPRoom *)room {
-  TBLOGMARK;
+  /* -- presence : 
+   <presence xmlns="jabber:client" 
+    from="cryptocatdev@conference.crypto.cat/thomas" 
+    to="1380123858.290953@crypto.cat/32032381791380123852967666">
+      <x xmlns="http://jabber.org/protocol/muc#user">
+        <item affiliation="owner" role="moderator"></item>
+      </x>
+   </presence>
+  */
+
+  TBLOG(@"-- presence : %@", presence);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

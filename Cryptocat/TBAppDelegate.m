@@ -31,8 +31,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  NSString *username = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
+  NSString *domain = @"crypto.cat";
+  NSString *conferenceDomain = @"conference.crypto.cat";
   
-  self.XMPPManager = [[TBXMPPManager alloc] init];
+  self.XMPPManager = [[TBXMPPManager alloc] initWithUsername:username
+                                                      domain:domain
+                                            conferenceDomain:conferenceDomain];
   [self.XMPPManager connect];
   //[self.XMPPManager registerUser];
   
