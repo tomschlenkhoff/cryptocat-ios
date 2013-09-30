@@ -38,6 +38,7 @@
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *conferenceDomain;
 @property (nonatomic, strong, readonly) XMPPJID *myJID;
+@property (nonatomic, strong) NSMutableDictionary *publicKeys;
 
 - (void)goOnline;
 - (void)goOffline;
@@ -50,6 +51,7 @@
 - (void)sendDummyMessage;
 
 - (void)handleMessage:(XMPPMessage *)message;
+- (void)handlePublicKey:(NSString *)publicKey forSender:(NSString *)sender;
 
 @end
 
@@ -84,6 +86,8 @@
     _conferenceDomain = conferenceDomain;
     _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _xmppStream.myJID = _myJID;
+    
+    _publicKeys = [NSMutableDictionary dictionary];
   }
   
   return self;
@@ -208,7 +212,7 @@
   
   // -- publicKey
   else if ([message tb_isPublicKeyMessage]) {
-    TBLOG(@"-- this is a public key message : %@", [message body]);
+    [self handlePublicKey:[message tb_publicKey] forSender:[message fromStr]];
   }
 
   // -- publicKey request
@@ -239,6 +243,15 @@
 //  - (BOOL)isGroupChatMessageWithBody;
 //  - (BOOL)isGroupChatMessageWithSubject;
 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handlePublicKey:(NSString *)publicKey forSender:(NSString *)sender {
+  TBLOG(@"-- this is a public key message : %@", publicKey);
+  [self.publicKeys setObject:publicKey forKey:sender];
+  
+  // TODO: generate fingerprint
+  // TODO: generate shared secret
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

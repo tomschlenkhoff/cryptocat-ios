@@ -37,4 +37,21 @@
   return [[jsonData objectForKey:@"type"] isEqualToString:@"publicKeyRequest"];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSString *)tb_publicKey {
+  /*
+  {
+    "type":"publicKey",
+    "text": {
+      "iOSTestApp": {
+        "message":"+kzVSOSVe9X3bt/QAH8YtRAgcLERpKZ0CKEpSPRI724="
+      }
+    }
+  }
+  */
+  
+  NSDictionary *jsonData = [[self body] tb_JSONObject];
+  return [[[[jsonData objectForKey:@"text"] allValues] lastObject] objectForKey:@"message"];
+}
+
 @end

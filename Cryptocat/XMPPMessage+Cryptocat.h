@@ -18,4 +18,6 @@
 - (BOOL)tb_isPublicKeyMessage;
 - (BOOL)tb_isPublicKeyRequestMessage;
 
+- (NSString *)tb_publicKey;
+
 @end
