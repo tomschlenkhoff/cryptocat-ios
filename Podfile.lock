@@ -1,6 +1,7 @@
 PODS:
   - CocoaAsyncSocket (7.3.1)
   - CocoaLumberjack (1.6.2)
+  - TBOTRManager (0.0.1)
   - XMPPFramework (3.6.2):
     - XMPPFramework/Authentication
     - XMPPFramework/BandwidthMonitor
@@ -133,15 +134,19 @@ PODS:
     - XMPPFramework/Core
 
 DEPENDENCIES:
+  - TBOTRManager (from `https://github.com/tbalthazar/TBOTRManager.git`)
   - XMPPFramework (from `https://github.com/tbalthazar/XMPPFramework.git`)
 
 EXTERNAL SOURCES:
+  TBOTRManager:
+    :git: https://github.com/tbalthazar/TBOTRManager.git
   XMPPFramework:
     :git: https://github.com/tbalthazar/XMPPFramework.git
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 6e59036ecae1e93d6c78f5766149983ceac558ba
   CocoaLumberjack: d73e1e317ced14ab930797dda6c17156ff17aaa1
+  TBOTRManager: 375a4a20792b60a47dc6a8572bc2719a2f4957e0
   XMPPFramework: bf818623aba272b79fcc7bf8772043de33614503
 
 COCOAPODS: 0.25.0
