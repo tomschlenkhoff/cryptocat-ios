@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBXMPPMessagesHandler ()
+@interface TBXMPPMessagesHandler () <TBOTRManagerDelegate>
 
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBOTRManager *OTRManager;
@@ -41,6 +41,7 @@
   if (self=[super init]) {
     _XMPPManager = XMPPManager;
     _OTRManager = [TBOTRManager sharedOTRManager];
+    _OTRManager.delegate = self;
   }
   
   return self;
@@ -108,13 +109,28 @@
 - (void)handlePrivateMessage:(XMPPMessage *)message {
   TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
-//  TBOTRManager *otrManager = [TBOTRManager sharedOTRManager];
-//  NSString *messageBody = message.body;
-//  NSString *recipient = message.toStr;
-//  NSString *sender = message.fromStr;
-//  
-//  [otrManager decodeMessage:messageBody recipient:recipient accountName:sender protocol:@"xmpp"];
+  NSString *messageBody = message.body;
+  NSString *recipient = message.toStr;
+  NSString *sender = message.fromStr;
+
+  [self.OTRManager decodeMessage:messageBody
+                       recipient:recipient
+                     accountName:sender
+                        protocol:@"xmpp"];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBOTRManagerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)OTRManager:(TBOTRManager *)OTRManager
+       sendMessage:(NSString *)message
+              from:(NSString *)sender
+                to:(NSString *)recipient
+          protocol:(NSString *)protocol {
+  TBLOG(@"-- from:%@ to%@ : %@", sender, recipient, message);
+}
 
 @end
