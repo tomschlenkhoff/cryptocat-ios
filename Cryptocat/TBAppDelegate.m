@@ -8,13 +8,15 @@
 
 #import "TBAppDelegate.h"
 #import "TBXMPPManager.h"
+#import "TBXMPPMessagesHandler.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBAppDelegate ()
+@interface TBAppDelegate () <TBXMPPManagerDelegate>
 
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
+@property (nonatomic, strong) TBXMPPMessagesHandler *XMPPMessageHandler;
 
 @end
 
@@ -38,8 +40,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.XMPPManager = [[TBXMPPManager alloc] initWithUsername:username
                                                       domain:domain
                                             conferenceDomain:conferenceDomain];
+  self.XMPPManager.delegate = self;
   [self.XMPPManager connect];
-  //[self.XMPPManager registerUser];
+  
+  self.XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithXMPPManager:self.XMPPManager];
   
   return YES;
 }
@@ -77,6 +81,18 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationWillTerminate:(UIApplication *)application {
   // Called when the application is about to terminate.
   // Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBXMPPManagerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager
+  didReceiveMessage:(XMPPMessage *)message
+              myJID:(XMPPJID *)myJID {
+  [self.XMPPMessageHandler handleMessage:message myJID:myJID];
 }
 
 @end

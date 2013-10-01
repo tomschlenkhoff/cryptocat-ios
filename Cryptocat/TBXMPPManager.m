@@ -13,9 +13,9 @@
 #import "XMPPMUC.h"
 
 #import "XMPPMessage+XEP0045.h"
+#import "XMPPMessage+Cryptocat.h"
 
 #import "XMPPInBandRegistration.h"
-#import "XMPPMessage+Cryptocat.h"
 
 #define kFakePassword @"bar"
 #define kFakeRoom     @"cryptocatdev"
@@ -38,20 +38,12 @@
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *conferenceDomain;
 @property (nonatomic, strong, readonly) XMPPJID *myJID;
-@property (nonatomic, strong) NSMutableDictionary *publicKeys;
-
-- (void)goOnline;
-- (void)goOffline;
 
 // -- connection steps
 - (void)requestRegistrationFields;
 - (void)registerUsername;
 - (void)authenticate;
 - (void)joinRoom;
-- (void)sendDummyMessage;
-
-- (void)handleMessage:(XMPPMessage *)message;
-- (void)handlePublicKey:(NSString *)publicKey forSender:(NSString *)sender;
 
 @end
 
@@ -86,8 +78,6 @@
     _conferenceDomain = conferenceDomain;
     _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _xmppStream.myJID = _myJID;
-    
-    _publicKeys = [NSMutableDictionary dictionary];
   }
   
   return self;
@@ -128,7 +118,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)disconnect {
-	[self goOffline];
 	[self.xmppStream disconnect];
 }
 
@@ -136,18 +125,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)goOnline {
-	XMPPPresence *presence = [XMPPPresence presence]; // type="available" is implicit
-	[self.xmppStream sendElement:presence];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)goOffline {
-	XMPPPresence *presence = [XMPPPresence presenceWithType:@"unavailable"];
-	[self.xmppStream sendElement:presence];
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
@@ -189,69 +166,6 @@
   [_xmppRoom activate:self.xmppStream];
   [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
   [_xmppRoom joinRoomUsingNickname:kFakeNick history:nil password:kFakePassword];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)sendDummyMessage {
-  [self.xmppRoom sendMessageWithBody:@"Hello Crypto World!"];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handleMessage:(XMPPMessage *)message {
-  if ([message tb_isArchiveMessage]) return;
-  if (message.from==self.myJID) return;
-
-  // TODO: If message is from someone not on buddy list, ignore.
-  
-  // -- composing
-  if ([message tb_isComposingMessage]) {
-    TBLOG(@"-- %@ is composing", message.fromStr);
-  }
-  
-  // TODO : Check if message has an "active" (stopped writing) notification.
-  
-  // -- publicKey
-  else if ([message tb_isPublicKeyMessage]) {
-    [self handlePublicKey:[message tb_publicKey] forSender:[message fromStr]];
-  }
-
-  // -- publicKey request
-  else if ([message tb_isPublicKeyRequestMessage]) {
-    TBLOG(@"-- this is a public key request message : %@", [message body]);
-  }
-
-  // -- group chat
-  else if ([message isGroupChatMessage]) {
-    TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
-  }
-  
-  // -- private chat
-  else if ([message isChatMessage]) {
-    TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
-  }
-  
-  // -- other messages
-  else {
-    TBLOG(@"-- message : %@", message);
-  }
-
-//  - (BOOL)isChatMessage;
-//  - (BOOL)isChatMessageWithBody;
-//  - (BOOL)isErrorMessage;
-//  - (BOOL)isMessageWithBody;
-//  - (BOOL)isGroupChatMessage;
-//  - (BOOL)isGroupChatMessageWithBody;
-//  - (BOOL)isGroupChatMessageWithSubject;
-
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handlePublicKey:(NSString *)publicKey forSender:(NSString *)sender {
-  TBLOG(@"-- this is a public key message : %@", publicKey);
-  [self.publicKeys setObject:publicKey forKey:sender];
-  
-  // TODO: generate fingerprint
-  // TODO: generate shared secret
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -341,7 +255,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
-  [self handleMessage:message];
+  if ([self.delegate respondsToSelector:@selector(XMPPManager:didReceiveMessage:myJID:)]) {
+    [self.delegate XMPPManager:self didReceiveMessage:message myJID:self.myJID];
+  }
+
+  //[self handleMessage:message];
   
 	// A simple example of inbound message handling.
   /*
@@ -427,9 +345,7 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender {
-  TBLOGMARK;
-  
-  //[self sendDummyMessage];
+  TBLOGMARK;  
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -465,7 +381,7 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handleIncomingMessage:(XMPPMessage *)message room:(XMPPRoom *)room {
-  TBLOGMARK;
+  //TBLOGMARK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

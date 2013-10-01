@@ -134,12 +134,12 @@ PODS:
     - XMPPFramework/Core
 
 DEPENDENCIES:
-  - TBOTRManager (from `https://github.com/tbalthazar/TBOTRManager.git`)
+  - TBOTRManager (from `../TBOTRManager`)
   - XMPPFramework (from `https://github.com/tbalthazar/XMPPFramework.git`)
 
 EXTERNAL SOURCES:
   TBOTRManager:
-    :git: https://github.com/tbalthazar/TBOTRManager.git
+    :path: ../TBOTRManager
   XMPPFramework:
     :git: https://github.com/tbalthazar/XMPPFramework.git
 
