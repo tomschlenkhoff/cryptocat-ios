@@ -22,7 +22,7 @@
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBOTRManager *OTRManager;
 
-- (void)handlePrivateMessage:(XMPPMessage *)message;
+- (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
 
 @end
 
@@ -53,9 +53,9 @@
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handleMessage:(XMPPMessage *)message myJID:(XMPPJID *)myJID {
+- (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   if ([message tb_isArchiveMessage]) return;
-  if (message.from==myJID) return;
+  if (message.from==myRoomJID) return;
   
   // TODO: If message is from someone not on buddy list, ignore.
   
@@ -83,7 +83,7 @@
   
   // -- private chat
   else if ([message isChatMessage]) {
-    [self handlePrivateMessage:message];
+    [self handlePrivateMessage:message myRoomJID:myRoomJID];
   }
   
   // -- other messages
@@ -106,17 +106,28 @@
 #pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handlePrivateMessage:(XMPPMessage *)message {
+- (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
   NSString *messageBody = message.body;
-  NSString *recipient = message.toStr;
+  NSString *accountName = myRoomJID.full;
   NSString *sender = message.fromStr;
 
-  [self.OTRManager decodeMessage:messageBody
-                       recipient:recipient
-                     accountName:sender
-                        protocol:@"xmpp"];
+  NSString *decodedMessage = [self.OTRManager decodeMessage:messageBody
+                                                     sender:sender
+                                                accountName:accountName
+                                                   protocol:@"xmpp"];
+  
+  NSLog(@"-- decoded message : |%@|", decodedMessage);
+
+// send a dummy message
+//  if (![decodedMessage isEqualToString:@""]) {
+//    NSString *encryptedMessage = [self.OTRManager encodeMessage:@"Not much!"
+//                                                      recipient:message.fromStr
+//                                                    accountName:myRoomJID.full
+//                                                       protocol:@"xmpp"];
+//    [self.XMPPManager sendMessageWithBody:encryptedMessage recipient:message.fromStr];
+//  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -127,10 +138,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)OTRManager:(TBOTRManager *)OTRManager
        sendMessage:(NSString *)message
-              from:(NSString *)sender
+       accountName:(NSString *)accountName
                 to:(NSString *)recipient
           protocol:(NSString *)protocol {
-  TBLOG(@"-- from:%@ to%@ : %@", sender, recipient, message);
+  [self.XMPPManager sendMessageWithBody:message recipient:recipient];
 }
 
 @end

@@ -24,6 +24,8 @@
 
 - (BOOL)connect;
 - (void)disconnect;
+- (void)sendMessageWithBody:(NSString *)body
+                  recipient:(NSString *)recipient;
 
 @end
 
@@ -36,6 +38,6 @@
 
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
   didReceiveMessage:(XMPPMessage *)message
-              myJID:(XMPPJID *)myJID;
+          myRoomJID:(XMPPJID *)myRoomJID;
 
 @end

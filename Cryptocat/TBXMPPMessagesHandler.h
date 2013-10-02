@@ -16,6 +16,6 @@
 @interface TBXMPPMessagesHandler : NSObject
 
 - (id)initWithXMPPManager:(TBXMPPManager *)XMPPManager;
-- (void)handleMessage:(XMPPMessage *)message myJID:(XMPPJID *)myJID;
+- (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
 
 @end

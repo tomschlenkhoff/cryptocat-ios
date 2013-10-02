@@ -122,6 +122,23 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendMessageWithBody:(NSString *)body
+                  recipient:(NSString *)recipient {
+  NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
+  [bodyElt setStringValue:body];
+  
+  NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
+  [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
+  [messageElt addAttributeWithName:@"to" stringValue:recipient];
+//  NSString * messageID = [NSString stringWithFormat:@"%@",theMessage.uniqueID];
+//  [messageElt addAttributeWithName:@"id" stringValue:messageID];
+
+  [messageElt addChild:bodyElt];
+  NSLog(@"-- will send message to %@ : %@", recipient, messageElt);
+  [self.xmppStream sendElement:messageElt];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
@@ -255,8 +272,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
-  if ([self.delegate respondsToSelector:@selector(XMPPManager:didReceiveMessage:myJID:)]) {
-    [self.delegate XMPPManager:self didReceiveMessage:message myJID:self.myJID];
+  if ([self.delegate respondsToSelector:@selector(XMPPManager:didReceiveMessage:myRoomJID:)]) {
+    [self.delegate XMPPManager:self didReceiveMessage:message myRoomJID:self.xmppRoom.myRoomJID];
   }
 
   //[self handleMessage:message];

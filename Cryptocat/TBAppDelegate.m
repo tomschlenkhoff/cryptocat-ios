@@ -91,8 +91,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
   didReceiveMessage:(XMPPMessage *)message
-              myJID:(XMPPJID *)myJID {
-  [self.XMPPMessageHandler handleMessage:message myJID:myJID];
+          myRoomJID:(XMPPJID *)myRoomJID {
+  [self.XMPPMessageHandler handleMessage:message myRoomJID:myRoomJID];
 }
 
 @end
