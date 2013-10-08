@@ -11,6 +11,7 @@
 #import "XMPP.h"
 #import "TBXMPPManager.h"
 #import <TBOTRManager.h>
+#import <TBMultipartyProtocolManager.h>
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
 
@@ -21,7 +22,9 @@
 
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBOTRManager *OTRManager;
+@property (nonatomic, strong) TBMultipartyProtocolManager *MPManager;
 
+- (void)handlePublicKeyMessage:(XMPPMessage *)message;
 - (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
 
 @end
@@ -42,6 +45,7 @@
     _XMPPManager = XMPPManager;
     _OTRManager = [TBOTRManager sharedOTRManager];
     _OTRManager.delegate = self;
+    _MPManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
   }
   
   return self;
@@ -68,7 +72,7 @@
   
   // -- publicKey
   else if ([message tb_isPublicKeyMessage]) {
-    TBLOG(@"-- publicKey message : %@", message);
+    [self handlePublicKeyMessage:message];
   }
   
   // -- publicKey request
@@ -104,6 +108,28 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handlePublicKeyMessage:(XMPPMessage *)message {
+  /*
+   <message xmlns="jabber:client" 
+            from="cryptocatdev@conference.crypto.cat/thomas" 
+            to="1381138993.096637@crypto.cat/14922274781381138980964345" 
+            type="groupchat" 
+            id="9012">
+              <body xmlns="jabber:client">
+                { "type":"publicKey",
+                  "text":{"iOSTestApp":{"message":"6ZpMAta860/myjWIkwgFj1fMaLgTcdCMeYtnd6O0q1Y="}}}
+              </body>
+              <x xmlns="jabber:x:event">
+                <active/>
+              </x>
+   </message>
+  */
+  [self.MPManager addPublicKeyFromMessage:message.body forUsername:message.fromStr];
+
+  TBLOG(@"-- publicKey message : %@", message);
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {

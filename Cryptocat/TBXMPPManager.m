@@ -17,10 +17,6 @@
 
 #import "XMPPInBandRegistration.h"
 
-#define kFakePassword @"bar"
-#define kFakeRoom     @"cryptocatdev"
-#define kFakeNick     @"iOSTestApp"
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,6 +32,9 @@
 @property (nonatomic, strong, readonly) XMPPRoom *xmppRoom;
 
 @property (nonatomic, strong) NSString *username;
+@property (nonatomic, strong) NSString *password;
+@property (nonatomic, strong) NSString *room;
+@property (nonatomic, strong) NSString *nickname;
 @property (nonatomic, strong) NSString *conferenceDomain;
 @property (nonatomic, strong, readonly) XMPPJID *myJID;
 
@@ -59,8 +58,11 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithUsername:(NSString *)username
+              password:(NSString *)password
                 domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain {
+      conferenceDomain:(NSString *)conferenceDomain
+                  room:(NSString *)room
+              nickname:(NSString *)nickname {
   if (self=[super init]) {
     _xmppStream = [[XMPPStream alloc] init];
     _xmppReconnect = [[XMPPReconnect alloc] init];
@@ -75,6 +77,9 @@
     _xmppStream.hostName = domain;
     
     _username = username;
+    _password = password;
+    _room = room;
+    _nickname = nickname;
     _conferenceDomain = conferenceDomain;
     _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _xmppStream.myJID = _myJID;
@@ -156,7 +161,7 @@
  *  Connection Step #2 : register username
  */
 - (void)registerUsername {
-  [self.xmppInBandRegistration registerUsername:self.username password:kFakePassword];
+  [self.xmppInBandRegistration registerUsername:self.username password:self.password];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -165,8 +170,7 @@
  */
 - (void)authenticate {
   NSError *error = nil;
-  NSString *password = kFakePassword;
-	if (![self.xmppStream authenticateWithPassword:password error:&error]) {
+	if (![self.xmppStream authenticateWithPassword:self.password error:&error]) {
     TBLOG(@"Error authenticating : %@", error);
 	}
 }
@@ -176,13 +180,13 @@
  *  Connection Step #4 : join room
  */
 - (void)joinRoom {
-  XMPPJID *roomJID = [XMPPJID jidWithUser:kFakeRoom
+  XMPPJID *roomJID = [XMPPJID jidWithUser:self.room
                                    domain:self.conferenceDomain
                                  resource:nil];
   _xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
   [_xmppRoom activate:self.xmppStream];
   [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
-  [_xmppRoom joinRoomUsingNickname:kFakeNick history:nil password:kFakePassword];
+  [_xmppRoom joinRoomUsingNickname:self.nickname history:nil password:self.password];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

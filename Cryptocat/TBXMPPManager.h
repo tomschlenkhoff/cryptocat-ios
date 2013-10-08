@@ -19,8 +19,11 @@
 @property (nonatomic, weak) id <TBXMPPManagerDelegate> delegate;
 
 - (id)initWithUsername:(NSString *)username
+              password:(NSString *)password
                 domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain;
+      conferenceDomain:(NSString *)conferenceDomain
+                  room:(NSString *)room
+              nickname:(NSString *)nickname;
 
 - (BOOL)connect;
 - (void)disconnect;

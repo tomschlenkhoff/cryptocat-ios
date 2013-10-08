@@ -9,6 +9,8 @@
 #import "TBAppDelegate.h"
 #import "TBXMPPManager.h"
 #import "TBXMPPMessagesHandler.h"
+#import <TBMultipartyProtocolManager.h>
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,16 +36,29 @@
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSString *username = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
+  NSString *password = @"foqmlsdkfj qsmldkfj lmkqsjfd";
   NSString *domain = @"crypto.cat";
   NSString *conferenceDomain = @"conference.crypto.cat";
+  NSString *room = @"cryptocatdev";
+  NSString *nickname = @"iOSTestApp";
   
   self.XMPPManager = [[TBXMPPManager alloc] initWithUsername:username
+                                                    password:password
                                                       domain:domain
-                                            conferenceDomain:conferenceDomain];
+                                            conferenceDomain:conferenceDomain
+                                                        room:room
+                                                    nickname:nickname];
+  
   self.XMPPManager.delegate = self;
   [self.XMPPManager connect];
   
   self.XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithXMPPManager:self.XMPPManager];
+  
+  TBMultipartyProtocolManager *mpm = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
+  mpm.myName = nickname;
+  TBLOG(@"-- public key : %@", mpm.publicKey);
+  TBLOG(@"-- public key message : %@", [mpm publicKeyMessageForUsername:@"thomas"]);
+  
   
   return YES;
 }
