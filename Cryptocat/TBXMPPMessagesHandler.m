@@ -26,6 +26,7 @@
 
 - (void)handlePublicKeyMessage:(XMPPMessage *)message;
 - (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
+- (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
 
 @end
 
@@ -59,7 +60,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   if ([message tb_isArchiveMessage]) return;
-  if (message.from==myRoomJID) return;
+  if ([message.from isEqualToJID:myRoomJID]) return;
   
   // TODO: If message is from someone not on buddy list, ignore.
   
@@ -82,7 +83,7 @@
   
   // -- group chat
   else if ([message isGroupChatMessage]) {
-    TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+    [self handleGroupMessage:message myRoomJID:myRoomJID];
   }
   
   // -- private chat
@@ -126,9 +127,17 @@
               </x>
    </message>
   */
-  [self.MPManager addPublicKeyFromMessage:message.body forUsername:message.fromStr];
+  [self.MPManager addPublicKeyFromMessage:message.body forUsername:message.from.resource];
 
-  TBLOG(@"-- publicKey message : %@", message);
+  NSString *messageBody = [self.MPManager publicKeyMessageForUsername:message.from.resource];
+  [self.XMPPManager sendGroupMessageWithBody:messageBody];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
+  TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+  
+  [self.MPManager decryptMessage:message.body fromUsername:message.from.resource];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

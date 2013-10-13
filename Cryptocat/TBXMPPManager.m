@@ -11,6 +11,7 @@
 #import "XMPP.h"
 #import "XMPPReconnect.h"
 #import "XMPPMUC.h"
+#import <XMPPRoom.h>
 
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
@@ -141,6 +142,11 @@
   [messageElt addChild:bodyElt];
   NSLog(@"-- will send message to %@ : %@", recipient, messageElt);
   [self.xmppStream sendElement:messageElt];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendGroupMessageWithBody:(NSString *)body {
+  [self.xmppRoom sendMessageWithBody:body];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
