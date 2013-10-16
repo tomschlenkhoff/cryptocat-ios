@@ -9,6 +9,7 @@
 #import "TBAppDelegate.h"
 #import "TBXMPPManager.h"
 #import "TBXMPPMessagesHandler.h"
+#import "TBChatViewController.h"
 #import <TBMultipartyProtocolManager.h>
 
 
@@ -60,58 +61,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   TBLOG(@"-- public key message : %@", [mpm publicKeyMessageForUsername:@"thomas"]);
   
   
-  // start read c string
-//  char *input_string, *output_string;
-//  char line[16];
-//  
-//  input_string = "Hello World!";
-//  output_string = getline(<#char **restrict#>, <#size_t *restrict#>, <#FILE *restrict#>)
-  
-  
-//  int main()
-//  {
-//    int bytes_read;
-//    int nbytes = 100;
-//    char *my_string;
-//    
-//    puts ("Please enter a line of text.");
-//    
-//    /* These 2 lines are the heart of the program. */
-//    my_string = (char *) malloc (nbytes + 1);
-//    bytes_read = getline (&my_string, &nbytes, stdin);
-//    
-//    if (bytes_read == -1)
-//    {
-//      puts ("ERROR!");
-//    }
-//    else
-//    {
-//      puts ("You typed:");
-//      puts (my_string);
-//    }
-//    
-//    return 0;
-//  }
-  
-  /*
-#include <stdio.h>
-#define MAX_LINE 100
-
-int main(void)
-{
-  char line[MAX_LINE];
-  char *result;
-  
-  printf("Enter string:\n");
-  if ((result = gets(line)) != NULL)
-    printf("string is %s\n",result);
-  else
-    if (ferror(stdin))
-      printf("Error\n");
-}
-*/
-  // end read c string
-  
+  UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+  TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
+  cvc.roomName = room;
   
   return YES;
 }

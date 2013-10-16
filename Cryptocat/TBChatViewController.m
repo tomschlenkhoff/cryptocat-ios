@@ -7,6 +7,7 @@
 //
 
 #import "TBChatViewController.h"
+#import "TBXMPPMessagesHandler.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,6 +19,7 @@
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *toolbarView;
+@property (nonatomic, strong) NSMutableArray *messages;
 
 @end
 
@@ -40,7 +42,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
-	// Do any additional setup after loading the view.
+	
+  self.messages = [NSMutableArray array];
+  self.title = self.roomName;
+  
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceiveMessage:)
+                        name:TBDidReceiveGroupChatMessageNotification
+                      object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -58,13 +68,32 @@
                                   reuseIdentifier:cellID];
   }
 
-  cell.textLabel.text = [NSString stringWithFormat:@"cell %d", indexPath.row];
+  cell.textLabel.text = [self.messages objectAtIndex:indexPath.row];
   
   return cell;
 }
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return 100;
+  return [self.messages count];
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Observers
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceiveMessage:(NSNotification *)notification {
+  NSString *roomName = notification.object;
+  NSString *message = [notification.userInfo objectForKey:@"message"];
+  NSString *sender = [notification.userInfo objectForKey:@"sender"];
+  
+  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", sender, message];
+  [self.messages addObject:receivedMessage];
+  [self.tableView reloadData];
+  TBLOG(@"-- received message in %@ from %@: %@", roomName, sender, message);
+}
+
 
 @end

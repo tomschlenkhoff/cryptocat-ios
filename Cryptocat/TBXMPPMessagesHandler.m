@@ -15,6 +15,10 @@
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
 
+NSString * const TBDidReceiveGroupChatMessageNotification =
+                                                        @"TBDidReceiveGroupChatMessageNotification";
+
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -137,15 +141,24 @@
 - (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
+  NSString *sender = message.from.resource;
+  NSString *roomName = message.from.user;
   NSString *decryptedMessage = [self.MPManager decryptMessage:message.body
-                                                 fromUsername:message.from.resource];
+                                                 fromUsername:sender];
+  NSDictionary *userInfo = @{@"message": decryptedMessage, @"sender": sender};
+  
   TBLOG(@"-- decrypted message : %@", decryptedMessage);
   
-  NSArray *usernames = [self.XMPPManager.usernames allObjects];
-  NSString *answer = @"Hey what's up?";
-  NSString *encryptedAnswer = [self.MPManager encryptMessage:answer forUsernames:usernames];
-  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
-  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter postNotificationName:TBDidReceiveGroupChatMessageNotification
+                               object:roomName
+                             userInfo:userInfo];
+  
+//  NSArray *usernames = [self.XMPPManager.usernames allObjects];
+//  NSString *answer = @"Hey what's up?";
+//  NSString *encryptedAnswer = [self.MPManager encryptMessage:answer forUsernames:usernames];
+//  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
+//  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

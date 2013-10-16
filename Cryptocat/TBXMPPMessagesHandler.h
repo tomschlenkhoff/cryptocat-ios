@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const TBDidReceiveGroupChatMessageNotification;
+
 @class TBXMPPManager, TBOTRManager, XMPPMessage, XMPPJID;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
