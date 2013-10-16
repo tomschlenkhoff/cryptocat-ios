@@ -19,8 +19,6 @@
 		339DD1B817F0399400C3E8E6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1B717F0399400C3E8E6 /* main.m */; };
 		339DD1BC17F0399400C3E8E6 /* TBAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */; };
 		339DD1BF17F0399400C3E8E6 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 339DD1BD17F0399400C3E8E6 /* Main.storyboard */; };
-		339DD1C217F0399400C3E8E6 /* TBMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1C117F0399400C3E8E6 /* TBMasterViewController.m */; };
-		339DD1C517F0399400C3E8E6 /* TBDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1C417F0399400C3E8E6 /* TBDetailViewController.m */; };
 		339DD1C717F0399400C3E8E6 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 339DD1C617F0399400C3E8E6 /* Images.xcassets */; };
 		339DD1CE17F0399400C3E8E6 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1CD17F0399400C3E8E6 /* XCTest.framework */; };
 		339DD1CF17F0399400C3E8E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AB17F0399400C3E8E6 /* Foundation.framework */; };
@@ -29,6 +27,7 @@
 		339DD1DA17F0399400C3E8E6 /* CryptocatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1D917F0399400C3E8E6 /* CryptocatTests.m */; };
 		339DD1EA17F0507F00C3E8E6 /* TBXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1E917F0507F00C3E8E6 /* TBXMPPManager.m */; };
 		33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */; };
+		33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F68320180EDDC100524C87 /* TBChatViewController.m */; };
 		976AB9436ED44BA3A75E898B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB88AE4167A9417F92564155 /* libPods.a */; };
 /* End PBXBuildFile section */
 
@@ -64,10 +63,6 @@
 		339DD1BA17F0399400C3E8E6 /* TBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBAppDelegate.h; sourceTree = "<group>"; };
 		339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBAppDelegate.m; sourceTree = "<group>"; };
 		339DD1BE17F0399400C3E8E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		339DD1C017F0399400C3E8E6 /* TBMasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBMasterViewController.h; sourceTree = "<group>"; };
-		339DD1C117F0399400C3E8E6 /* TBMasterViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBMasterViewController.m; sourceTree = "<group>"; };
-		339DD1C317F0399400C3E8E6 /* TBDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBDetailViewController.h; sourceTree = "<group>"; };
-		339DD1C417F0399400C3E8E6 /* TBDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBDetailViewController.m; sourceTree = "<group>"; };
 		339DD1C617F0399400C3E8E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		339DD1CC17F0399400C3E8E6 /* CryptocatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptocatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		339DD1CD17F0399400C3E8E6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -79,6 +74,8 @@
 		339DD1E917F0507F00C3E8E6 /* TBXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXMPPManager.m; sourceTree = "<group>"; };
 		33F6831C180ED21800524C87 /* XMPPPresence+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPPresence+Cryptocat.h"; sourceTree = "<group>"; };
 		33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPPresence+Cryptocat.m"; sourceTree = "<group>"; };
+		33F6831F180EDDC100524C87 /* TBChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBChatViewController.h; sourceTree = "<group>"; };
+		33F68320180EDDC100524C87 /* TBChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBChatViewController.m; sourceTree = "<group>"; };
 		755CE0E7481542A09EFFC814 /* Pods.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.xcconfig; path = Pods/Pods.xcconfig; sourceTree = "<group>"; };
 		FB88AE4167A9417F92564155 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -234,10 +231,8 @@
 		339DD1E317F039DD00C3E8E6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				339DD1C017F0399400C3E8E6 /* TBMasterViewController.h */,
-				339DD1C117F0399400C3E8E6 /* TBMasterViewController.m */,
-				339DD1C317F0399400C3E8E6 /* TBDetailViewController.h */,
-				339DD1C417F0399400C3E8E6 /* TBDetailViewController.m */,
+				33F6831F180EDDC100524C87 /* TBChatViewController.h */,
+				33F68320180EDDC100524C87 /* TBChatViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -395,11 +390,10 @@
 				339DD1EA17F0507F00C3E8E6 /* TBXMPPManager.m in Sources */,
 				3301305317F18F0800287253 /* XMPPIQ+XEP_0077.m in Sources */,
 				33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */,
-				339DD1C217F0399400C3E8E6 /* TBMasterViewController.m in Sources */,
 				3301305017F18A5E00287253 /* XMPPInBandRegistration.m in Sources */,
 				339DD1B817F0399400C3E8E6 /* main.m in Sources */,
+				33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */,
 				330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */,
-				339DD1C517F0399400C3E8E6 /* TBDetailViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
