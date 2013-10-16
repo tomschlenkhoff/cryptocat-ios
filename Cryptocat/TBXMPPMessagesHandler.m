@@ -110,6 +110,14 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendGroupMessage:(NSString *)message {
+  NSArray *usernames = [self.XMPPManager.usernames allObjects];
+  NSString *encryptedJSONMessage = [self.MPManager encryptMessage:message
+                                                     forUsernames:usernames];
+  [self.XMPPManager sendGroupMessageWithBody:encryptedJSONMessage];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
@@ -152,13 +160,7 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter postNotificationName:TBDidReceiveGroupChatMessageNotification
                                object:roomName
-                             userInfo:userInfo];
-  
-//  NSArray *usernames = [self.XMPPManager.usernames allObjects];
-//  NSString *answer = @"Hey what's up?";
-//  NSString *encryptedAnswer = [self.MPManager encryptMessage:answer forUsernames:usernames];
-//  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
-//  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
+                             userInfo:userInfo];  
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

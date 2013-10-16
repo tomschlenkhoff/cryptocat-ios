@@ -19,5 +19,6 @@ extern NSString * const TBDidReceiveGroupChatMessageNotification;
 
 - (id)initWithXMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
+- (void)sendGroupMessage:(NSString *)message;
 
 @end

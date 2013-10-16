@@ -12,11 +12,13 @@
 #import "TBChatViewController.h"
 #import <TBMultipartyProtocolManager.h>
 
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBAppDelegate () <TBXMPPManagerDelegate>
+@interface TBAppDelegate () <
+  TBXMPPManagerDelegate,
+  TBChatViewControllerDelegate
+>
 
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBXMPPMessagesHandler *XMPPMessageHandler;
@@ -64,6 +66,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
   TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
   cvc.roomName = room;
+  cvc.delegate = self;
   
   return YES;
 }
@@ -128,6 +131,20 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username {
   TBLOG(@"-- %@ went away", username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBChatViewControllerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewController:(TBChatViewController *)controller
+       didAskToSendMessage:(NSString *)message {
+  [self.XMPPMessageHandler sendGroupMessage:message];
+//  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
+//  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
+
 }
 
 @end
