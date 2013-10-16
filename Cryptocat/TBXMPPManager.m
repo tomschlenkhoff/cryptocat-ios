@@ -15,6 +15,7 @@
 
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
+#import "XMPPPresence+Cryptocat.h"
 
 #import "XMPPInBandRegistration.h"
 
@@ -38,6 +39,7 @@
 @property (nonatomic, strong) NSString *nickname;
 @property (nonatomic, strong) NSString *conferenceDomain;
 @property (nonatomic, strong, readonly) XMPPJID *myJID;
+@property (nonatomic, strong) NSMutableSet *buddies;
 
 // -- connection steps
 - (void)requestRegistrationFields;
@@ -84,6 +86,7 @@
     _conferenceDomain = conferenceDomain;
     _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _xmppStream.myJID = _myJID;
+    _buddies = [NSMutableSet set];
   }
   
   return self;
@@ -101,6 +104,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Public Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSSet *)usernames {
+  return self.buddies;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)connect {
@@ -323,7 +331,36 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence {
-	TBLOG(@"Presence : %@", presence);
+  NSString *username = presence.from.resource;
+  
+  // sign out
+  if ([presence tb_isUnavailable]) {
+    [self.buddies removeObject:username];
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidSignOut:)]) {
+      [self.delegate XMPPManager:self usernameDidSignOut:username];
+    }
+  }
+  
+  // sign in
+  else if ([presence tb_isAvailable]) {
+    [self.buddies addObject:username];
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidSignIn:)]) {
+      [self.delegate XMPPManager:self usernameDidSignIn:presence.from.resource];
+    }
+  }
+  
+  // go away
+  else if ([presence tb_isAway]) {
+    [self.buddies addObject:username];
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidGoAway:)]) {
+      [self.delegate XMPPManager:self usernameDidGoAway:presence.from.resource];
+    }
+  }
+  
+  // unhandled
+  else {
+    TBLOG(@"Unhandled presence : %@", presence);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

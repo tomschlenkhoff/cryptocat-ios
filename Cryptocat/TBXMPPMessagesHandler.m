@@ -137,7 +137,15 @@
 - (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
-  [self.MPManager decryptMessage:message.body fromUsername:message.from.resource];
+  NSString *decryptedMessage = [self.MPManager decryptMessage:message.body
+                                                 fromUsername:message.from.resource];
+  TBLOG(@"-- decrypted message : %@", decryptedMessage);
+  
+  NSArray *usernames = [self.XMPPManager.usernames allObjects];
+  NSString *answer = @"Hey what's up?";
+  NSString *encryptedAnswer = [self.MPManager encryptMessage:answer forUsernames:usernames];
+  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
+  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

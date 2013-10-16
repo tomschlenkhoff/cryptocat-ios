@@ -163,4 +163,19 @@ int main(void)
   [self.XMPPMessageHandler handleMessage:message myRoomJID:myRoomJID];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username {
+  TBLOG(@"-- %@ signed in", username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignOut:(NSString *)username {
+  TBLOG(@"-- %@ signed out", username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username {
+  TBLOG(@"-- %@ went away", username);
+}
+
 @end
