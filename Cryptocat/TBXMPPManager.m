@@ -38,8 +38,6 @@
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSString *myNickname;
 @property (nonatomic, strong) NSString *conferenceDomain;
-// TODO: is myJID still needed?
-@property (nonatomic, strong, readonly) XMPPJID *myJID;
 @property (nonatomic, strong) NSMutableSet *buddies;
 
 // -- connection steps
@@ -86,8 +84,7 @@
     _roomName = roomName;
     _myNickname = nickname;
     _conferenceDomain = conferenceDomain;
-    _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
-    _xmppStream.myJID = _myJID;
+    _xmppStream.myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _buddies = [NSMutableSet set];
   }
   
@@ -177,10 +174,10 @@
   XMPPJID *roomJID = [XMPPJID jidWithUser:self.roomName
                                    domain:self.conferenceDomain
                                  resource:nil];
-  _xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
-  [_xmppRoom activate:self.xmppStream];
-  [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
-  [_xmppRoom joinRoomUsingNickname:self.myNickname history:nil password:self.password];
+  self.xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
+  [self.xmppRoom activate:self.xmppStream];
+  [self.xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
+  [self.xmppRoom joinRoomUsingNickname:self.myNickname history:nil password:self.password];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -197,46 +194,6 @@
 // TODO: is this method used?
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings {
 	TBLOGMARK;
-	
-//	if (allowSelfSignedCertificates) {
-//		[settings setObject:[NSNumber numberWithBool:YES]
-//                 forKey:(NSString *)kCFStreamSSLAllowsAnyRoot];
-//	}
-	
-	//if (allowSSLHostNameMismatch) {
-  if (NO) {
-		[settings setObject:[NSNull null] forKey:(NSString *)kCFStreamSSLPeerName];
-	}
-	else {
-		// Google does things incorrectly (does not conform to RFC).
-		// Because so many people ask questions about this (assume xmpp framework is broken),
-		// I've explicitly added code that shows how other xmpp clients "do the right thing"
-		// when connecting to a google server (gmail, or google apps for domains).
-		
-		NSString *expectedCertName = nil;
-		
-		NSString *serverDomain = self.xmppStream.hostName;
-		NSString *virtualDomain = [self.xmppStream.myJID domain];
-		
-		if ([serverDomain isEqualToString:@"talk.google.com"]) {
-			if ([virtualDomain isEqualToString:@"gmail.com"]) {
-				expectedCertName = virtualDomain;
-			}
-			else {
-				expectedCertName = serverDomain;
-			}
-		}
-		else if (serverDomain == nil) {
-			expectedCertName = virtualDomain;
-		}
-		else {
-			expectedCertName = serverDomain;
-		}
-		
-		if (expectedCertName) {
-			[settings setObject:expectedCertName forKey:(NSString *)kCFStreamSSLPeerName];
-		}
-	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
