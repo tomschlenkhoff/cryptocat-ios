@@ -18,7 +18,8 @@
 
 NSString * const TBDidReceiveGroupChatMessageNotification =
                                                         @"TBDidReceiveGroupChatMessageNotification";
-
+NSString * const TBDidReceivePrivateChatMessageNotification =
+                                                      @"TBDidReceivePrivateChatMessageNotification";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,8 +106,15 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 - (void)sendMessageWithBody:(NSString *)body
                   recipient:(NSString *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager {
+  
+  NSString *accountName = XMPPManager.xmppRoom.myRoomJID.full;
+  NSString *encodedBody = [self.OTRManager encodeMessage:body
+                                               recipient:recipient
+                                             accountName:accountName
+                                                protocol:@"xmpp"];
+
   NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
-  [bodyElt setStringValue:body];
+  [bodyElt setStringValue:encodedBody];
   
   NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
   [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
@@ -186,13 +194,14 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                                                 accountName:accountName
                                                    protocol:@"xmpp"];
   
+  
   TBLOG(@"-- decoded message : |%@|", decodedMessage);
   
-  NSString *encodedMessage = [self.OTRManager encodeMessage:@"Hey man!"
-                                                  recipient:sender
-                                                accountName:accountName
-                                                   protocol:@"xmpp"];
-  [self sendMessageWithBody:encodedMessage recipient:sender XMPPManager:XMPPManager];
+  NSDictionary *userInfo = @{@"message": decodedMessage};
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
+                               object:sender
+                             userInfo:userInfo];
 }
 
 @end

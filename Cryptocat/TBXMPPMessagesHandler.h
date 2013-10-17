@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
+extern NSString * const TBDidReceivePrivateChatMessageNotification;
 
 @class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager, XMPPMessage, XMPPJID;
 

@@ -76,6 +76,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
   cvc.roomName = roomName;
   cvc.delegate = self;
+  cvc.usernames = [NSMutableArray arrayWithArray:[self.XMPPManager.usernames allObjects]];
   
   return YES;
 }
@@ -130,6 +131,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username {
   TBLOG(@"-- %@ signed in", username);
+
+  if (![username isEqualToString:XMPPManager.myNickname]) {
+    UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
+    TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
+    [cvc.usernames addObject:username];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,6 +158,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message {
   [self.XMPPMessageHandler sendGroupMessage:message XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewController:(TBChatViewController *)controller
+       didAskToSendMessage:(NSString *)message
+                    toUser:(NSString *)recipient {
+  [self.XMPPMessageHandler sendMessageWithBody:message
+                                     recipient:recipient
+                                   XMPPManager:self.XMPPManager];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

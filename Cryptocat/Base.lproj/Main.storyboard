@@ -87,7 +87,13 @@
                             <constraint firstItem="9wI-zg-rtH" firstAttribute="trailing" secondItem="95m-qY-31n" secondAttribute="trailing" id="mrj-eq-nx9"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" id="6v5-Ux-E9P"/>
+                    <navigationItem key="navigationItem" id="6v5-Ux-E9P">
+                        <barButtonItem key="leftBarButtonItem" title="Buddies" id="EzE-Lf-ZAK">
+                            <connections>
+                                <segue destination="YmX-wc-9fA" kind="modal" identifier="BuddiesSegueID" id="ig4-U8-tA3"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="9wI-zg-rtH" id="7jZ-kl-Clo"/>
                         <outlet property="textField" destination="gRT-CI-CT5" id="Ndm-Dd-GgR"/>
@@ -97,6 +103,61 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oOc-g7-lfK" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="449" y="64"/>
+        </scene>
+        <!--Buddies View Controller-->
+        <scene sceneID="gjG-Ih-YIa">
+            <objects>
+                <tableViewController id="Sb9-pC-6Sy" customClass="TBBuddiesViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="2bY-1b-crl">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" accessoryType="detailButton" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="BuddyCellID" textLabel="7rC-kp-Iqg" style="IBUITableViewCellStyleDefault" id="9gJ-uS-5Zb">
+                                <rect key="frame" x="0.0" y="119" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="9gJ-uS-5Zb" id="8Ko-Iv-GOh">
+                                    <rect key="frame" x="0.0" y="0.0" width="273" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <subviews>
+                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="7rC-kp-Iqg">
+                                            <rect key="frame" x="15" y="0.0" width="258" height="43"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                                            <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                            <nil key="highlightedColor"/>
+                                        </label>
+                                    </subviews>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="hYp-H1-bmC">
+                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="fRg-H3-u40">
+                            <connections>
+                                <action selector="done:" destination="Sb9-pC-6Sy" id="nMH-iU-kBz"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8jw-Sv-8kt" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1406" y="-260"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="pe0-yd-5qE">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="YmX-wc-9fA" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="J91-VB-PnA">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="Sb9-pC-6Sy" kind="relationship" relationship="rootViewController" id="qFt-tH-XEH"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vwL-Eg-A17" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="938" y="-260"/>
         </scene>
     </scenes>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">

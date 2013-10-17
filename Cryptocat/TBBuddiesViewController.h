@@ -1,21 +1,21 @@
 //
-//  TBChatViewController.h
+//  TBBuddiesViewController.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 16/10/13.
+//  Created by Thomas Balthazar on 17/10/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
 #import <UIKit/UIKit.h>
 
-@protocol TBChatViewControllerDelegate;
+@protocol TBBuddiesViewControllerDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBChatViewController : UIViewController
+@interface TBBuddiesViewController : UITableViewController
 
-@property (nonatomic, weak) id <TBChatViewControllerDelegate> delegate;
+@property (nonatomic, weak) id <TBBuddiesViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSMutableArray *usernames;
@@ -25,11 +25,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@protocol TBChatViewControllerDelegate <NSObject>
+@protocol TBBuddiesViewControllerDelegate <NSObject>
 
-- (void)chatViewController:(TBChatViewController *)controller
-       didAskToSendMessage:(NSString *)message;
-- (void)chatViewController:(TBChatViewController *)controller
-       didAskToSendMessage:(NSString *)message
-                    toUser:(NSString *)recipient;
+- (void)buddiesViewControllerHasFinished:(TBBuddiesViewController *)controller;
+- (void)buddiesViewController:(TBBuddiesViewController *)controller
+        didSelectConversation:(NSString *)conversation;
+
 @end
