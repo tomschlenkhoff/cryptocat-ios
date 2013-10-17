@@ -10,15 +10,16 @@
 
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
 
-@class TBXMPPManager, TBOTRManager, XMPPMessage, XMPPJID;
+@class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager,XMPPMessage, XMPPJID;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBXMPPMessagesHandler : NSObject
 
-- (id)initWithXMPPManager:(TBXMPPManager *)XMPPManager;
-- (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
-- (void)sendGroupMessage:(NSString *)message;
+- (id)initWithOTRManager:(TBOTRManager *)OTRManager
+multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManager;
+- (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end

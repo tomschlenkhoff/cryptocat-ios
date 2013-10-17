@@ -9,6 +9,7 @@
 #import "TBXMPPMessagesHandler.h"
 
 #import "XMPP.h"
+#import "XMPPRoom.h"
 #import "TBXMPPManager.h"
 #import <TBOTRManager.h>
 #import <TBMultipartyProtocolManager.h>
@@ -22,14 +23,13 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBXMPPMessagesHandler () <TBOTRManagerDelegate>
+@interface TBXMPPMessagesHandler ()
 
-@property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBOTRManager *OTRManager;
-@property (nonatomic, strong) TBMultipartyProtocolManager *MPManager;
+@property (nonatomic, strong) TBMultipartyProtocolManager *multipartyProtocolManager;
 
-- (void)handlePublicKeyMessage:(XMPPMessage *)message;
-- (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
+- (void)handlePublicKeyMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)handlePrivateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
 
 @end
@@ -45,12 +45,11 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 #pragma mark Initializer
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (id)initWithXMPPManager:(TBXMPPManager *)XMPPManager {
+- (id)initWithOTRManager:(TBOTRManager *)OTRManager
+multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManager {
   if (self=[super init]) {
-    _XMPPManager = XMPPManager;
-    _OTRManager = [TBOTRManager sharedOTRManager];
-    _OTRManager.delegate = self;
-    _MPManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
+    _OTRManager = OTRManager;
+    _multipartyProtocolManager = multipartyProtocolManager;
   }
   
   return self;
@@ -62,7 +61,8 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handleMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
+- (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
+  XMPPJID *myRoomJID = XMPPManager.xmppRoom.myRoomJID;
   if ([message tb_isArchiveMessage]) return;
   if ([message.from isEqualToJID:myRoomJID]) return;
   
@@ -77,7 +77,7 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
   
   // -- publicKey
   else if ([message tb_isPublicKeyMessage]) {
-    [self handlePublicKeyMessage:message];
+    [self handlePublicKeyMessage:message XMPPManager:XMPPManager];
   }
   
   // -- publicKey request
@@ -92,29 +92,21 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
   
   // -- private chat
   else if ([message isChatMessage]) {
-    [self handlePrivateMessage:message myRoomJID:myRoomJID];
+    [self handlePrivateMessage:message XMPPManager:XMPPManager];
   }
   
   // -- other messages
   else {
     TBLOG(@"-- message : %@", message);
   }
-  
-  //  - (BOOL)isChatMessage;
-  //  - (BOOL)isChatMessageWithBody;
-  //  - (BOOL)isErrorMessage;
-  //  - (BOOL)isMessageWithBody;
-  //  - (BOOL)isGroupChatMessage;
-  //  - (BOOL)isGroupChatMessageWithBody;
-  //  - (BOOL)isGroupChatMessageWithSubject;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)sendGroupMessage:(NSString *)message {
-  NSArray *usernames = [self.XMPPManager.usernames allObjects];
-  NSString *encryptedJSONMessage = [self.MPManager encryptMessage:message
-                                                     forUsernames:usernames];
-  [self.XMPPManager sendGroupMessageWithBody:encryptedJSONMessage];
+- (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager {
+  NSArray *usernames = [XMPPManager.usernames allObjects];
+  NSString *encryptedJSONMessage = [self.multipartyProtocolManager encryptMessage:message
+                                                                     forUsernames:usernames];
+  [XMPPManager.xmppRoom sendMessageWithBody:encryptedJSONMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,7 +115,7 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 #pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handlePublicKeyMessage:(XMPPMessage *)message {
+- (void)handlePublicKeyMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
   /*
    <message xmlns="jabber:client" 
             from="cryptocatdev@conference.crypto.cat/thomas" 
@@ -139,10 +131,12 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
               </x>
    </message>
   */
-  [self.MPManager addPublicKeyFromMessage:message.body forUsername:message.from.resource];
+  [self.multipartyProtocolManager addPublicKeyFromMessage:message.body
+                                              forUsername:message.from.resource];
 
-  NSString *messageBody = [self.MPManager publicKeyMessageForUsername:message.from.resource];
-  [self.XMPPManager sendGroupMessageWithBody:messageBody];
+  NSString *messageBody = [self.multipartyProtocolManager
+                           publicKeyMessageForUsername:message.from.resource];
+  [XMPPManager.xmppRoom sendMessageWithBody:messageBody];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -151,8 +145,8 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
   
   NSString *sender = message.from.resource;
   NSString *roomName = message.from.user;
-  NSString *decryptedMessage = [self.MPManager decryptMessage:message.body
-                                                 fromUsername:sender];
+  NSString *decryptedMessage = [self.multipartyProtocolManager decryptMessage:message.body
+                                                                 fromUsername:sender];
   NSDictionary *userInfo = @{@"message": decryptedMessage, @"sender": sender};
   
   TBLOG(@"-- decrypted message : %@", decryptedMessage);
@@ -164,11 +158,11 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)handlePrivateMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
+- (void)handlePrivateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
   TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
   NSString *messageBody = message.body;
-  NSString *accountName = myRoomJID.full;
+  NSString *accountName = XMPPManager.xmppRoom.myRoomJID.full;
   NSString *sender = message.fromStr;
 
   NSString *decodedMessage = [self.OTRManager decodeMessage:messageBody
@@ -176,30 +170,7 @@ NSString * const TBDidReceiveGroupChatMessageNotification =
                                                 accountName:accountName
                                                    protocol:@"xmpp"];
   
-  NSLog(@"-- decoded message : |%@|", decodedMessage);
-
-// send a dummy message
-//  if (![decodedMessage isEqualToString:@""]) {
-//    NSString *encryptedMessage = [self.OTRManager encodeMessage:@"Not much!"
-//                                                      recipient:message.fromStr
-//                                                    accountName:myRoomJID.full
-//                                                       protocol:@"xmpp"];
-//    [self.XMPPManager sendMessageWithBody:encryptedMessage recipient:message.fromStr];
-//  }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark TBOTRManagerDelegate
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)OTRManager:(TBOTRManager *)OTRManager
-       sendMessage:(NSString *)message
-       accountName:(NSString *)accountName
-                to:(NSString *)recipient
-          protocol:(NSString *)protocol {
-  [self.XMPPManager sendMessageWithBody:message recipient:recipient];
+  TBLOG(@"-- decoded message : |%@|", decodedMessage);
 }
 
 @end

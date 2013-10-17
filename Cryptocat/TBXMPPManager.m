@@ -28,16 +28,17 @@
   XMPPRoomDelegate,
   XMPPRoomStorage>
 
-@property (nonatomic, strong, readonly) XMPPStream *xmppStream;
-@property (nonatomic, strong, readonly) XMPPReconnect *xmppReconnect;
-@property (nonatomic, strong, readonly) XMPPInBandRegistration *xmppInBandRegistration;
-@property (nonatomic, strong, readonly) XMPPRoom *xmppRoom;
+@property (nonatomic, strong, readwrite) XMPPStream *xmppStream;
+@property (nonatomic, strong, readwrite) XMPPReconnect *xmppReconnect;
+@property (nonatomic, strong, readwrite) XMPPInBandRegistration *xmppInBandRegistration;
+@property (nonatomic, strong, readwrite) XMPPRoom *xmppRoom;
 
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
-@property (nonatomic, strong) NSString *room;
-@property (nonatomic, strong) NSString *nickname;
+@property (nonatomic, strong) NSString *roomName;
+@property (nonatomic, strong) NSString *myNickname;
 @property (nonatomic, strong) NSString *conferenceDomain;
+// TODO: is myJID still needed?
 @property (nonatomic, strong, readonly) XMPPJID *myJID;
 @property (nonatomic, strong) NSMutableSet *buddies;
 
@@ -64,7 +65,7 @@
               password:(NSString *)password
                 domain:(NSString *)domain
       conferenceDomain:(NSString *)conferenceDomain
-                  room:(NSString *)room
+              roomName:(NSString *)roomName
               nickname:(NSString *)nickname {
   if (self=[super init]) {
     _xmppStream = [[XMPPStream alloc] init];
@@ -78,11 +79,12 @@
     [_xmppInBandRegistration addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
     _xmppStream.hostName = domain;
+    _xmppRoom = nil;
     
     _username = username;
     _password = password;
-    _room = room;
-    _nickname = nickname;
+    _roomName = roomName;
+    _myNickname = nickname;
     _conferenceDomain = conferenceDomain;
     _myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
     _xmppStream.myJID = _myJID;
@@ -194,13 +196,13 @@
  *  Connection Step #4 : join room
  */
 - (void)joinRoom {
-  XMPPJID *roomJID = [XMPPJID jidWithUser:self.room
+  XMPPJID *roomJID = [XMPPJID jidWithUser:self.roomName
                                    domain:self.conferenceDomain
                                  resource:nil];
   _xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
   [_xmppRoom activate:self.xmppStream];
   [_xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
-  [_xmppRoom joinRoomUsingNickname:self.nickname history:nil password:self.password];
+  [_xmppRoom joinRoomUsingNickname:self.myNickname history:nil password:self.password];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -214,6 +216,7 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+// TODO: is this method used?
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings {
 	TBLOGMARK;
 	

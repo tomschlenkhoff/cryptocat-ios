@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class XMPPMessage, XMPPJID;
+@class XMPPMessage, XMPPJID, XMPPRoom, XMPPStream;
 @protocol TBXMPPManagerDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,17 +17,22 @@
 @interface TBXMPPManager : NSObject
 
 @property (nonatomic, weak) id <TBXMPPManagerDelegate> delegate;
+@property (nonatomic, readonly) NSString *myNickname;
 @property (nonatomic, readonly) NSSet *usernames;
+@property (nonatomic, readonly) XMPPStream *xmppStream;
+@property (nonatomic, readonly) XMPPRoom *xmppRoom;
 
 - (id)initWithUsername:(NSString *)username
               password:(NSString *)password
                 domain:(NSString *)domain
       conferenceDomain:(NSString *)conferenceDomain
-                  room:(NSString *)room
+              roomName:(NSString *)roomName
               nickname:(NSString *)nickname;
 
 - (BOOL)connect;
 - (void)disconnect;
+
+// TODO: remove those methods
 - (void)sendMessageWithBody:(NSString *)body
                   recipient:(NSString *)recipient;
 - (void)sendGroupMessageWithBody:(NSString *)body;

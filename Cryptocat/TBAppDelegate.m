@@ -11,15 +11,19 @@
 #import "TBXMPPMessagesHandler.h"
 #import "TBChatViewController.h"
 #import <TBMultipartyProtocolManager.h>
+#import <TBOTRManager.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBAppDelegate () <
   TBXMPPManagerDelegate,
+  TBOTRManagerDelegate,
   TBChatViewControllerDelegate
 >
 
+@property (nonatomic, strong) TBMultipartyProtocolManager *multipartyProtocolManager;
+@property (nonatomic, strong) TBOTRManager *OTRManager;
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBXMPPMessagesHandler *XMPPMessageHandler;
 
@@ -42,30 +46,35 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSString *password = @"foqmlsdkfj qsmldkfj lmkqsjfd";
   NSString *domain = @"crypto.cat";
   NSString *conferenceDomain = @"conference.crypto.cat";
-  NSString *room = @"cryptocatdev";
+  NSString *roomName = @"cryptocatdev";
   NSString *nickname = @"iOSTestApp";
   
+  // xmpp manager
   self.XMPPManager = [[TBXMPPManager alloc] initWithUsername:username
                                                     password:password
                                                       domain:domain
                                             conferenceDomain:conferenceDomain
-                                                        room:room
+                                                        roomName:roomName
                                                     nickname:nickname];
-  
   self.XMPPManager.delegate = self;
   [self.XMPPManager connect];
+
+  // multiparty chat manager
+  self.multipartyProtocolManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
+  self.multipartyProtocolManager.myName = self.XMPPManager.myNickname;
   
-  self.XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithXMPPManager:self.XMPPManager];
-  
-  TBMultipartyProtocolManager *mpm = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
-  mpm.myName = nickname;
-  TBLOG(@"-- public key : %@", mpm.publicKey);
-  TBLOG(@"-- public key message : %@", [mpm publicKeyMessageForUsername:@"thomas"]);
-  
+  // otr manager
+  self.OTRManager = [TBOTRManager sharedOTRManager];
+  self.OTRManager.delegate = self;
+
+  // message handler
+  self.XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithOTRManager:self.OTRManager
+                                                    multipartyProtocolManager:
+                                                                    self.multipartyProtocolManager];
   
   UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
   TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
-  cvc.roomName = room;
+  cvc.roomName = roomName;
   cvc.delegate = self;
   
   return YES;
@@ -115,7 +124,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
   didReceiveMessage:(XMPPMessage *)message
           myRoomJID:(XMPPJID *)myRoomJID {
-  [self.XMPPMessageHandler handleMessage:message myRoomJID:myRoomJID];
+  [self.XMPPMessageHandler handleMessage:message XMPPManager:XMPPManager];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -141,10 +150,21 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message {
-  [self.XMPPMessageHandler sendGroupMessage:message];
-//  TBLOG(@"-- encrypted answer : %@", encryptedAnswer);
-//  [self.XMPPManager sendGroupMessageWithBody:encryptedAnswer];
+  [self.XMPPMessageHandler sendGroupMessage:message XMPPManager:self.XMPPManager];
+}
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBOTRManagerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)OTRManager:(TBOTRManager *)OTRManager
+       sendMessage:(NSString *)message
+       accountName:(NSString *)accountName
+                to:(NSString *)recipient
+          protocol:(NSString *)protocol {
+  [self.XMPPManager sendMessageWithBody:message recipient:recipient];
 }
 
 @end
