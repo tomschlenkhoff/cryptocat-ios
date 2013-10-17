@@ -32,11 +32,6 @@
 - (BOOL)connect;
 - (void)disconnect;
 
-// TODO: remove those methods
-- (void)sendMessageWithBody:(NSString *)body
-                  recipient:(NSString *)recipient;
-- (void)sendGroupMessageWithBody:(NSString *)body;
-
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

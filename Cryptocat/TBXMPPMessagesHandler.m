@@ -102,6 +102,22 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendMessageWithBody:(NSString *)body
+                  recipient:(NSString *)recipient
+                XMPPManager:(TBXMPPManager *)XMPPManager {
+  NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
+  [bodyElt setStringValue:body];
+  
+  NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
+  [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
+  [messageElt addAttributeWithName:@"to" stringValue:recipient];
+  
+  [messageElt addChild:bodyElt];
+  TBLOG(@"-- will send message to %@ : %@", recipient, messageElt);
+  [XMPPManager.xmppStream sendElement:messageElt];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager {
   NSArray *usernames = [XMPPManager.usernames allObjects];
   NSString *encryptedJSONMessage = [self.multipartyProtocolManager encryptMessage:message
@@ -171,6 +187,12 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                                                    protocol:@"xmpp"];
   
   TBLOG(@"-- decoded message : |%@|", decodedMessage);
+  
+  NSString *encodedMessage = [self.OTRManager encodeMessage:@"Hey man!"
+                                                  recipient:sender
+                                                accountName:accountName
+                                                   protocol:@"xmpp"];
+  [self sendMessageWithBody:encodedMessage recipient:sender XMPPManager:XMPPManager];
 }
 
 @end

@@ -164,7 +164,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
        accountName:(NSString *)accountName
                 to:(NSString *)recipient
           protocol:(NSString *)protocol {
-  [self.XMPPManager sendMessageWithBody:message recipient:recipient];
+  [self.XMPPMessageHandler sendMessageWithBody:message
+                                     recipient:recipient
+                                   XMPPManager:self.XMPPManager];
 }
 
 @end

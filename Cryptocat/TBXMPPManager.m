@@ -138,28 +138,6 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)sendMessageWithBody:(NSString *)body
-                  recipient:(NSString *)recipient {
-  NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
-  [bodyElt setStringValue:body];
-  
-  NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
-  [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
-  [messageElt addAttributeWithName:@"to" stringValue:recipient];
-//  NSString * messageID = [NSString stringWithFormat:@"%@",theMessage.uniqueID];
-//  [messageElt addAttributeWithName:@"id" stringValue:messageID];
-
-  [messageElt addChild:bodyElt];
-  NSLog(@"-- will send message to %@ : %@", recipient, messageElt);
-  [self.xmppStream sendElement:messageElt];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)sendGroupMessageWithBody:(NSString *)body {
-  [self.xmppRoom sendMessageWithBody:body];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods

@@ -20,6 +20,9 @@ extern NSString * const TBDidReceiveGroupChatMessageNotification;
 - (id)initWithOTRManager:(TBOTRManager *)OTRManager
 multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManager;
 - (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)sendMessageWithBody:(NSString *)body
+                  recipient:(NSString *)recipient
+                XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end
