@@ -108,21 +108,24 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                 XMPPManager:(TBXMPPManager *)XMPPManager {
   
   NSString *accountName = XMPPManager.xmppRoom.myRoomJID.full;
-  NSString *encodedBody = [self.OTRManager encodeMessage:body
-                                               recipient:recipient
-                                             accountName:accountName
-                                                protocol:@"xmpp"];
-
-  NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
-  [bodyElt setStringValue:encodedBody];
   
-  NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
-  [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
-  [messageElt addAttributeWithName:@"to" stringValue:recipient];
-  
-  [messageElt addChild:bodyElt];
-  TBLOG(@"-- will send message to %@ : %@", recipient, messageElt);
-  [XMPPManager.xmppStream sendElement:messageElt];
+  [self.OTRManager encodeMessage:body
+                       recipient:recipient
+                     accountName:accountName
+                        protocol:@"xmpp"
+                 completionBlock:^(NSString *encodedMessage)
+  {
+    NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
+    [bodyElt setStringValue:encodedMessage];
+    
+    NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
+    [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
+    [messageElt addAttributeWithName:@"to" stringValue:recipient];
+    
+    [messageElt addChild:bodyElt];
+    TBLOG(@"-- will send message to %@ : %@", recipient, messageElt);
+    [XMPPManager.xmppStream sendElement:messageElt];
+  }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

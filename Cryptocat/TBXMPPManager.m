@@ -347,7 +347,10 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender {
-  TBLOGMARK;  
+  TBLOGMARK;
+  if ([self.delegate respondsToSelector:@selector(XMPPManager:didJoinRoom:)]) {
+    [self.delegate XMPPManager:self didJoinRoom:sender];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

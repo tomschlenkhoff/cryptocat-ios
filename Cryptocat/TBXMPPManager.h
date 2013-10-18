@@ -41,6 +41,7 @@
 
 @required
 
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager didJoinRoom:(XMPPRoom *)room;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
   didReceiveMessage:(XMPPMessage *)message
           myRoomJID:(XMPPJID *)myRoomJID;
