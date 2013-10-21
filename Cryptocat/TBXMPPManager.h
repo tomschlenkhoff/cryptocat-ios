@@ -22,14 +22,13 @@
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPRoom *xmppRoom;
 
-- (id)initWithUsername:(NSString *)username
-              password:(NSString *)password
-                domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain
-              roomName:(NSString *)roomName
-              nickname:(NSString *)nickname;
-
-- (BOOL)connect;
+- (id)init;
+- (BOOL)connectWithUsername:(NSString *)username
+                   password:(NSString *)password
+                     domain:(NSString *)domain
+           conferenceDomain:(NSString *)conferenceDomain
+                   roomName:(NSString *)roomName
+                   nickname:(NSString *)nickname;
 - (void)disconnect;
 
 @end

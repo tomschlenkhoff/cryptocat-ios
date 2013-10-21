@@ -14,5 +14,6 @@
 @interface NSString (Cryptocat)
 
 - (id)tb_JSONObject;
++ (NSString *)tb_randomStringWithLength:(NSInteger)length;
 
 @end

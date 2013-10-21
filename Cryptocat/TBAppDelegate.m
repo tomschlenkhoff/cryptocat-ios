@@ -9,10 +9,15 @@
 #import "TBAppDelegate.h"
 #import "TBXMPPManager.h"
 #import "TBXMPPMessagesHandler.h"
+#import "TBLoginViewController.h"
 #import "TBChatViewController.h"
+#import "NSString+Cryptocat.h"
 #import <TBMultipartyProtocolManager.h>
 #import <TBOTRManager.h>
 #import "XMPPRoom.h"
+
+#define kDomain           @"crypto.cat"
+#define kConferenceDomain @"conference.crypto.cat"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -20,13 +25,18 @@
 @interface TBAppDelegate () <
   TBXMPPManagerDelegate,
   TBOTRManagerDelegate,
-  TBChatViewControllerDelegate
+  TBChatViewControllerDelegate,
+  TBLoginViewControllerDelegate
 >
 
 @property (nonatomic, strong) TBMultipartyProtocolManager *multipartyProtocolManager;
 @property (nonatomic, strong) TBOTRManager *OTRManager;
 @property (nonatomic, strong) TBXMPPManager *XMPPManager;
 @property (nonatomic, strong) TBXMPPMessagesHandler *XMPPMessageHandler;
+@property (nonatomic, strong) TBChatViewController *chatViewController;
+@property (nonatomic, strong) TBLoginViewController *loginViewController;
+
+- (BOOL)isLoginScreenPresented;
 
 @end
 
@@ -43,26 +53,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  NSString *username = [NSString stringWithFormat:@"%f", [[NSDate date] timeIntervalSince1970]];
-  NSString *password = @"foqmlsdkfj qsmldkfj lmkqsjfd";
-  NSString *domain = @"crypto.cat";
-  NSString *conferenceDomain = @"conference.crypto.cat";
-  NSString *roomName = @"cryptocatdev";
-  NSString *nickname = @"iOSTestApp";
-  
   // xmpp manager
-  self.XMPPManager = [[TBXMPPManager alloc] initWithUsername:username
-                                                    password:password
-                                                      domain:domain
-                                            conferenceDomain:conferenceDomain
-                                                        roomName:roomName
-                                                    nickname:nickname];
+  self.XMPPManager = [[TBXMPPManager alloc] init];
   self.XMPPManager.delegate = self;
-  [self.XMPPManager connect];
 
   // multiparty chat manager
   self.multipartyProtocolManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
-  self.multipartyProtocolManager.myName = self.XMPPManager.myNickname;
   
   // otr manager
   self.OTRManager = [TBOTRManager sharedOTRManager];
@@ -73,11 +69,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                                     multipartyProtocolManager:
                                                                     self.multipartyProtocolManager];
   
+  // get the chatVC
   UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
-  TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
-  cvc.roomName = roomName;
-  cvc.delegate = self;
-  cvc.usernames = [NSMutableArray arrayWithArray:[self.XMPPManager.usernames allObjects]];
+  self.chatViewController = (TBChatViewController *)nc.topViewController;
+  self.chatViewController.delegate = self;
   
   return YES;
 }
@@ -109,6 +104,19 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   // Restart any tasks that were paused (or not yet started) while the application was inactive.
   // If the application was previously in the background, optionally refresh the user interface.
+  
+  // if xmpp is not connected or connecting, show loginVC
+  if (!self.XMPPManager.xmppStream.isConnected && !self.XMPPManager.xmppStream.isConnecting) {
+    // show loginVC
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UINavigationController *loginNC = [storyboard
+                                       instantiateViewControllerWithIdentifier:@"LoginNCID"];
+    self.loginViewController = (TBLoginViewController *)loginNC.topViewController;
+    self.loginViewController.delegate = self;
+    [self.chatViewController presentViewController:loginNC
+                                          animated:NO
+                                        completion:NULL];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -120,12 +128,36 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)isLoginScreenPresented {
+  TBChatViewController *cvc = self.chatViewController;
+  BOOL cvcPresentedVCIsNC = [cvc.presentedViewController
+                             isKindOfClass:[UINavigationController class]];
+  if (!cvcPresentedVCIsNC) return NO;
+  
+  UINavigationController *nc = (UINavigationController *)cvc.presentedViewController;
+  return [nc.topViewController isKindOfClass:[TBLoginViewController class]];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark TBXMPPManagerDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager didJoinRoom:(XMPPRoom *)room {
   NSString *account = room.myRoomJID.full;
-  [self.OTRManager generatePrivateKeyForAccount:account protocol:@"xmpp"];
+  [self.OTRManager generatePrivateKeyForAccount:account protocol:TBMessagingProtocol];
+  
+  self.chatViewController.roomName = room.roomJID.user;
+  self.chatViewController.usernames = [NSMutableArray
+                                       arrayWithArray:[XMPPManager.usernames allObjects]];
+
+  if ([self isLoginScreenPresented]) {
+    [self.chatViewController dismissViewControllerAnimated:YES completion:NULL];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -190,6 +222,29 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [self.XMPPMessageHandler sendMessageWithBody:message
                                      recipient:recipient
                                    XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBLoginViewControllerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)loginController:(TBLoginViewController *)controller
+didAskToConnectWithRoomName:(NSString *)roomName
+               nickname:(NSString *)nickname {
+  NSString *username = [NSString tb_randomStringWithLength:16];
+  NSString *password = [NSString tb_randomStringWithLength:16];
+  NSString *domain = kDomain;
+  NSString *conferenceDomain = kConferenceDomain;
+  
+  [self.XMPPManager connectWithUsername:username
+                               password:password
+                                 domain:domain
+                       conferenceDomain:conferenceDomain
+                               roomName:roomName
+                               nickname:nickname];
+  self.multipartyProtocolManager.myName = self.XMPPManager.myNickname;
 }
 
 @end

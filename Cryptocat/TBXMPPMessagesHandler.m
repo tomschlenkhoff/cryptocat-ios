@@ -16,6 +16,7 @@
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
 
+NSString * const TBMessagingProtocol = @"xmpp";
 NSString * const TBDidReceiveGroupChatMessageNotification =
                                                         @"TBDidReceiveGroupChatMessageNotification";
 NSString * const TBDidReceivePrivateChatMessageNotification =
@@ -112,7 +113,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   [self.OTRManager encodeMessage:body
                        recipient:recipient
                      accountName:accountName
-                        protocol:@"xmpp"
+                        protocol:TBMessagingProtocol
                  completionBlock:^(NSString *encodedMessage)
   {
     NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];

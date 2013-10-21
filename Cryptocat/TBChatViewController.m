@@ -50,13 +50,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
-	
-  self.title = self.roomName;
-  self.currentRoomName = self.roomName;
-  
-  self.messagesForConversation = [NSMutableDictionary dictionary];
-  [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.roomName];
-  
+	 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
                     selector:@selector(didReceiveGroupMessage:)
@@ -71,7 +65,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-  
+
+  self.messagesForConversation = [NSMutableDictionary dictionary];
+  [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.roomName];
+  self.title = self.roomName;
+  self.currentRoomName = self.roomName;
+
   [self startObservingKeyboard];
   TBLOGMARK;
 }

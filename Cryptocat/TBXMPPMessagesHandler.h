@@ -8,6 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
+extern NSString * const TBMessagingProtocol;
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
 extern NSString * const TBDidReceivePrivateChatMessageNotification;
 

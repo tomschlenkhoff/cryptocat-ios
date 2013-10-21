@@ -59,12 +59,7 @@
 #pragma mark Initializer
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (id)initWithUsername:(NSString *)username
-              password:(NSString *)password
-                domain:(NSString *)domain
-      conferenceDomain:(NSString *)conferenceDomain
-              roomName:(NSString *)roomName
-              nickname:(NSString *)nickname {
+- (id)init {
   if (self=[super init]) {
     _xmppStream = [[XMPPStream alloc] init];
     _xmppReconnect = [[XMPPReconnect alloc] init];
@@ -76,15 +71,12 @@
     [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [_xmppInBandRegistration addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
-    _xmppStream.hostName = domain;
     _xmppRoom = nil;
-    
-    _username = username;
-    _password = password;
-    _roomName = roomName;
-    _myNickname = nickname;
-    _conferenceDomain = conferenceDomain;
-    _xmppStream.myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
+    _username = nil;
+    _password = nil;
+    _roomName = nil;
+    _myNickname = nil;
+    _conferenceDomain = nil;
     _buddies = [NSMutableSet set];
   }
   
@@ -110,9 +102,22 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)connect {
+- (BOOL)connectWithUsername:(NSString *)username
+                   password:(NSString *)password
+                     domain:(NSString *)domain
+           conferenceDomain:(NSString *)conferenceDomain
+                   roomName:(NSString *)roomName
+                   nickname:(NSString *)nickname {
   TBLOGMARK;
   if (!self.xmppStream.isDisconnected) return YES;
+  
+  self.username = username;
+  self.password = password;
+  self.roomName = roomName;
+  self.myNickname = nickname;
+  self.conferenceDomain = conferenceDomain;
+  self.xmppStream.myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
+  self.xmppStream.hostName = domain;
   
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]) {
