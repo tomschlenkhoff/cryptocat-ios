@@ -276,6 +276,14 @@
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence {
   NSString *username = presence.from.resource;
   
+  // nickname is already in use by another occupant
+  if ([presence tb_isNicknameAlreadyInUseError]) {
+    if ([self.delegate
+         respondsToSelector:@selector(XMPPManager:didTryToRegisterAlreadyInUseUsername:)]) {
+      [self.delegate XMPPManager:self didTryToRegisterAlreadyInUseUsername:username];
+    }
+  }
+  
   // sign out
   if ([presence tb_isUnavailable]) {
     [self.buddies removeObject:username];

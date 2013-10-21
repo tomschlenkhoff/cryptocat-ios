@@ -48,5 +48,6 @@
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignOut:(NSString *)username;
-
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager
+didTryToRegisterAlreadyInUseUsername:(NSString *)username;
 @end

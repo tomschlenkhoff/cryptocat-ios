@@ -15,6 +15,7 @@
 #import <TBMultipartyProtocolManager.h>
 #import <TBOTRManager.h>
 #import "XMPPRoom.h"
+#import "NSError+Cryptocat.h"
 
 #define kDomain           @"crypto.cat"
 #define kConferenceDomain @"conference.crypto.cat"
@@ -186,6 +187,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username {
   TBLOG(@"-- %@ went away", username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager
+didTryToRegisterAlreadyInUseUsername:(NSString *)username {
+  if ([self isLoginScreenPresented]) {
+    NSString *message = NSLocalizedString(@"Nickname in use.", @"Nickname in use. Error Message");
+    [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -20,6 +20,11 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSString *)tb_trim {
+  return [self stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSString *)tb_randomStringWithLength:(NSInteger)length {
   NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   NSMutableString *randomString = [NSMutableString stringWithCapacity:length];

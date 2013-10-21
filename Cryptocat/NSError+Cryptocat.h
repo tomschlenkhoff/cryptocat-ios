@@ -1,8 +1,8 @@
 //
-//  NSString+Cryptocat.h
+//  NSError+Cryptocat.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 26/09/13.
+//  Created by Thomas Balthazar on 21/10/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
@@ -11,10 +11,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface NSString (Cryptocat)
+@interface NSError (Cryptocat)
 
-- (id)tb_JSONObject;
-- (NSString *)tb_trim;
-+ (NSString *)tb_randomStringWithLength:(NSInteger)length;
++ (NSError *)tb_errorWithMessage:(NSString *)message;
++ (NSError *)tb_errorWithCode:(NSInteger)code message:(NSString *)message;
+- (NSString *)tb_message;
 
 @end

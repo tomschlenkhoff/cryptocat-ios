@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface XMPPPresence (Cryptocat)
 
+- (BOOL)tb_isNicknameAlreadyInUseError;
 - (BOOL)tb_isAvailable;
 - (BOOL)tb_isAway;
 - (BOOL)tb_isUnavailable;
