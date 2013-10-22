@@ -208,6 +208,15 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManagerDidFailToConnect:(TBXMPPManager *)XMPPManager {
+  if ([self isLoginScreenPresented]) {
+    NSString *message = NSLocalizedString(@"Connection failed.",
+                                          @"Connection failed. Error Message");
+    [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TBChatViewControllerDelegate
@@ -257,13 +266,15 @@ didAskToConnectWithRoomName:(NSString *)roomName
   NSString *domain = kDomain;
   NSString *conferenceDomain = kConferenceDomain;
   
-  [self.XMPPManager connectWithUsername:username
-                               password:password
-                                 domain:domain
-                       conferenceDomain:conferenceDomain
-                               roomName:roomName
-                               nickname:nickname];
+  BOOL isConnected = [self.XMPPManager connectWithUsername:username
+                                                  password:password
+                                                    domain:domain
+                                          conferenceDomain:conferenceDomain
+                                                  roomName:roomName
+                                                  nickname:nickname];
   self.multipartyProtocolManager.myName = self.XMPPManager.myNickname;
+  
+  TBLOG(@"-- isConnected : %d", isConnected);
 }
 
 @end

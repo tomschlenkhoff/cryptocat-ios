@@ -121,12 +121,6 @@
   
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]) {
-		UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"Error connecting"
-		                                                    message:@"See console for error details."
-		                                                   delegate:nil
-		                                          cancelButtonTitle:@"Ok"
-		                                          otherButtonTitles:nil];
-		[alertView show];
 		TBLOG(@"Error connecting: %@", error);
 		return NO;
 	}
@@ -323,12 +317,21 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * This method is called after the stream is closed.
+ *
+ * The given error parameter will be non-nil if the error was due to something outside the general xmpp realm.
+ * Some examples:
+ * - The TCP socket was unexpectedly disconnected.
+ * - The SRV resolution of the domain failed.
+ * - Error parsing xml sent from server.
+ **/
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error {
 	TBLOG(@"-- stream did disconnect with error : %@", error);
-	
-//	if (!isXmppConnected) {
-//		DDLogError(@"Unable to connect to server. Check xmppStream.hostName");
-//	}
+  
+  if (error!=nil && [self.delegate respondsToSelector:@selector(XMPPManagerDidFailToConnect:)]) {
+    [self.delegate XMPPManagerDidFailToConnect:self];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -45,6 +45,7 @@
   didReceiveMessage:(XMPPMessage *)message
           myRoomJID:(XMPPJID *)myRoomJID;
 - (void)XMPPManagerDidFailToAuthenticate:(TBXMPPManager *)XMPPManager;
+- (void)XMPPManagerDidFailToConnect:(TBXMPPManager *)XMPPManager;
 
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username;
