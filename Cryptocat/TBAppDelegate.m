@@ -199,6 +199,15 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManagerDidFailToAuthenticate:(TBXMPPManager *)XMPPManager {
+  if ([self isLoginScreenPresented]) {
+    NSString *message = NSLocalizedString(@"Authentication failure.",
+                                          @"Authentication failure. Error Message");
+    [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TBChatViewControllerDelegate
