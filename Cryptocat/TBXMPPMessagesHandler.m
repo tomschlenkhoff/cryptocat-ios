@@ -14,6 +14,7 @@
 #import <TBOTRManager.h>
 #import <TBMultipartyProtocolManager.h>
 #import "XMPPMessage+XEP0045.h"
+#import "XMPPMessage+XEP_0085.h"
 #import "XMPPMessage+Cryptocat.h"
 
 NSString * const TBMessagingProtocol = @"xmpp";
@@ -72,7 +73,12 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   // -- composing
   if ([message tb_isComposingMessage]) {
-    TBLOG(@"-- %@ is composing", message.fromStr);
+    if ([message isGroupChatMessage]) {
+      TBLOG(@"-- %@ is composing in meeting room", message.fromStr);
+    }
+    else {
+      TBLOG(@"-- %@ is composing in private", message.fromStr);
+    }
   }
   
   // TODO : Check if message has an "active" (stopped writing) notification.
@@ -138,6 +144,37 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendStateNotification:(NSString *)state
+                    recipient:(NSString *)recipient
+                  XMPPManager:(TBXMPPManager *)XMPPManager {
+  XMPPMessage *message = nil;
+  
+  if (recipient==nil) {
+    message = [XMPPMessage message];
+  }
+  else {
+    message = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:recipient]];
+  }
+
+  if ([state isEqualToString:@"composing"]) {
+    [message addComposingChatState];
+  }
+  else if ([state isEqualToString:@"active"]) {
+    [message addActiveChatState];
+  }
+  else if ([state isEqualToString:@"paused"]) {
+    [message addPausedChatState];
+  }
+  
+  if (recipient==nil) {
+    [XMPPManager.xmppRoom sendMessage:message];
+  }
+  else {
+    [XMPPManager.xmppStream sendElement:message];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
@@ -196,7 +233,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   NSString *decodedMessage = [self.OTRManager decodeMessage:messageBody
                                                      sender:sender
                                                 accountName:accountName
-                                                   protocol:@"xmpp"];
+                                                   protocol:TBMessagingProtocol];
   
   
   TBLOG(@"-- decoded message : |%@|", decodedMessage);

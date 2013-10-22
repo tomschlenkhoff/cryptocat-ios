@@ -32,4 +32,11 @@
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message
                     toUser:(NSString *)recipient;
+- (void)chatViewControllerDidStartComposing:(TBChatViewController *)controller
+                               forRecipient:(NSString *)recipient;
+- (void)chatViewControllerDidPauseComposing:(TBChatViewController *)controller
+                               forRecipient:(NSString *)recipient;
+- (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
+                             forRecipient:(NSString *)recipient;
+
 @end

@@ -237,6 +237,30 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewControllerDidStartComposing:(TBChatViewController *)controller
+                               forRecipient:(NSString *)recipient {
+  [self.XMPPMessageHandler sendStateNotification:@"composing"
+                                       recipient:recipient
+                                     XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewControllerDidPauseComposing:(TBChatViewController *)controller
+                               forRecipient:(NSString *)recipient {
+  [self.XMPPMessageHandler sendStateNotification:@"paused"
+                                       recipient:recipient
+                                     XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
+                             forRecipient:(NSString *)recipient {
+  [self.XMPPMessageHandler sendStateNotification:@"active"
+                                       recipient:recipient
+                                     XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TBOTRManagerDelegate

@@ -26,5 +26,8 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                   recipient:(NSString *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)sendStateNotification:(NSString *)state
+                    recipient:(NSString *)recipient
+                  XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end

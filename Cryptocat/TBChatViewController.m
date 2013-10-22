@@ -10,13 +10,16 @@
 #import "TBXMPPMessagesHandler.h"
 #import "TBBuddiesViewController.h"
 
+#define kPausedMessageTimer 5.0
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBChatViewController () <
   UITableViewDataSource,
   UITableViewDelegate,
-  TBBuddiesViewControllerDelegate
+  TBBuddiesViewControllerDelegate,
+  UITextFieldDelegate
 >
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
@@ -24,10 +27,13 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (nonatomic, strong) NSMutableDictionary *messagesForConversation;
 @property (nonatomic, strong) NSString *currentRoomName;
+@property (nonatomic, readonly) NSString *currentRecipient;
+@property (strong, readwrite) NSTimer *composingTimer;
 
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
 - (IBAction)sendMessage:(id)sender;
+- (BOOL)isInConversationRoom;
 
 @end
 
@@ -51,6 +57,10 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 	 
+  self.messagesForConversation = [NSMutableDictionary dictionary];
+  self.title = self.roomName;
+  self.currentRoomName = self.roomName;
+
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
                     selector:@selector(didReceiveGroupMessage:)
@@ -65,11 +75,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
-
-  self.messagesForConversation = [NSMutableDictionary dictionary];
-  [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.roomName];
-  self.title = self.roomName;
-  self.currentRoomName = self.roomName;
 
   [self startObservingKeyboard];
   TBLOGMARK;
@@ -134,6 +139,11 @@
   NSString *sender = [notification.userInfo objectForKey:@"sender"];
   
   NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", sender, message];
+  
+  if ([self.messagesForConversation objectForKey:roomName]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:roomName];
+  }
+
   [[self.messagesForConversation objectForKey:roomName] addObject:receivedMessage];
   [self.tableView reloadData];
   TBLOG(@"-- received message in %@ from %@: %@", roomName, sender, message);
@@ -240,6 +250,16 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSString *)currentRecipient {
+  return [self isInConversationRoom] ? nil : self.currentRoomName;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)isInConversationRoom {
+  return [self.roomName isEqualToString:self.currentRoomName];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Actions
@@ -252,7 +272,7 @@
   self.textField.text = @"";
   
   // group chat message
-  if ([self.roomName isEqualToString:self.currentRoomName]) {
+  if ([self isInConversationRoom]) {
     if ([self.delegate respondsToSelector:@selector(chatViewController:didAskToSendMessage:)]) {
       [self.delegate chatViewController:self didAskToSendMessage:message];
     }
@@ -267,6 +287,23 @@
                     didAskToSendMessage:message
                                  toUser:recipient];
     }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)typingDidPause {
+  [self.composingTimer invalidate];
+  self.composingTimer = nil;
+  
+  TBLOG(@"-- timer fired");
+  if ([self.delegate
+       respondsToSelector:@selector(chatViewControllerDidPauseComposing:forRecipient:)]) {
+    NSString *recipient = self.currentRecipient;
+    if (recipient!=nil) {
+      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+    }
+
+    [self.delegate chatViewControllerDidPauseComposing:self forRecipient:recipient];
   }
 }
 
@@ -286,8 +323,74 @@
   self.title = conversation;
   self.currentRoomName = conversation;
   [self dismissViewControllerAnimated:YES completion:^{
+    //[self.messagesForConversation setObject:[NSMutableArray array] forKey:self.roomName];
+    //self.currentRoomName = self.roomName;
     [self.tableView reloadData];
   }];
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITextFieldDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)textField:(UITextField *)textField
+shouldChangeCharactersInRange:(NSRange)range
+replacementString:(NSString *)string {
+  NSUInteger oldLength = textField.text.length;
+  NSUInteger newLength = textField.text.length + string.length - range.length;
+  
+  // if there's a string in the input field
+  if (newLength > 0) {
+    // if there wasn't a string in the input field before
+    if (oldLength==0) {
+      TBLOG(@"-- composing");
+      if ([self.delegate
+           respondsToSelector:@selector(chatViewControllerDidStartComposing:forRecipient:)]) {
+        NSString *recipient = self.currentRecipient;
+        if (recipient!=nil) {
+          recipient = [NSString
+                       stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+        }
+        [self.delegate chatViewControllerDidStartComposing:self forRecipient:recipient];
+      }
+    }
+    else {
+      // start/restart timer
+      if (self.composingTimer) {
+        TBLOG(@"-- cancelling the timer");
+        [self.composingTimer invalidate];
+        self.composingTimer = nil;
+      }
+      TBLOG(@"-- starting the timer");
+      self.composingTimer = [NSTimer scheduledTimerWithTimeInterval:kPausedMessageTimer
+                                                             target:self
+                                                           selector:@selector(typingDidPause)
+                                                           userInfo:nil
+                                                            repeats:NO];
+    }
+  }
+  else {
+    TBLOG(@"-- active");
+    if (self.composingTimer) {
+      TBLOG(@"-- cancelling the timer");
+      [self.composingTimer invalidate];
+      self.composingTimer = nil;
+    }
+
+    if ([self.delegate
+         respondsToSelector:@selector(chatViewControllerDidEndComposing:forRecipient:)]) {
+      NSString *recipient = self.currentRecipient;
+      if (recipient!=nil) {
+        recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+      }
+      [self.delegate chatViewControllerDidEndComposing:self forRecipient:recipient];
+    }
+  }
+  
+  return YES;
+}
+
 
 @end
