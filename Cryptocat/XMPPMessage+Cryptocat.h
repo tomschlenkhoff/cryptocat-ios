@@ -14,10 +14,15 @@
 @interface XMPPMessage (Cryptocat)
 
 - (BOOL)tb_isArchiveMessage;
-- (BOOL)tb_isComposingMessage;
 - (BOOL)tb_isPublicKeyMessage;
 - (BOOL)tb_isPublicKeyRequestMessage;
 
 - (NSString *)tb_publicKey;
+
+// chat state
+- (BOOL)tb_isComposingMessage;
+- (BOOL)tb_isPausedMessage;
+- (BOOL)tb_isActiveMessage;
+- (BOOL)tb_isChatState;
 
 @end

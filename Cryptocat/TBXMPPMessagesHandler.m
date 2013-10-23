@@ -34,6 +34,7 @@ NSString * const TBDidReceivePrivateChatMessageNotification =
 - (void)handlePublicKeyMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)handlePrivateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID;
+- (void)handleChatStateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end
 
@@ -65,24 +66,14 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
+  TBLOG(@"-- received message : %@", message);
+  
   XMPPJID *myRoomJID = XMPPManager.xmppRoom.myRoomJID;
   if ([message tb_isArchiveMessage]) return;
   if ([message.from isEqualToJID:myRoomJID]) return;
   
   // TODO: If message is from someone not on buddy list, ignore.
-  
-  // -- composing
-  if ([message tb_isComposingMessage]) {
-    if ([message isGroupChatMessage]) {
-      TBLOG(@"-- %@ is composing in meeting room", message.fromStr);
-    }
-    else {
-      TBLOG(@"-- %@ is composing in private", message.fromStr);
-    }
-  }
-  
-  // TODO : Check if message has an "active" (stopped writing) notification.
-  
+    
   // -- publicKey
   else if ([message tb_isPublicKeyMessage]) {
     [self handlePublicKeyMessage:message XMPPManager:XMPPManager];
@@ -95,11 +86,19 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   // -- group chat
   else if ([message isGroupChatMessage]) {
+    // group message can also contain chat state info
+    if ([message tb_isChatState]) {
+      [self handleChatStateMessage:message XMPPManager:XMPPManager];
+    }
     [self handleGroupMessage:message myRoomJID:myRoomJID];
   }
   
   // -- private chat
   else if ([message isChatMessage]) {
+    // private message can also contain chat state info
+    if ([message tb_isChatState]) {
+      [self handleChatStateMessage:message XMPPManager:XMPPManager];
+    }
     [self handlePrivateMessage:message XMPPManager:XMPPManager];
   }
   
@@ -167,9 +166,11 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   }
   
   if (recipient==nil) {
+    TBLOG(@"-- will send chat state message to group : %@", message);
     [XMPPManager.xmppRoom sendMessage:message];
   }
   else {
+    TBLOG(@"-- will send chat state message to %@ : %@", recipient, message);
     [XMPPManager.xmppStream sendElement:message];
   }
 }
@@ -207,6 +208,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handleGroupMessage:(XMPPMessage *)message myRoomJID:(XMPPJID *)myRoomJID {
   TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+  if (message.body==nil || [message.body isEqualToString:@""]) return;
   
   NSString *sender = message.from.resource;
   NSString *roomName = message.from.user;
@@ -220,6 +222,39 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   [defaultCenter postNotificationName:TBDidReceiveGroupChatMessageNotification
                                object:roomName
                              userInfo:userInfo];  
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)handleChatStateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
+  // -- composing
+  if ([message tb_isComposingMessage]) {
+    if ([message isGroupChatMessage]) {
+      TBLOG(@"-- %@ is composing in meeting room", message.fromStr);
+    }
+    else {
+      TBLOG(@"-- %@ is composing in private", message.fromStr);
+    }
+  }
+  
+  // -- paused (composing paused)
+  else if ([message tb_isPausedMessage]) {
+    if ([message isGroupChatMessage]) {
+      TBLOG(@"-- %@ is paused in meeting room", message.fromStr);
+    }
+    else {
+      TBLOG(@"-- %@ is paused in private", message.fromStr);
+    }
+  }
+  
+  // -- active (finished composing)
+  else if ([message tb_isActiveMessage]) {
+    if ([message isGroupChatMessage]) {
+      TBLOG(@"-- %@ is active in meeting room", message.fromStr);
+    }
+    else {
+      TBLOG(@"-- %@ is active in private", message.fromStr);
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

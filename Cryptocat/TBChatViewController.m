@@ -29,11 +29,17 @@
 @property (nonatomic, strong) NSString *currentRoomName;
 @property (nonatomic, readonly) NSString *currentRecipient;
 @property (strong, readwrite) NSTimer *composingTimer;
+@property (nonatomic, assign, getter=isTyping) BOOL typing;
 
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
 - (IBAction)sendMessage:(id)sender;
 - (BOOL)isInConversationRoom;
+- (void)setupTypingTimer;
+- (void)cancelTypingTimer;
+- (void)didStartComposing;
+- (void)didPauseComposing;
+- (void)didEndComposing;
 
 @end
 
@@ -57,6 +63,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 	 
+  self.typing = NO;
   self.messagesForConversation = [NSMutableDictionary dictionary];
   self.title = self.roomName;
   self.currentRoomName = self.roomName;
@@ -260,6 +267,67 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setupTypingTimer {
+  [self cancelTypingTimer];
+  TBLOG(@"-- starting the timer");
+  self.composingTimer = [NSTimer scheduledTimerWithTimeInterval:kPausedMessageTimer
+                                                         target:self
+                                                       selector:@selector(typingDidPause)
+                                                       userInfo:nil
+                                                        repeats:NO];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)cancelTypingTimer {
+  if (self.composingTimer) {
+    TBLOG(@"-- cancelling the timer");
+    [self.composingTimer invalidate];
+    self.composingTimer = nil;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didStartComposing {
+  self.typing = YES;
+  if ([self.delegate
+       respondsToSelector:@selector(chatViewControllerDidStartComposing:forRecipient:)]) {
+    NSString *recipient = self.currentRecipient;
+    if (recipient!=nil) {
+      recipient = [NSString
+                   stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+    }
+    [self.delegate chatViewControllerDidStartComposing:self forRecipient:recipient];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didPauseComposing {
+  self.typing = NO;
+  if ([self.delegate
+       respondsToSelector:@selector(chatViewControllerDidPauseComposing:forRecipient:)]) {
+    NSString *recipient = self.currentRecipient;
+    if (recipient!=nil) {
+      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+    }
+    
+    [self.delegate chatViewControllerDidPauseComposing:self forRecipient:recipient];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didEndComposing {
+  self.typing = NO;
+  if ([self.delegate
+       respondsToSelector:@selector(chatViewControllerDidEndComposing:forRecipient:)]) {
+    NSString *recipient = self.currentRecipient;
+    if (recipient!=nil) {
+      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
+    }
+    [self.delegate chatViewControllerDidEndComposing:self forRecipient:recipient];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Actions
@@ -270,6 +338,8 @@
   [[self.messagesForConversation objectForKey:self.currentRoomName] addObject:message];
   [self.tableView reloadData];
   self.textField.text = @"";
+  
+  [self cancelTypingTimer];
   
   // group chat message
   if ([self isInConversationRoom]) {
@@ -292,19 +362,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)typingDidPause {
-  [self.composingTimer invalidate];
-  self.composingTimer = nil;
-  
   TBLOG(@"-- timer fired");
-  if ([self.delegate
-       respondsToSelector:@selector(chatViewControllerDidPauseComposing:forRecipient:)]) {
-    NSString *recipient = self.currentRecipient;
-    if (recipient!=nil) {
-      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-    }
-
-    [self.delegate chatViewControllerDidPauseComposing:self forRecipient:recipient];
-  }
+  [self cancelTypingTimer];
+  [self didPauseComposing];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -343,50 +403,20 @@ replacementString:(NSString *)string {
   
   // if there's a string in the input field
   if (newLength > 0) {
-    // if there wasn't a string in the input field before
-    if (oldLength==0) {
+    // if there wasn't a string in the input field before or typing had paused
+    if (oldLength==0  || !self.isTyping) {
       TBLOG(@"-- composing");
-      if ([self.delegate
-           respondsToSelector:@selector(chatViewControllerDidStartComposing:forRecipient:)]) {
-        NSString *recipient = self.currentRecipient;
-        if (recipient!=nil) {
-          recipient = [NSString
-                       stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-        }
-        [self.delegate chatViewControllerDidStartComposing:self forRecipient:recipient];
-      }
+      [self didStartComposing];
     }
-    else {
-      // start/restart timer
-      if (self.composingTimer) {
-        TBLOG(@"-- cancelling the timer");
-        [self.composingTimer invalidate];
-        self.composingTimer = nil;
-      }
-      TBLOG(@"-- starting the timer");
-      self.composingTimer = [NSTimer scheduledTimerWithTimeInterval:kPausedMessageTimer
-                                                             target:self
-                                                           selector:@selector(typingDidPause)
-                                                           userInfo:nil
-                                                            repeats:NO];
-    }
+    
+    // start/restart timer
+    [self setupTypingTimer];
   }
   else {
+    // all the chars in the input field have been deleted
     TBLOG(@"-- active");
-    if (self.composingTimer) {
-      TBLOG(@"-- cancelling the timer");
-      [self.composingTimer invalidate];
-      self.composingTimer = nil;
-    }
-
-    if ([self.delegate
-         respondsToSelector:@selector(chatViewControllerDidEndComposing:forRecipient:)]) {
-      NSString *recipient = self.currentRecipient;
-      if (recipient!=nil) {
-        recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-      }
-      [self.delegate chatViewControllerDidEndComposing:self forRecipient:recipient];
-    }
+    [self cancelTypingTimer];
+    [self didEndComposing];
   }
   
   return YES;
