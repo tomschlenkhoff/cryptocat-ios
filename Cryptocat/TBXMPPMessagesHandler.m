@@ -121,16 +121,13 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                         protocol:TBMessagingProtocol
                  completionBlock:^(NSString *encodedMessage)
   {
-    NSXMLElement *bodyElt = [NSXMLElement elementWithName:@"body"];
-    [bodyElt setStringValue:encodedMessage];
-    
-    NSXMLElement *messageElt = [NSXMLElement elementWithName:@"message"];
-    [messageElt addAttributeWithName:@"type" stringValue:@"chat"];
-    [messageElt addAttributeWithName:@"to" stringValue:recipient];
-    
-    [messageElt addChild:bodyElt];
-    TBLOG(@"-- will send message to %@ : %@", recipient, messageElt);
-    [XMPPManager.xmppStream sendElement:messageElt];
+    XMPPMessage *message = [XMPPMessage messageWithType:@"chat"
+                                                     to:[XMPPJID jidWithString:recipient]];
+    [message addBody:encodedMessage];
+    [message addActiveChatState];
+
+    TBLOG(@"-- will send message to %@ : %@", recipient, message);
+    [XMPPManager.xmppStream sendElement:message];
   }];
 }
 
@@ -139,7 +136,10 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   NSArray *usernames = [XMPPManager.usernames allObjects];
   NSString *encryptedJSONMessage = [self.multipartyProtocolManager encryptMessage:message
                                                                      forUsernames:usernames];
-  [XMPPManager.xmppRoom sendMessageWithBody:encryptedJSONMessage];
+  XMPPMessage *xmppMessage = [XMPPMessage message];
+  [xmppMessage addBody:encryptedJSONMessage];
+  [xmppMessage addActiveChatState];
+  [XMPPManager.xmppRoom sendMessage:xmppMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
