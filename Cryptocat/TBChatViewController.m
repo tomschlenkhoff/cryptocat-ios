@@ -175,17 +175,16 @@
   NSString *message = [notification.userInfo objectForKey:@"message"];
   if ([message isEqualToString:@""]) return ;
   
-  NSString *senderName = notification.object;
-  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@",
-                               self.title, message];
+  TBBuddy *sender = notification.object;
+  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", self.title, message];
   
-  if ([self.messagesForConversation objectForKey:senderName]==nil) {
-    [self.messagesForConversation setObject:[NSMutableArray array] forKey:senderName];
+  if ([self.messagesForConversation objectForKey:sender.fullname]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:sender.fullname];
   }
   
-  [[self.messagesForConversation objectForKey:senderName] addObject:receivedMessage];
+  [[self.messagesForConversation objectForKey:sender.fullname] addObject:receivedMessage];
   [self.tableView reloadData];
-  TBLOG(@"-- received private message from %@: %@", senderName, message);
+  TBLOG(@"-- received private message from %@: %@", sender.fullname, message);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

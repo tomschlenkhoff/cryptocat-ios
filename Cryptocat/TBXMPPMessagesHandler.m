@@ -267,10 +267,10 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   NSString *messageBody = message.body;
   NSString *accountName = XMPPManager.me.fullname;
-  NSString *senderName = message.fromStr;
+  TBBuddy *sender = [[TBBuddy alloc] initWithXMPPJID:message.from];
 
   NSString *decodedMessage = [self.OTRManager decodeMessage:messageBody
-                                                     sender:senderName
+                                                     sender:sender.fullname
                                                 accountName:accountName
                                                    protocol:TBMessagingProtocol];
   
@@ -280,7 +280,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   NSDictionary *userInfo = @{@"message": decodedMessage};
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
-                               object:senderName
+                               object:sender
                              userInfo:userInfo];
 }
 
