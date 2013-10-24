@@ -65,8 +65,6 @@
 	 
   self.typing = NO;
   self.messagesForConversation = [NSMutableDictionary dictionary];
-  self.title = self.roomName;
-  self.currentRoomName = self.roomName;
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
@@ -83,6 +81,12 @@
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
 
+  // the first time the view appears, after the loginVC is dismissed
+  if (self.currentRoomName==nil) {
+    self.currentRoomName = self.roomName;
+    self.title = self.roomName;
+  }
+  
   [self startObservingKeyboard];
   TBLOGMARK;
 }
