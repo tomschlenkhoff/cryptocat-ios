@@ -122,7 +122,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
                  completionBlock:^(NSString *encodedMessage)
   {
     XMPPMessage *message = [XMPPMessage messageWithType:@"chat"
-                                                     to:[XMPPJID jidWithString:recipient.fullname]];
+                                                     to:recipient.XMPPJID];
     [message addBody:encodedMessage];
     [message addActiveChatState];
 
@@ -156,7 +156,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
     message = [XMPPMessage message];
   }
   else {
-    message = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:recipient.fullname]];
+    message = [XMPPMessage messageWithType:@"chat" to:recipient.XMPPJID];
   }
 
   if ([state isEqualToString:@"composing"]) {

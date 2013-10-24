@@ -19,6 +19,7 @@
 @property (nonatomic, readonly) NSString *fullname;
 @property (nonatomic, strong) NSString *chatFingerprint;
 @property (nonatomic, strong) NSString *groupChatFingerprint;
+@property (nonatomic, readonly) XMPPJID *XMPPJID;
 
 - (id)initWithXMPPJID:(XMPPJID *)XMPPJID;
 
