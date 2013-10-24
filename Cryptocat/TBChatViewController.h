@@ -38,5 +38,6 @@
                                forRecipient:(NSString *)recipient;
 - (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
                              forRecipient:(NSString *)recipient;
+- (void)chatViewControllerDidAskToLogout:(TBChatViewController *)controller;
 
 @end

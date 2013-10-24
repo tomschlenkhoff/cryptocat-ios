@@ -9,6 +9,7 @@
 #import "TBChatViewController.h"
 #import "TBXMPPMessagesHandler.h"
 #import "TBBuddiesViewController.h"
+#import "TBMeViewController.h"
 
 #define kPausedMessageTimer 5.0
 
@@ -19,6 +20,7 @@
   UITableViewDataSource,
   UITableViewDelegate,
   TBBuddiesViewControllerDelegate,
+  TBMeViewControllerDelegate,
   UITextFieldDelegate
 >
 
@@ -108,6 +110,13 @@
     bvc.delegate = self;
     bvc.roomName = self.roomName;
     bvc.usernames = self.usernames;
+  }
+  
+  // -- me
+  else if ([segue.identifier isEqualToString:@"MeSegueID"]) {
+    UINavigationController *nc = segue.destinationViewController;
+    TBMeViewController *mvc = (TBMeViewController *)nc.topViewController;
+    mvc.delegate = self;
   }
 }
 
@@ -391,6 +400,25 @@
     //self.currentRoomName = self.roomName;
     [self.tableView reloadData];
   }];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBMeViewControllerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)meViewControllerHasFinished:(TBMeViewController *)controller {
+  [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)meViewControllerDidAskToLogout:(TBMeViewController *)controller {
+  if ([self.delegate respondsToSelector:@selector(chatViewControllerDidAskToLogout:)]) {
+    [self dismissViewControllerAnimated:NO completion:^{
+      [self.delegate chatViewControllerDidAskToLogout:self];
+    }];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

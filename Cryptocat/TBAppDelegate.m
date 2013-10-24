@@ -38,6 +38,7 @@
 @property (nonatomic, strong) TBLoginViewController *loginViewController;
 
 - (BOOL)isLoginScreenPresented;
+- (BOOL)presentLoginVCAnimated:(BOOL)animated;
 
 @end
 
@@ -105,19 +106,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationDidBecomeActive:(UIApplication *)application {
   // Restart any tasks that were paused (or not yet started) while the application was inactive.
   // If the application was previously in the background, optionally refresh the user interface.
-  
-  // if xmpp is not connected or connecting, show loginVC
-  if (!self.XMPPManager.xmppStream.isConnected && !self.XMPPManager.xmppStream.isConnecting) {
-    // show loginVC
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *loginNC = [storyboard
-                                       instantiateViewControllerWithIdentifier:@"LoginNCID"];
-    self.loginViewController = (TBLoginViewController *)loginNC.topViewController;
-    self.loginViewController.delegate = self;
-    [self.chatViewController presentViewController:loginNC
-                                          animated:NO
-                                        completion:NULL];
-  }
+  [self presentLoginVCAnimated:NO];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -140,6 +129,26 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
   UINavigationController *nc = (UINavigationController *)cvc.presentedViewController;
   return [nc.topViewController isKindOfClass:[TBLoginViewController class]];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)presentLoginVCAnimated:(BOOL)animated {
+  // if xmpp is not connected or connecting, show loginVC
+  if (!self.XMPPManager.xmppStream.isConnected && !self.XMPPManager.xmppStream.isConnecting) {
+    // show loginVC
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
+    UINavigationController *loginNC = [storyboard
+                                       instantiateViewControllerWithIdentifier:@"LoginNCID"];
+    loginNC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    self.loginViewController = (TBLoginViewController *)loginNC.topViewController;
+    self.loginViewController.delegate = self;
+    [self.chatViewController presentViewController:loginNC
+                                          animated:animated
+                                        completion:NULL];
+    return YES;
+  }
+  
+  return NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +267,12 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
   [self.XMPPMessageHandler sendStateNotification:@"active"
                                        recipient:recipient
                                      XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewControllerDidAskToLogout:(TBChatViewController *)controller {
+  [self.XMPPManager.xmppStream disconnect];
+  [self presentLoginVCAnimated:YES];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
