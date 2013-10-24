@@ -16,6 +16,7 @@
 #import <TBOTRManager.h>
 #import "XMPPRoom.h"
 #import "NSError+Cryptocat.h"
+#import "TBBuddy.h"
 
 #define kDomain           @"crypto.cat"
 #define kConferenceDomain @"conference.crypto.cat"
@@ -159,11 +160,19 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager didJoinRoom:(XMPPRoom *)room {
   NSString *account = room.myRoomJID.full;
-  [self.OTRManager generatePrivateKeyForAccount:account protocol:TBMessagingProtocol];
+  [self.OTRManager generatePrivateKeyForAccount:account
+                                       protocol:TBMessagingProtocol
+                                completionBlock:^
+  {
+    XMPPManager.me.chatFingerprint = [self.OTRManager fingerprintForAccountName:account
+                                                                      protocol:TBMessagingProtocol];
+    XMPPManager.me.groupChatFingerprint = self.multipartyProtocolManager.fingerprint;
+    TBLOG(@"-- my OTR fingerprint is : %@", XMPPManager.me.chatFingerprint);
+    TBLOG(@"-- my group fingerprint is : %@", XMPPManager.me.groupChatFingerprint);
+  }];
   
   self.chatViewController.roomName = room.roomJID.user;
-  self.chatViewController.usernames = [NSMutableArray
-                                       arrayWithArray:[XMPPManager.usernames allObjects]];
+  self.chatViewController.buddies = [NSMutableSet setWithSet:XMPPManager.buddies];
 
   if ([self isLoginScreenPresented]) {
     [self.chatViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -172,30 +181,29 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
-  didReceiveMessage:(XMPPMessage *)message
-          myRoomJID:(XMPPJID *)myRoomJID {
+  didReceiveMessage:(XMPPMessage *)message {
   [self.XMPPMessageHandler handleMessage:message XMPPManager:XMPPManager];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username {
-  TBLOG(@"-- %@ signed in", username);
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignIn:(TBBuddy *)buddy {
+  TBLOG(@"-- %@ signed in", buddy.fullname);
 
-  if (![username isEqualToString:XMPPManager.myNickname]) {
+  if (![buddy isEqual:XMPPManager.me]) {
     UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
     TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
-    [cvc.usernames addObject:username];
+    [cvc.buddies addObject:buddy];
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignOut:(NSString *)username {
-  TBLOG(@"-- %@ signed out", username);
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignOut:(TBBuddy *)buddy {
+  TBLOG(@"-- %@ signed out", buddy.fullname);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username {
-  TBLOG(@"-- %@ went away", username);
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidGoAway:(TBBuddy *)buddy {
+  TBLOG(@"-- %@ went away", buddy.fullname);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -239,7 +247,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message
-                    toUser:(NSString *)recipient {
+                    toUser:(TBBuddy *)recipient {
   [self.XMPPMessageHandler sendMessageWithBody:message
                                      recipient:recipient
                                    XMPPManager:self.XMPPManager];
@@ -247,7 +255,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewControllerDidStartComposing:(TBChatViewController *)controller
-                               forRecipient:(NSString *)recipient {
+                               forRecipient:(TBBuddy *)recipient {
   [self.XMPPMessageHandler sendStateNotification:@"composing"
                                        recipient:recipient
                                      XMPPManager:self.XMPPManager];
@@ -255,7 +263,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewControllerDidPauseComposing:(TBChatViewController *)controller
-                               forRecipient:(NSString *)recipient {
+                               forRecipient:(TBBuddy *)recipient {
   [self.XMPPMessageHandler sendStateNotification:@"paused"
                                        recipient:recipient
                                      XMPPManager:self.XMPPManager];
@@ -263,7 +271,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
-                             forRecipient:(NSString *)recipient {
+                             forRecipient:(TBBuddy *)recipient {
   [self.XMPPMessageHandler sendStateNotification:@"active"
                                        recipient:recipient
                                      XMPPManager:self.XMPPManager];
@@ -286,8 +294,10 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
        accountName:(NSString *)accountName
                 to:(NSString *)recipient
           protocol:(NSString *)protocol {
+  XMPPJID *recipientJID = [XMPPJID jidWithString:recipient];
+  TBBuddy *buddy = [[TBBuddy alloc] initWithXMPPJID:recipientJID];
   [self.XMPPMessageHandler sendMessageWithBody:message
-                                     recipient:recipient
+                                     recipient:buddy
                                    XMPPManager:self.XMPPManager];
 }
 
@@ -311,7 +321,7 @@ didAskToConnectWithRoomName:(NSString *)roomName
                                           conferenceDomain:conferenceDomain
                                                   roomName:roomName
                                                   nickname:nickname];
-  self.multipartyProtocolManager.myName = self.XMPPManager.myNickname;
+  self.multipartyProtocolManager.myName = self.XMPPManager.me.nickname;
   
   TBLOG(@"-- isConnected : %d", isConnected);
 }

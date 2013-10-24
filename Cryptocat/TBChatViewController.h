@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol TBChatViewControllerDelegate;
+@class TBBuddy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,8 @@
 @property (nonatomic, weak) id <TBChatViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) NSString *roomName;
-@property (nonatomic, strong) NSMutableArray *usernames;
+@property (nonatomic, strong) NSMutableSet *buddies;
+@property (nonatomic, strong) NSString *myUsername;
 
 @end
 
@@ -31,13 +33,13 @@
        didAskToSendMessage:(NSString *)message;
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message
-                    toUser:(NSString *)recipient;
+                    toUser:(TBBuddy *)recipient;
 - (void)chatViewControllerDidStartComposing:(TBChatViewController *)controller
-                               forRecipient:(NSString *)recipient;
+                               forRecipient:(TBBuddy *)recipient;
 - (void)chatViewControllerDidPauseComposing:(TBChatViewController *)controller
-                               forRecipient:(NSString *)recipient;
+                               forRecipient:(TBBuddy *)recipient;
 - (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
-                             forRecipient:(NSString *)recipient;
+                             forRecipient:(TBBuddy *)recipient;
 - (void)chatViewControllerDidAskToLogout:(TBChatViewController *)controller;
 
 @end

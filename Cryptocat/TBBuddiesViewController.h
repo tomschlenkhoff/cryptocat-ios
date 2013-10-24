@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @protocol TBBuddiesViewControllerDelegate;
+@class TBBuddy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,7 +19,7 @@
 @property (nonatomic, weak) id <TBBuddiesViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) NSString *roomName;
-@property (nonatomic, strong) NSMutableArray *usernames;
+@property (nonatomic, strong) NSMutableSet *buddies;
 
 @end
 
@@ -29,6 +30,8 @@
 
 - (void)buddiesViewControllerHasFinished:(TBBuddiesViewController *)controller;
 - (void)buddiesViewController:(TBBuddiesViewController *)controller
-        didSelectConversation:(NSString *)conversation;
+            didSelectRoomName:(NSString *)roomName;
+- (void)buddiesViewController:(TBBuddiesViewController *)controller
+        didSelectBuddy:(TBBuddy *)buddy;
 
 @end

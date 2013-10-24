@@ -7,7 +7,7 @@
 //
 
 #import "TBXMPPManager.h"
-
+#import "TBBuddy.h"
 #import "XMPP.h"
 #import "XMPPReconnect.h"
 #import "XMPPMUC.h"
@@ -28,6 +28,7 @@
   XMPPRoomDelegate,
   XMPPRoomStorage>
 
+@property (nonatomic, strong, readwrite) TBBuddy *me;
 @property (nonatomic, strong, readwrite) XMPPStream *xmppStream;
 @property (nonatomic, strong, readwrite) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong, readwrite) XMPPInBandRegistration *xmppInBandRegistration;
@@ -36,9 +37,8 @@
 @property (nonatomic, strong) NSString *username;
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *roomName;
-@property (nonatomic, strong) NSString *myNickname;
 @property (nonatomic, strong) NSString *conferenceDomain;
-@property (nonatomic, strong) NSMutableSet *buddies;
+@property (nonatomic, strong) NSMutableSet *internalBuddies;
 
 // -- connection steps
 - (void)requestRegistrationFields;
@@ -61,6 +61,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)init {
   if (self=[super init]) {
+    _me = nil;
     _xmppStream = [[XMPPStream alloc] init];
     _xmppReconnect = [[XMPPReconnect alloc] init];
     _xmppInBandRegistration = [[XMPPInBandRegistration alloc] init];
@@ -75,9 +76,8 @@
     _username = nil;
     _password = nil;
     _roomName = nil;
-    _myNickname = nil;
     _conferenceDomain = nil;
-    _buddies = [NSMutableSet set];
+    _internalBuddies = [NSMutableSet set];
   }
   
   return self;
@@ -97,8 +97,8 @@
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSSet *)usernames {
-  return self.buddies;
+- (NSSet *)buddies {
+  return self.internalBuddies;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -111,10 +111,14 @@
   TBLOGMARK;
   if (!self.xmppStream.isDisconnected) return YES;
   
+  // something like lobby@conference.crypto.cat/thomas
+  XMPPJID *myRoomJID = [XMPPJID jidWithUser:roomName
+                                     domain:conferenceDomain
+                                   resource:nickname];
+  self.me = [[TBBuddy alloc] initWithXMPPJID:myRoomJID];
   self.username = username;
   self.password = password;
   self.roomName = roomName;
-  self.myNickname = nickname;
   self.conferenceDomain = conferenceDomain;
   self.xmppStream.myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
   self.xmppStream.hostName = domain;
@@ -176,7 +180,7 @@
   self.xmppRoom = [[XMPPRoom alloc] initWithRoomStorage:self jid:roomJID];
   [self.xmppRoom activate:self.xmppStream];
   [self.xmppRoom addDelegate:self delegateQueue:dispatch_get_main_queue()];
-  [self.xmppRoom joinRoomUsingNickname:self.myNickname history:nil password:self.password];
+  [self.xmppRoom joinRoomUsingNickname:self.me.nickname history:nil password:self.password];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,78 +234,48 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceiveMessage:(XMPPMessage *)message {
-  if ([self.delegate respondsToSelector:@selector(XMPPManager:didReceiveMessage:myRoomJID:)]) {
-    [self.delegate XMPPManager:self didReceiveMessage:message myRoomJID:self.xmppRoom.myRoomJID];
+  if ([self.delegate respondsToSelector:@selector(XMPPManager:didReceiveMessage:)]) {
+    [self.delegate XMPPManager:self didReceiveMessage:message];
   }
-
-  //[self handleMessage:message];
-  
-	// A simple example of inbound message handling.
-  /*
-	if ([message isChatMessageWithBody])
-	{
-		XMPPUserCoreDataStorageObject *user = [xmppRosterStorage userForJID:[message from]
-		                                                         xmppStream:xmppStream
-		                                               managedObjectContext:[self managedObjectContext_roster]];
-		
-		NSString *body = [[message elementForName:@"body"] stringValue];
-		NSString *displayName = [user displayName];
-    
-		if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateActive)
-		{
-			UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:displayName
-                                                          message:body
-                                                         delegate:nil
-                                                cancelButtonTitle:@"Ok"
-                                                otherButtonTitles:nil];
-			[alertView show];
-		}
-		else
-		{
-			// We are not active, so use a local notification instead
-			UILocalNotification *localNotification = [[UILocalNotification alloc] init];
-			localNotification.alertAction = @"Ok";
-			localNotification.alertBody = [NSString stringWithFormat:@"From: %@\n\n%@",displayName,body];
-      
-			[[UIApplication sharedApplication] presentLocalNotificationNow:localNotification];
-		}
-	}
-  */
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didReceivePresence:(XMPPPresence *)presence {
-  NSString *username = presence.from.resource;
+  TBBuddy *presenceBuddy = [[TBBuddy alloc] initWithXMPPJID:presence.from];
   
   // nickname is already in use by another occupant
   if ([presence tb_isNicknameAlreadyInUseError]) {
     if ([self.delegate
          respondsToSelector:@selector(XMPPManager:didTryToRegisterAlreadyInUseUsername:)]) {
-      [self.delegate XMPPManager:self didTryToRegisterAlreadyInUseUsername:username];
+      [self.delegate XMPPManager:self didTryToRegisterAlreadyInUseUsername:presenceBuddy.nickname];
     }
   }
   
   // sign out
   if ([presence tb_isUnavailable]) {
-    [self.buddies removeObject:username];
-    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidSignOut:)]) {
-      [self.delegate XMPPManager:self usernameDidSignOut:username];
+    [self.internalBuddies removeObject:presenceBuddy];
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignOut:)]) {
+      [self.delegate XMPPManager:self buddyDidSignOut:presenceBuddy];
     }
   }
   
   // sign in
   else if ([presence tb_isAvailable]) {
-    [self.buddies addObject:username];
-    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidSignIn:)]) {
-      [self.delegate XMPPManager:self usernameDidSignIn:presence.from.resource];
+    if (![presenceBuddy isEqual:self.me]) {
+      [self.internalBuddies addObject:presenceBuddy];
+    }
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignIn:)]) {
+      [self.delegate XMPPManager:self buddyDidSignIn:presenceBuddy];
     }
   }
   
   // go away
   else if ([presence tb_isAway]) {
-    [self.buddies addObject:username];
-    if ([self.delegate respondsToSelector:@selector(XMPPManager:usernameDidGoAway:)]) {
-      [self.delegate XMPPManager:self usernameDidGoAway:presence.from.resource];
+    if (![presenceBuddy isEqual:self.me]) {
+      [self.internalBuddies addObject:presenceBuddy];
+    }
+    if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidGoAway:)]) {
+      [self.delegate XMPPManager:self buddyDidGoAway:presenceBuddy];
     }
   }
   

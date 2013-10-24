@@ -7,11 +7,14 @@
 //
 
 #import "TBBuddiesViewController.h"
+#import "TBBuddy.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBBuddiesViewController ()
+
+@property (nonatomic, strong) NSArray *internalBuddies;
 
 - (IBAction)done:(id)sender;
 
@@ -36,6 +39,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
+  self.internalBuddies = [self.buddies allObjects];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -50,9 +54,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return [self.usernames count] + 1;
+  return [self.internalBuddies count] + 1;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
   static NSString *CellIdentifier = @"BuddyCellID";
@@ -63,7 +68,8 @@
     cell.textLabel.text = NSLocalizedString(@"Conversation", @"Conversation Room Label");
   }
   else {
-    cell.textLabel.text = [self.usernames objectAtIndex:indexPath.row-1];
+    TBBuddy *buddy = [self.internalBuddies objectAtIndex:indexPath.row-1];
+    cell.textLabel.text = buddy.nickname;
   }
   
   return cell;
@@ -76,16 +82,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-  if ([self.delegate respondsToSelector:@selector(buddiesViewController:didSelectConversation:)]) {
-    NSString *conversation = nil;
-    if (indexPath.row==0) {
-      conversation = self.roomName;
+  // conversation room
+  if (indexPath.row==0) {
+    if ([self.delegate respondsToSelector:@selector(buddiesViewController:didSelectRoomName:)]) {
+      [self.delegate buddiesViewController:self didSelectRoomName:self.roomName];
     }
-    else {
-      conversation = [self.usernames objectAtIndex:indexPath.row-1];
+  }
+  
+  // buddy
+  else {
+    if ([self.delegate respondsToSelector:@selector(buddiesViewController:didSelectBuddy:)]) {
+      TBBuddy *buddy = [self.internalBuddies objectAtIndex:indexPath.row-1];
+      [self.delegate buddiesViewController:self didSelectBuddy:buddy];
     }
-    [self.delegate buddiesViewController:self
-                   didSelectConversation:conversation];
   }
 }
 

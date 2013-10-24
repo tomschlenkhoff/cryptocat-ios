@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 
-@class XMPPMessage, XMPPJID, XMPPRoom, XMPPStream;
+@class XMPPMessage, XMPPJID, XMPPRoom, XMPPStream, TBBuddy;
 @protocol TBXMPPManagerDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,8 +17,8 @@
 @interface TBXMPPManager : NSObject
 
 @property (nonatomic, weak) id <TBXMPPManagerDelegate> delegate;
-@property (nonatomic, readonly) NSString *myNickname;
-@property (nonatomic, readonly) NSSet *usernames;
+@property (nonatomic, readonly) TBBuddy *me;
+@property (nonatomic, readonly) NSSet *buddies;
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPRoom *xmppRoom;
 
@@ -41,15 +41,13 @@
 @required
 
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager didJoinRoom:(XMPPRoom *)room;
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager
-  didReceiveMessage:(XMPPMessage *)message
-          myRoomJID:(XMPPJID *)myRoomJID;
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager didReceiveMessage:(XMPPMessage *)message;
 - (void)XMPPManagerDidFailToAuthenticate:(TBXMPPManager *)XMPPManager;
 - (void)XMPPManagerDidFailToConnect:(TBXMPPManager *)XMPPManager;
 
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignIn:(NSString *)username;
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidGoAway:(NSString *)username;
-- (void)XMPPManager:(TBXMPPManager *)XMPPManager usernameDidSignOut:(NSString *)username;
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignIn:(TBBuddy *)buddy;
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidGoAway:(TBBuddy *)buddy;
+- (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignOut:(TBBuddy *)buddy;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
 didTryToRegisterAlreadyInUseUsername:(NSString *)username;
 @end

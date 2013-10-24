@@ -10,6 +10,7 @@
 #import "TBXMPPMessagesHandler.h"
 #import "TBBuddiesViewController.h"
 #import "TBMeViewController.h"
+#import "TBBuddy.h"
 
 #define kPausedMessageTimer 5.0
 
@@ -29,7 +30,7 @@
 @property (weak, nonatomic) IBOutlet UITextField *textField;
 @property (nonatomic, strong) NSMutableDictionary *messagesForConversation;
 @property (nonatomic, strong) NSString *currentRoomName;
-@property (nonatomic, readonly) NSString *currentRecipient;
+@property (nonatomic, strong) TBBuddy *currentRecipient;
 @property (strong, readwrite) NSTimer *composingTimer;
 @property (nonatomic, assign, getter=isTyping) BOOL typing;
 
@@ -109,7 +110,7 @@
     TBBuddiesViewController *bvc = (TBBuddiesViewController *)nc.topViewController;
     bvc.delegate = self;
     bvc.roomName = self.roomName;
-    bvc.usernames = self.usernames;
+    bvc.buddies = self.buddies;
   }
   
   // -- me
@@ -174,21 +175,17 @@
   NSString *message = [notification.userInfo objectForKey:@"message"];
   if ([message isEqualToString:@""]) return ;
   
-  NSString *roomName = notification.object;
+  NSString *senderName = notification.object;
+  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@",
+                               self.title, message];
   
-  roomName = [roomName stringByReplacingOccurrencesOfString:@"cryptocatdev@conference.crypto.cat/"
-                                                 withString:@""];
-  
-  NSString *sender = roomName;
-  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", sender, message];
-  
-  if ([self.messagesForConversation objectForKey:roomName]==nil) {
-    [self.messagesForConversation setObject:[NSMutableArray array] forKey:roomName];
+  if ([self.messagesForConversation objectForKey:senderName]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:senderName];
   }
   
-  [[self.messagesForConversation objectForKey:roomName] addObject:receivedMessage];
+  [[self.messagesForConversation objectForKey:senderName] addObject:receivedMessage];
   [self.tableView reloadData];
-  TBLOG(@"-- received private message from %@: %@", sender, message);
+  TBLOG(@"-- received private message from %@: %@", senderName, message);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -270,11 +267,6 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSString *)currentRecipient {
-  return [self isInConversationRoom] ? nil : self.currentRoomName;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)isInConversationRoom {
   return [self.roomName isEqualToString:self.currentRoomName];
 }
@@ -304,12 +296,7 @@
   self.typing = YES;
   if ([self.delegate
        respondsToSelector:@selector(chatViewControllerDidStartComposing:forRecipient:)]) {
-    NSString *recipient = self.currentRecipient;
-    if (recipient!=nil) {
-      recipient = [NSString
-                   stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-    }
-    [self.delegate chatViewControllerDidStartComposing:self forRecipient:recipient];
+    [self.delegate chatViewControllerDidStartComposing:self forRecipient:self.currentRecipient];
   }
 }
 
@@ -318,12 +305,7 @@
   self.typing = NO;
   if ([self.delegate
        respondsToSelector:@selector(chatViewControllerDidPauseComposing:forRecipient:)]) {
-    NSString *recipient = self.currentRecipient;
-    if (recipient!=nil) {
-      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-    }
-    
-    [self.delegate chatViewControllerDidPauseComposing:self forRecipient:recipient];
+    [self.delegate chatViewControllerDidPauseComposing:self forRecipient:self.currentRecipient];
   }
 }
 
@@ -332,11 +314,7 @@
   self.typing = NO;
   if ([self.delegate
        respondsToSelector:@selector(chatViewControllerDidEndComposing:forRecipient:)]) {
-    NSString *recipient = self.currentRecipient;
-    if (recipient!=nil) {
-      recipient = [NSString stringWithFormat:@"cryptocatdev@conference.crypto.cat/%@", recipient];
-    }
-    [self.delegate chatViewControllerDidEndComposing:self forRecipient:recipient];
+    [self.delegate chatViewControllerDidEndComposing:self forRecipient:self.currentRecipient];
   }
 }
 
@@ -364,11 +342,9 @@
   else {
     if ([self.delegate
          respondsToSelector:@selector(chatViewController:didAskToSendMessage:toUser:)]) {
-      NSString *recipient = [NSString stringWithFormat:
-                             @"cryptocatdev@conference.crypto.cat/%@", self.currentRoomName];
       [self.delegate chatViewController:self
                     didAskToSendMessage:message
-                                 toUser:recipient];
+                                 toUser:self.currentRecipient];
     }
   }
 }
@@ -392,12 +368,22 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)buddiesViewController:(TBBuddiesViewController *)controller
-        didSelectConversation:(NSString *)conversation {
-  self.title = conversation;
-  self.currentRoomName = conversation;
+            didSelectRoomName:(NSString *)roomName {
+  self.title = roomName;
+  self.currentRoomName = roomName;
+  self.currentRecipient = nil;
   [self dismissViewControllerAnimated:YES completion:^{
-    //[self.messagesForConversation setObject:[NSMutableArray array] forKey:self.roomName];
-    //self.currentRoomName = self.roomName;
+    [self.tableView reloadData];
+  }];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)buddiesViewController:(TBBuddiesViewController *)controller
+               didSelectBuddy:(TBBuddy *)buddy {
+  self.title = buddy.nickname;
+  self.currentRoomName = buddy.fullname;
+  self.currentRecipient = buddy;
+  [self dismissViewControllerAnimated:YES completion:^{
     [self.tableView reloadData];
   }];
 }

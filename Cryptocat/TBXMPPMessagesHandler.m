@@ -7,7 +7,7 @@
 //
 
 #import "TBXMPPMessagesHandler.h"
-
+#import "TBBuddy.h"
 #import "XMPP.h"
 #import "XMPPRoom.h"
 #import "TBXMPPManager.h"
@@ -110,30 +110,34 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)sendMessageWithBody:(NSString *)body
-                  recipient:(NSString *)recipient
+                  recipient:(TBBuddy *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager {
   
-  NSString *accountName = XMPPManager.xmppRoom.myRoomJID.full;
+  NSString *accountName = XMPPManager.me.fullname;
   
   [self.OTRManager encodeMessage:body
-                       recipient:recipient
+                       recipient:recipient.fullname
                      accountName:accountName
                         protocol:TBMessagingProtocol
                  completionBlock:^(NSString *encodedMessage)
   {
     XMPPMessage *message = [XMPPMessage messageWithType:@"chat"
-                                                     to:[XMPPJID jidWithString:recipient]];
+                                                     to:[XMPPJID jidWithString:recipient.fullname]];
     [message addBody:encodedMessage];
     [message addActiveChatState];
 
-    TBLOG(@"-- will send message to %@ : %@", recipient, message);
+    TBLOG(@"-- will send message to %@ : %@", recipient.fullname, message);
     [XMPPManager.xmppStream sendElement:message];
   }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager {
-  NSArray *usernames = [XMPPManager.usernames allObjects];
+  NSMutableArray *usernames = [NSMutableArray arrayWithCapacity:[XMPPManager.buddies count]];
+  for (TBBuddy *buddy in XMPPManager.buddies) {
+    [usernames addObject:buddy.nickname];
+  }
+  
   NSString *encryptedJSONMessage = [self.multipartyProtocolManager encryptMessage:message
                                                                      forUsernames:usernames];
   XMPPMessage *xmppMessage = [XMPPMessage message];
@@ -144,7 +148,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)sendStateNotification:(NSString *)state
-                    recipient:(NSString *)recipient
+                    recipient:(TBBuddy *)recipient
                   XMPPManager:(TBXMPPManager *)XMPPManager {
   XMPPMessage *message = nil;
   
@@ -152,7 +156,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
     message = [XMPPMessage message];
   }
   else {
-    message = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:recipient]];
+    message = [XMPPMessage messageWithType:@"chat" to:[XMPPJID jidWithString:recipient.fullname]];
   }
 
   if ([state isEqualToString:@"composing"]) {
@@ -170,7 +174,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
     [XMPPManager.xmppRoom sendMessage:message];
   }
   else {
-    TBLOG(@"-- will send chat state message to %@ : %@", recipient, message);
+    TBLOG(@"-- will send chat state message to %@ : %@", recipient.fullname, message);
     [XMPPManager.xmppStream sendElement:message];
   }
 }
@@ -262,11 +266,11 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   
   NSString *messageBody = message.body;
-  NSString *accountName = XMPPManager.xmppRoom.myRoomJID.full;
-  NSString *sender = message.fromStr;
+  NSString *accountName = XMPPManager.me.fullname;
+  NSString *senderName = message.fromStr;
 
   NSString *decodedMessage = [self.OTRManager decodeMessage:messageBody
-                                                     sender:sender
+                                                     sender:senderName
                                                 accountName:accountName
                                                    protocol:TBMessagingProtocol];
   
@@ -276,7 +280,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   NSDictionary *userInfo = @{@"message": decodedMessage};
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
-                               object:sender
+                               object:senderName
                              userInfo:userInfo];
 }
 

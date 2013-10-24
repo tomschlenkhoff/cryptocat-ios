@@ -12,7 +12,7 @@ extern NSString * const TBMessagingProtocol;
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
 extern NSString * const TBDidReceivePrivateChatMessageNotification;
 
-@class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager, XMPPMessage, XMPPJID;
+@class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager, XMPPMessage, XMPPJID, TBBuddy;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,11 +23,11 @@ extern NSString * const TBDidReceivePrivateChatMessageNotification;
 multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManager;
 - (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendMessageWithBody:(NSString *)body
-                  recipient:(NSString *)recipient
+                  recipient:(TBBuddy *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendGroupMessage:(NSString *)message XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendStateNotification:(NSString *)state
-                    recipient:(NSString *)recipient
+                    recipient:(TBBuddy *)recipient
                   XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end
