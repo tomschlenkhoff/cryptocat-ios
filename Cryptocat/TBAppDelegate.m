@@ -29,6 +29,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 @interface TBAppDelegate () <
   TBXMPPManagerDelegate,
   TBOTRManagerDelegate,
+  TBMultipartyProtocolManagerDelegate,
   TBChatViewControllerDelegate,
   TBLoginViewControllerDelegate
 >
@@ -71,6 +72,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
   // multiparty chat manager
   self.multipartyProtocolManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
+  self.multipartyProtocolManager.delegate = self;
   
   // otr manager
   self.OTRManager = [TBOTRManager sharedOTRManager];
@@ -229,6 +231,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   }];
   
   self.chatViewController.roomName = room.roomJID.user;
+  self.chatViewController.me = XMPPManager.me;
   self.chatViewController.buddies = [NSMutableSet setWithSet:XMPPManager.buddies];
 
   if ([self isLoginScreenPresented]) {
@@ -362,6 +365,41 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatViewController:(TBChatViewController *)controller
+didAskFingerprintsForBuddy:(TBBuddy *)buddy {
+  NSString *accountName = self.XMPPManager.me.fullname;
+  NSString *recipientName = buddy.fullname;
+  
+  // if we are not yet in a secure mode
+  if (![self.OTRManager isConversationEncryptedForAccountName:accountName
+                                                    recipient:recipientName
+                                                     protocol:TBMessagingProtocol]) {
+    NSString *queryMsg = [self.OTRManager queryMessageForAccount:accountName];
+    [self.XMPPMessageHandler sendRawMessageWithBody:queryMsg
+                                          recipient:buddy
+                                        XMPPManager:self.XMPPManager];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBMultipartyProtocolManagerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)multipartyProtocolManager:(TBMultipartyProtocolManager *)manager didEstablishSecureConnectionWithUsername:(NSString *)username {
+  for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
+    if ([aBuddy.nickname isEqualToString:username]) {
+      aBuddy.groupChatFingerprint = [self.multipartyProtocolManager
+                                     fingerprintForUsername:username];
+      break;
+    }
+  }
+  
+  TBLOG(@"-- group chat with %@ is now secured", username);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TBOTRManagerDelegate
@@ -395,6 +433,14 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
                                             (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
       [self executeCompletionBlocisForUser:accountName recipient:recipient];
+      for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
+        if ([aBuddy.fullname isEqualToString:recipient]) {
+          aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
+                                                                accountName:accountName
+                                                                   protocol:TBMessagingProtocol];
+          break;
+        }
+      }
     });
   }
 }

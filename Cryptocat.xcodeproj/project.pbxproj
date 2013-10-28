@@ -14,7 +14,6 @@
 		330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */; };
 		332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CC1819108C00233E92 /* TBMeViewController.m */; };
 		332CA4D0181955B500233E92 /* TBBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CF181955B500233E92 /* TBBuddy.m */; };
-		3379BA21181EAF81002A316F /* TBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA20181EAF81002A316F /* TBConstants.m */; };
 		3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA23181EBAE0002A316F /* TBBuddyViewController.m */; };
 		339DD1AC17F0399400C3E8E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AB17F0399400C3E8E6 /* Foundation.framework */; };
 		339DD1AE17F0399400C3E8E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AD17F0399400C3E8E6 /* CoreGraphics.framework */; };
@@ -63,8 +62,6 @@
 		332CA4CC1819108C00233E92 /* TBMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMeViewController.m; sourceTree = "<group>"; };
 		332CA4CE181955B500233E92 /* TBBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddy.h; sourceTree = "<group>"; };
 		332CA4CF181955B500233E92 /* TBBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddy.m; sourceTree = "<group>"; };
-		3379BA1F181EAF80002A316F /* TBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBConstants.h; sourceTree = "<group>"; };
-		3379BA20181EAF81002A316F /* TBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBConstants.m; sourceTree = "<group>"; };
 		3379BA22181EBAE0002A316F /* TBBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddyViewController.h; sourceTree = "<group>"; };
 		3379BA23181EBAE0002A316F /* TBBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddyViewController.m; sourceTree = "<group>"; };
 		339DD1A817F0399400C3E8E6 /* Cryptocat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cryptocat.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -214,8 +211,6 @@
 				339DD1E317F039DD00C3E8E6 /* Controllers */,
 				339DD1BA17F0399400C3E8E6 /* TBAppDelegate.h */,
 				339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */,
-				3379BA1F181EAF80002A316F /* TBConstants.h */,
-				3379BA20181EAF81002A316F /* TBConstants.m */,
 				339DD1BD17F0399400C3E8E6 /* Main.storyboard */,
 				339DD1C617F0399400C3E8E6 /* Images.xcassets */,
 				339DD1B217F0399400C3E8E6 /* Supporting Files */,
@@ -431,7 +426,6 @@
 				3301305017F18A5E00287253 /* XMPPInBandRegistration.m in Sources */,
 				33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */,
 				339DD1B817F0399400C3E8E6 /* main.m in Sources */,
-				3379BA21181EAF81002A316F /* TBConstants.m in Sources */,
 				33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */,
 				330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */,
 				332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */,
