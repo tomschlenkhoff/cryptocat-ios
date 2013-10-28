@@ -35,12 +35,38 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)dealloc {
+  [self.buddy removeObserver:self forKeyPath:@"groupChatFingerprint"];
+  [self.buddy removeObserver:self forKeyPath:@"chatFingerprint"];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
 
   self.title = self.buddy.nickname;
   self.groupFingerprintCell.textLabel.text = self.buddy.groupChatFingerprint;
   self.privateFingerprintCell.textLabel.text = self.buddy.chatFingerprint;
+  
+  [self.buddy addObserver:self forKeyPath:@"groupChatFingerprint" options:0 context:NULL];
+  [self.buddy addObserver:self forKeyPath:@"chatFingerprint" options:0 context:NULL];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Observers
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+  if (object==self.buddy) {
+    self.groupFingerprintCell.textLabel.text = self.buddy.groupChatFingerprint;
+    self.privateFingerprintCell.textLabel.text = self.buddy.chatFingerprint;
+    [self.tableView reloadData];
+  }
 }
 
 @end
