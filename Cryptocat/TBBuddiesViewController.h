@@ -33,5 +33,7 @@
             didSelectRoomName:(NSString *)roomName;
 - (void)buddiesViewController:(TBBuddiesViewController *)controller
         didSelectBuddy:(TBBuddy *)buddy;
+- (void)buddiesViewController:(TBBuddiesViewController *)controller
+   didAskFingerprintsForBuddy:(TBBuddy *)buddy;
 
 @end

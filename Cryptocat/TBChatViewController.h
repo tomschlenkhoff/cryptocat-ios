@@ -20,7 +20,7 @@
 
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSMutableSet *buddies;
-@property (nonatomic, strong) NSString *myUsername;
+@property (nonatomic, strong) TBBuddy *me;
 
 @end
 
@@ -41,5 +41,7 @@
 - (void)chatViewControllerDidEndComposing:(TBChatViewController *)controller
                              forRecipient:(TBBuddy *)recipient;
 - (void)chatViewControllerDidAskToLogout:(TBChatViewController *)controller;
+- (void)chatViewController:(TBChatViewController *)controller
+didAskFingerprintsForBuddy:(TBBuddy *)buddy;
 
 @end

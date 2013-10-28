@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 
+@class TBBuddy;
 @protocol TBMeViewControllerDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -16,6 +17,7 @@
 @interface TBMeViewController : UITableViewController
 
 @property (nonatomic, weak) id <TBMeViewControllerDelegate> delegate;
+@property (nonatomic, strong) TBBuddy *me;
 
 @end
 

@@ -118,6 +118,7 @@
     UINavigationController *nc = segue.destinationViewController;
     TBMeViewController *mvc = (TBMeViewController *)nc.topViewController;
     mvc.delegate = self;
+    mvc.me = self.me;
   }
 }
 
@@ -385,6 +386,15 @@
   [self dismissViewControllerAnimated:YES completion:^{
     [self.tableView reloadData];
   }];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)buddiesViewController:(TBBuddiesViewController *)controller
+   didAskFingerprintsForBuddy:(TBBuddy *)buddy {
+  if ([self.delegate
+       respondsToSelector:@selector(chatViewController:didAskFingerprintsForBuddy:)]) {
+    [self.delegate chatViewController:self didAskFingerprintsForBuddy:buddy];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -7,6 +7,7 @@
 //
 
 #import "TBBuddiesViewController.h"
+#import "TBBuddyViewController.h"
 #import "TBBuddy.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,8 @@
 @property (nonatomic, strong) NSArray *internalBuddies;
 
 - (IBAction)done:(id)sender;
+
+- (TBBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath;
 
 @end
 
@@ -40,6 +43,20 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   self.internalBuddies = [self.buddies allObjects];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  // buddy
+  if ([segue.identifier isEqualToString:@"BuddySegueID"]) {
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+    TBBuddyViewController *bvc = segue.destinationViewController;
+    bvc.buddy = [self buddyForIndexPath:indexPath];
+    if ([self.delegate
+         respondsToSelector:@selector(buddiesViewController:didAskFingerprintsForBuddy:)]) {
+      [self.delegate buddiesViewController:self didAskFingerprintsForBuddy:bvc.buddy];
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -68,7 +85,7 @@
     cell.textLabel.text = NSLocalizedString(@"Conversation", @"Conversation Room Label");
   }
   else {
-    TBBuddy *buddy = [self.internalBuddies objectAtIndex:indexPath.row-1];
+    TBBuddy *buddy = [self buddyForIndexPath:indexPath];
     cell.textLabel.text = buddy.nickname;
   }
   
@@ -92,7 +109,7 @@
   // buddy
   else {
     if ([self.delegate respondsToSelector:@selector(buddiesViewController:didSelectBuddy:)]) {
-      TBBuddy *buddy = [self.internalBuddies objectAtIndex:indexPath.row-1];
+      TBBuddy *buddy = [self buddyForIndexPath:indexPath];
       [self.delegate buddiesViewController:self didSelectBuddy:buddy];
     }
   }
@@ -108,6 +125,16 @@
   if ([self.delegate respondsToSelector:@selector(buddiesViewControllerHasFinished:)]) {
     [self.delegate buddiesViewControllerHasFinished:self];
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (TBBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath {
+  return [self.internalBuddies objectAtIndex:indexPath.row-1];
 }
 
 @end
