@@ -18,6 +18,8 @@
 #import "NSError+Cryptocat.h"
 #import "TBBuddy.h"
 
+typedef void (^TBGoneSecureCompletionBlock)();
+
 #define kDomain           @"crypto.cat"
 #define kConferenceDomain @"conference.crypto.cat"
 
@@ -37,9 +39,14 @@
 @property (nonatomic, strong) TBXMPPMessagesHandler *XMPPMessageHandler;
 @property (nonatomic, strong) TBChatViewController *chatViewController;
 @property (nonatomic, strong) TBLoginViewController *loginViewController;
+@property (nonatomic, strong) NSMutableDictionary *goneSecureCompletionBlocks;
 
 - (BOOL)isLoginScreenPresented;
 - (BOOL)presentLoginVCAnimated:(BOOL)animated;
+- (void)addCompletionBlock:(TBGoneSecureCompletionBlock)completionBlock
+                   forUser:(TBBuddy *)user
+                 recipient:(TBBuddy *)recipient;
+- (void)executeCompletionBlocisForUser:(NSString *)user recipient:(NSString *)recipient;
 
 @end
 
@@ -56,6 +63,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+  self.goneSecureCompletionBlocks = [NSMutableDictionary dictionary];
+  
   // xmpp manager
   self.XMPPManager = [[TBXMPPManager alloc] init];
   self.XMPPManager.delegate = self;
@@ -153,6 +162,46 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)addCompletionBlock:(TBGoneSecureCompletionBlock)completionBlock
+                   forUser:(TBBuddy *)user
+                 recipient:(TBBuddy *)recipient {
+  NSString *username = user.fullname;
+  NSString *recipientName = recipient.fullname;
+  
+  // make sure to have a mutable dic for each username's recipients
+  if ([self.goneSecureCompletionBlocks objectForKey:user]==nil) {
+    [self.goneSecureCompletionBlocks setObject:[NSMutableDictionary dictionary] forKey:username];
+  }
+  
+  // make sure to have a mutable array for each recipient's completion blocks
+  if ([[self.goneSecureCompletionBlocks objectForKey:username] objectForKey:recipientName]==nil) {
+    [[self.goneSecureCompletionBlocks objectForKey:username] setObject:[NSMutableArray array]
+                                                                forKey:recipientName];
+  }
+  
+  [[[self.goneSecureCompletionBlocks objectForKey:username]
+    objectForKey:recipientName] addObject:completionBlock];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)executeCompletionBlocisForUser:(NSString *)user recipient:(NSString *)recipient {
+  // check that there are completion blocks for the account/recipient
+  if ([self.goneSecureCompletionBlocks objectForKey:user]==nil ||
+      [[self.goneSecureCompletionBlocks objectForKey:user] objectForKey:recipient]==nil) return;
+  
+  NSMutableArray *completionBlocks = [[self.goneSecureCompletionBlocks objectForKey:user]
+                                      objectForKey:recipient];
+  TBLOG(@"-- gone secure, will execute %d completion blocks", [completionBlocks count]);
+  for (TBGoneSecureCompletionBlock completionBlock in completionBlocks) {
+    completionBlock();
+  }
+  
+  // empty the completion blocks array
+  [[self.goneSecureCompletionBlocks objectForKey:user] setObject:[NSMutableArray array]
+                                                          forKey:recipient];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark TBXMPPManagerDelegate
@@ -169,6 +218,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     XMPPManager.me.groupChatFingerprint = self.multipartyProtocolManager.fingerprint;
     TBLOG(@"-- my OTR fingerprint is : %@", XMPPManager.me.chatFingerprint);
     TBLOG(@"-- my group fingerprint is : %@", XMPPManager.me.groupChatFingerprint);
+    
+    TBLOG(@"-- safari OTR fingerprint is : %@",
+          [self.OTRManager fingerprintForAccountName:@"cryptocatdev@conference.crypto.cat/safari"
+                                            protocol:TBMessagingProtocol]);
+    BOOL isChatWithSafariSecure = [self.OTRManager isConversationEncryptedForAccountName:account
+                                                                               recipient:@"cryptocatdev@conference.crypto.cat/safari"
+                                                                                protocol:TBMessagingProtocol];
+    TBLOG(@"-- chat with safari is %@", (isChatWithSafariSecure ? @"secure" : @"insecure"));
   }];
   
   self.chatViewController.roomName = room.roomJID.user;
@@ -248,9 +305,30 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 - (void)chatViewController:(TBChatViewController *)controller
        didAskToSendMessage:(NSString *)message
                     toUser:(TBBuddy *)recipient {
-  [self.XMPPMessageHandler sendMessageWithBody:message
-                                     recipient:recipient
-                                   XMPPManager:self.XMPPManager];
+  TBBuddy *account = self.XMPPManager.me;
+  NSString *accountName = account.fullname;
+  NSString *recipientName = recipient.fullname;
+  
+  // this block will send the message
+  TBGoneSecureCompletionBlock goneSecureCompletionBlock = ^{
+    [self.XMPPMessageHandler sendMessageWithBody:message
+                                       recipient:recipient
+                                     XMPPManager:self.XMPPManager];
+  };
+  
+  // if we are already in a secure mode, send the message straight away
+  if ([self.OTRManager isConversationEncryptedForAccountName:accountName
+                                                   recipient:recipientName
+                                                    protocol:TBMessagingProtocol]) {
+    goneSecureCompletionBlock();
+  }
+  else {
+    [self addCompletionBlock:goneSecureCompletionBlock forUser:account recipient:recipient];
+    NSString *queryMsg = [self.OTRManager queryMessageForAccount:accountName];
+    [self.XMPPMessageHandler sendRawMessageWithBody:queryMsg
+                                          recipient:recipient
+                                        XMPPManager:self.XMPPManager];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -296,9 +374,29 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
           protocol:(NSString *)protocol {
   XMPPJID *recipientJID = [XMPPJID jidWithString:recipient];
   TBBuddy *buddy = [[TBBuddy alloc] initWithXMPPJID:recipientJID];
-  [self.XMPPMessageHandler sendMessageWithBody:message
-                                     recipient:buddy
-                                   XMPPManager:self.XMPPManager];
+  TBLOG(@"-- will ask to send OTR message to %@ : %@", recipient, message);
+  [self.XMPPMessageHandler sendRawMessageWithBody:message
+                                        recipient:buddy
+                                      XMPPManager:self.XMPPManager];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)OTRManager:(TBOTRManager *)OTRManager
+didUpdateEncryptionStatus:(BOOL)isEncrypted
+      forRecipient:(NSString *)recipient
+       accountName:(NSString *)accountName
+          protocol:(NSString *)protocol {
+  TBLOG(@"-- conversation with %@ is now %@", recipient, (isEncrypted ? @"secure" : @"insecure"));
+  
+  if (isEncrypted) {
+    // dirty workaround : I receive a gone_secure message before the key exchange is fully finished
+    double delayInSeconds = 1.0;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW,
+                                            (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+      [self executeCompletionBlocisForUser:accountName recipient:recipient];
+    });
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

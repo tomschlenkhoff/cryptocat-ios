@@ -109,6 +109,19 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendRawMessageWithBody:(NSString *)body
+                     recipient:(TBBuddy *)recipient
+                   XMPPManager:(TBXMPPManager *)XMPPManager {
+  XMPPMessage *message = [XMPPMessage messageWithType:@"chat"
+                                                   to:recipient.XMPPJID];
+  [message addBody:body];
+  [message addActiveChatState];
+  
+  TBLOG(@"-- will send raw message to %@ : %@", recipient.fullname, message);
+  [XMPPManager.xmppStream sendElement:message];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)sendMessageWithBody:(NSString *)body
                   recipient:(TBBuddy *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager {
@@ -264,6 +277,11 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handlePrivateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
   TBLOG(@"-- private message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
+  
+  if ([message.body isEqualToString:@""]) {
+    TBLOG(@"-- private message is empty, don't do anything with it.");
+    return;
+  }
   
   NSString *messageBody = message.body;
   NSString *accountName = XMPPManager.me.fullname;

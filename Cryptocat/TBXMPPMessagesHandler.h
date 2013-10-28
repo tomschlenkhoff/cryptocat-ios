@@ -22,6 +22,9 @@ extern NSString * const TBDidReceivePrivateChatMessageNotification;
 - (id)initWithOTRManager:(TBOTRManager *)OTRManager
 multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManager;
 - (void)handleMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)sendRawMessageWithBody:(NSString *)body
+                     recipient:(TBBuddy *)recipient
+                   XMPPManager:(TBXMPPManager *)XMPPManager;
 - (void)sendMessageWithBody:(NSString *)body
                   recipient:(TBBuddy *)recipient
                 XMPPManager:(TBXMPPManager *)XMPPManager;
