@@ -38,7 +38,6 @@
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSString *conferenceDomain;
-@property (nonatomic, strong) NSMutableSet *internalBuddies;
 
 // -- connection steps
 - (void)requestRegistrationFields;
@@ -77,7 +76,7 @@
     _password = nil;
     _roomName = nil;
     _conferenceDomain = nil;
-    _internalBuddies = [NSMutableSet set];
+    _buddies = [NSMutableSet set];
   }
   
   return self;
@@ -95,11 +94,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Public Methods
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSSet *)buddies {
-  return self.internalBuddies;
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)connectWithUsername:(NSString *)username
@@ -253,7 +247,7 @@
   
   // sign out
   if ([presence tb_isUnavailable]) {
-    [self.internalBuddies removeObject:presenceBuddy];
+    [self.buddies removeObject:presenceBuddy];
     if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignOut:)]) {
       [self.delegate XMPPManager:self buddyDidSignOut:presenceBuddy];
     }
@@ -262,7 +256,7 @@
   // sign in
   else if ([presence tb_isAvailable]) {
     if (![presenceBuddy isEqual:self.me]) {
-      [self.internalBuddies addObject:presenceBuddy];
+      [self.buddies addObject:presenceBuddy];
     }
     if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignIn:)]) {
       [self.delegate XMPPManager:self buddyDidSignIn:presenceBuddy];
@@ -272,7 +266,7 @@
   // go away
   else if ([presence tb_isAway]) {
     if (![presenceBuddy isEqual:self.me]) {
-      [self.internalBuddies addObject:presenceBuddy];
+      [self.buddies addObject:presenceBuddy];
     }
     if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidGoAway:)]) {
       [self.delegate XMPPManager:self buddyDidGoAway:presenceBuddy];
