@@ -57,6 +57,14 @@
 #pragma mark Lifecycle
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)dealloc {
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
+  [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
+  [defaultCenter removeObserver:self name:TBBuddiesListDidChangeNotification object:nil];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
   // Dispose of any resources that can be recreated.
@@ -77,6 +85,10 @@
   [defaultCenter addObserver:self
                     selector:@selector(didReceivePrivateMessage:)
                         name:TBDidReceivePrivateChatMessageNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(buddiesListDidChange:)
+                        name:TBBuddiesListDidChangeNotification
                       object:nil];
 }
 
@@ -186,6 +198,19 @@
   [[self.messagesForConversation objectForKey:sender.fullname] addObject:receivedMessage];
   [self.tableView reloadData];
   TBLOG(@"-- received private message from %@: %@", sender.fullname, message);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)buddiesListDidChange:(NSNotification *)notification {
+  self.buddies = notification.object;
+  if (self.currentRecipient!=nil && ![self.buddies containsObject:self.currentRecipient]) {
+    self.textField.backgroundColor = [UIColor redColor];
+    self.textField.enabled = NO;
+  }
+  else {
+    self.textField.backgroundColor = [UIColor whiteColor];
+    self.textField.enabled = YES;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

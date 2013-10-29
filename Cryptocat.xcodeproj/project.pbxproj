@@ -12,6 +12,7 @@
 		330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 330130C517F431CF00287253 /* XMPPMessage+Cryptocat.m */; };
 		330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 330130C817F4453000287253 /* NSString+Cryptocat.m */; };
 		330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */; };
+		3317DCDA181FD39E008353E5 /* TBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3317DCD9181FD39E008353E5 /* TBConstants.m */; };
 		332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CC1819108C00233E92 /* TBMeViewController.m */; };
 		332CA4D0181955B500233E92 /* TBBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CF181955B500233E92 /* TBBuddy.m */; };
 		3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA23181EBAE0002A316F /* TBBuddyViewController.m */; };
@@ -58,6 +59,8 @@
 		330130C817F4453000287253 /* NSString+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Cryptocat.m"; sourceTree = "<group>"; };
 		330131DB17FB0D6000287253 /* TBXMPPMessagesHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBXMPPMessagesHandler.h; sourceTree = "<group>"; };
 		330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXMPPMessagesHandler.m; sourceTree = "<group>"; };
+		3317DCD8181FD39E008353E5 /* TBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBConstants.h; sourceTree = "<group>"; };
+		3317DCD9181FD39E008353E5 /* TBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBConstants.m; sourceTree = "<group>"; };
 		332CA4CB1819108C00233E92 /* TBMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMeViewController.h; sourceTree = "<group>"; };
 		332CA4CC1819108C00233E92 /* TBMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMeViewController.m; sourceTree = "<group>"; };
 		332CA4CE181955B500233E92 /* TBBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddy.h; sourceTree = "<group>"; };
@@ -211,6 +214,8 @@
 				339DD1E317F039DD00C3E8E6 /* Controllers */,
 				339DD1BA17F0399400C3E8E6 /* TBAppDelegate.h */,
 				339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */,
+				3317DCD8181FD39E008353E5 /* TBConstants.h */,
+				3317DCD9181FD39E008353E5 /* TBConstants.m */,
 				339DD1BD17F0399400C3E8E6 /* Main.storyboard */,
 				339DD1C617F0399400C3E8E6 /* Images.xcassets */,
 				339DD1B217F0399400C3E8E6 /* Supporting Files */,
@@ -414,6 +419,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3317DCDA181FD39E008353E5 /* TBConstants.m in Sources */,
 				330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */,
 				330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */,
 				339DD1BC17F0399400C3E8E6 /* TBAppDelegate.m in Sources */,

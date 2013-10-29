@@ -232,7 +232,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
   self.chatViewController.roomName = room.roomJID.user;
   self.chatViewController.me = XMPPManager.me;
-  self.chatViewController.buddies = [NSMutableSet setWithSet:XMPPManager.buddies];
+  self.chatViewController.buddies = XMPPManager.buddies;
 
   if ([self isLoginScreenPresented]) {
     [self.chatViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -250,20 +250,23 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   TBLOG(@"-- %@ signed in", buddy.fullname);
 
   if (![buddy isEqual:XMPPManager.me]) {
-    UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
-    TBChatViewController *cvc = (TBChatViewController *)nc.topViewController;
-    [cvc.buddies addObject:buddy];
+    NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+    [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignOut:(TBBuddy *)buddy {
   TBLOG(@"-- %@ signed out", buddy.fullname);
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidGoAway:(TBBuddy *)buddy {
   TBLOG(@"-- %@ went away", buddy.fullname);
+  NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
+  [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

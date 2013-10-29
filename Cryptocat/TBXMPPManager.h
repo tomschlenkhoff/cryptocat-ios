@@ -18,7 +18,7 @@
 
 @property (nonatomic, weak) id <TBXMPPManagerDelegate> delegate;
 @property (nonatomic, readonly) TBBuddy *me;
-@property (nonatomic, strong) NSMutableSet *buddies;
+@property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPRoom *xmppRoom;
 

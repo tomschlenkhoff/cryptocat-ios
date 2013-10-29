@@ -76,7 +76,7 @@
     _password = nil;
     _roomName = nil;
     _conferenceDomain = nil;
-    _buddies = [NSMutableSet set];
+    _buddies = [NSMutableArray array];
   }
   
   return self;
@@ -255,7 +255,7 @@
   
   // sign in
   else if ([presence tb_isAvailable]) {
-    if (![presenceBuddy isEqual:self.me]) {
+    if (![presenceBuddy isEqual:self.me] && ![self.buddies containsObject:presenceBuddy]) {
       [self.buddies addObject:presenceBuddy];
     }
     if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignIn:)]) {
@@ -265,7 +265,7 @@
   
   // go away
   else if ([presence tb_isAway]) {
-    if (![presenceBuddy isEqual:self.me]) {
+    if (![presenceBuddy isEqual:self.me] && ![self.buddies containsObject:presenceBuddy]) {
       [self.buddies addObject:presenceBuddy];
     }
     if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidGoAway:)]) {

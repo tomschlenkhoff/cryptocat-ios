@@ -19,7 +19,7 @@
 @property (nonatomic, weak) id <TBChatViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) NSString *roomName;
-@property (nonatomic, strong) NSMutableSet *buddies;
+@property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, strong) TBBuddy *me;
 
 @end
