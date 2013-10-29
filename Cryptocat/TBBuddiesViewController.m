@@ -100,11 +100,28 @@
                                                           forIndexPath:indexPath];
   
   if (indexPath.row==0) {
-    cell.textLabel.text = NSLocalizedString(@"Conversation", @"Conversation Room Label");
+    NSString *conversationRoomTitle = NSLocalizedString(@"Conversation",
+                                                        @"Conversation Room Label");
+    if (self.nbUnreadMessagesInRoom == 0) {
+      cell.textLabel.text = conversationRoomTitle;
+    }
+    else {
+      cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",
+                             conversationRoomTitle, self.nbUnreadMessagesInRoom];
+    }
   }
   else {
     TBBuddy *buddy = [self buddyForIndexPath:indexPath];
-    cell.textLabel.text = buddy.nickname;
+    
+    NSInteger nbUnreadMessages = [[self.nbUnreadMessagesForBuddy objectForKey:buddy.fullname]
+                                  integerValue];
+    if (nbUnreadMessages==0) {
+      cell.textLabel.text = buddy.nickname;
+    }
+    else {
+      cell.textLabel.text = [NSString stringWithFormat:@"%@ (%d)",
+                             buddy.nickname, nbUnreadMessages];
+    }
   }
   
   return cell;

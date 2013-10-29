@@ -20,6 +20,8 @@
 
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSMutableArray *buddies;
+@property (nonatomic, assign) NSUInteger nbUnreadMessagesInRoom;
+@property (nonatomic, strong) NSMutableDictionary *nbUnreadMessagesForBuddy;
 
 @end
 

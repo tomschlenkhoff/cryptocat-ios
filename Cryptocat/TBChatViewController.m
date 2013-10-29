@@ -33,6 +33,9 @@
 @property (nonatomic, strong) TBBuddy *currentRecipient;
 @property (strong, readwrite) NSTimer *composingTimer;
 @property (nonatomic, assign, getter=isTyping) BOOL typing;
+@property (nonatomic, assign) NSUInteger nbUnreadMessagesInRoom;
+@property (nonatomic, strong) NSMutableDictionary *nbUnreadMessagesForBuddy;
+@property (nonatomic, strong) NSString *defaultNavLeftItemTitle;
 
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
@@ -43,6 +46,7 @@
 - (void)didStartComposing;
 - (void)didPauseComposing;
 - (void)didEndComposing;
+- (void)updateUnreadMessagesCounter;
 
 @end
 
@@ -75,8 +79,17 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 	 
+  self.defaultNavLeftItemTitle = NSLocalizedString(@"Buddies",
+                                                   @"Buddies Button Title on Chat Screen");
+  self.navigationItem.leftBarButtonItem.title = self.defaultNavLeftItemTitle;
+  self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Me",
+                                                                @"Me Button Title on Chat Screen");
+  
+  
   self.typing = NO;
   self.messagesForConversation = [NSMutableDictionary dictionary];
+  self.nbUnreadMessagesInRoom = 0;
+  self.nbUnreadMessagesForBuddy = [NSMutableDictionary dictionary];
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
@@ -128,6 +141,8 @@
     bvc.delegate = self;
     bvc.roomName = self.roomName;
     bvc.buddies = self.buddies;
+    bvc.nbUnreadMessagesInRoom = self.nbUnreadMessagesInRoom;
+    bvc.nbUnreadMessagesForBuddy = self.nbUnreadMessagesForBuddy;
   }
   
   // -- me
@@ -184,7 +199,14 @@
   }
 
   [[self.messagesForConversation objectForKey:roomName] addObject:receivedMessage];
-  [self.tableView reloadData];
+  
+  if ([self isInConversationRoom]) {
+    [self.tableView reloadData];
+  }
+  else {
+    self.nbUnreadMessagesInRoom+=1;
+    [self updateUnreadMessagesCounter];
+  }
   TBLOG(@"-- received message in %@ from %@: %@", roomName, sender, message);
 }
 
@@ -201,7 +223,20 @@
   }
   
   [[self.messagesForConversation objectForKey:sender.fullname] addObject:receivedMessage];
-  [self.tableView reloadData];
+  
+  if (![self isInConversationRoom] && [self.currentRecipient isEqual:sender]) {
+    [self.tableView reloadData];
+  }
+  else {
+    NSString *buddyName = sender.fullname;
+    NSInteger nbUnreadMessages = [[self.nbUnreadMessagesForBuddy objectForKey:buddyName]
+                                  integerValue];
+    nbUnreadMessages+=1;
+    [self.nbUnreadMessagesForBuddy setObject:[NSNumber numberWithInteger:nbUnreadMessages]
+                                      forKey:buddyName];
+    [self updateUnreadMessagesCounter];
+  }
+  
   TBLOG(@"-- received private message from %@: %@", sender.fullname, message);
 }
 
@@ -347,6 +382,26 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)updateUnreadMessagesCounter {
+  NSInteger totalUnreadMSGCount = self.nbUnreadMessagesInRoom;
+  TBLOG(@"-- self.nbUnreadMessagesInRoom : %d", self.nbUnreadMessagesInRoom);
+  for (NSString *buddyName in self.nbUnreadMessagesForBuddy) {
+    NSNumber *nbUnreadMessages = [self.nbUnreadMessagesForBuddy objectForKey:buddyName];
+    totalUnreadMSGCount+=[nbUnreadMessages integerValue];
+    TBLOG(@"-- nb unread msgs for %@ : %d", buddyName, [nbUnreadMessages integerValue]);
+  }
+  
+  if (totalUnreadMSGCount==0) {
+    self.navigationItem.leftBarButtonItem.title = self.defaultNavLeftItemTitle;
+  }
+  else {
+    self.navigationItem.leftBarButtonItem.title = [NSString stringWithFormat:@"%@ (%d)",
+                                                   self.defaultNavLeftItemTitle,
+                                                   totalUnreadMSGCount];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Actions
@@ -400,8 +455,10 @@
   self.title = roomName;
   self.currentRoomName = roomName;
   self.currentRecipient = nil;
+  self.nbUnreadMessagesInRoom = 0;
   [self dismissViewControllerAnimated:YES completion:^{
     [self.tableView reloadData];
+    [self updateUnreadMessagesCounter];
   }];
 }
 
@@ -411,8 +468,10 @@
   self.title = buddy.nickname;
   self.currentRoomName = buddy.fullname;
   self.currentRecipient = buddy;
+  [self.nbUnreadMessagesForBuddy setObject:[NSNumber numberWithInt:0] forKey:buddy.fullname];
   [self dismissViewControllerAnimated:YES completion:^{
     [self.tableView reloadData];
+    [self updateUnreadMessagesCounter];
   }];
 }
 
