@@ -62,6 +62,11 @@
   if (self=[super init]) {
     _me = nil;
     _xmppStream = [[XMPPStream alloc] init];
+    
+#if !TARGET_IPHONE_SIMULATOR
+    _xmppStream.enableBackgroundingOnSocket = YES;
+#endif
+
     _xmppReconnect = [[XMPPReconnect alloc] init];
     _xmppInBandRegistration = [[XMPPInBandRegistration alloc] init];
 

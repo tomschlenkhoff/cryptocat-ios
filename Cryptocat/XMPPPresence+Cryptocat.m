@@ -53,4 +53,14 @@
   return [self.type isEqualToString:@"unavailable"];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (XMPPPresence *)tb_awayPresence {
+  XMPPPresence *presence = [XMPPPresence presenceWithType:@"available"];
+  NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
+  [status setStringValue:@"away"];
+  [presence addChild:status];
+
+  return presence;
+}
+
 @end

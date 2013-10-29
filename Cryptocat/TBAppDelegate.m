@@ -17,6 +17,7 @@
 #import "XMPPRoom.h"
 #import "NSError+Cryptocat.h"
 #import "TBBuddy.h"
+#import "XMPPPresence+Cryptocat.h"
 
 typedef void (^TBGoneSecureCompletionBlock)();
 
@@ -106,6 +107,26 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // enough application state information to restore your application to its current state in case
   // it is terminated later. If your application supports background execution, this method is
   // called instead of applicationWillTerminate: when the user quits.
+  
+  // <presence xmlns="jabber:client" from="cryptocatdev@conference.crypto.cat/safari" to="rx21bjikfqyzvyvq@crypto.cat/353544399813835940523576"><show>away</show><status>away</status><x xmlns="http://jabber.org/protocol/muc#user"><item affiliation="none" role="visitor"/></x></presence>
+  
+  // -- will send presence : <presence from="cryptocatdev@conference.crypto.cat/iOSTestApp" type="available"><status>away</status></presence>
+  
+  // -- will send presence : <presence from="cryptocatdev@conference.crypto.cat/iOSTestApp"><status>away</status><show>away</show></presence>
+  
+  // TODO: should use something like [XMPPPresence tb_awayPresence]
+//  XMPPPresence *presence = [XMPPPresence presence];
+//  [presence addAttributeWithName:@"from" stringValue:self.XMPPManager.xmppRoom.myRoomJID.full];
+//  [presence addAttributeWithName:@"to" stringValue:@"cryptocatdev@conference.crypto.cat/safari"];
+//  //[presence addAttributeWithName:@"type" stringValue:@"available"];
+//  NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
+//  [status setStringValue:@"away"];
+//  [presence addChild:status];
+//  NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
+//  [show setStringValue:@"away"];
+//  [presence addChild:show];
+//  TBLOG(@"-- will send presence : %@", presence);
+//  [self.XMPPManager.xmppStream sendElement:presence];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -398,7 +419,7 @@ didAskFingerprintsForBuddy:(TBBuddy *)buddy {
       break;
     }
   }
-  
+
   TBLOG(@"-- group chat with %@ is now secured", username);
 }
 

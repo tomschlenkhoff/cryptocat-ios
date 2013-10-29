@@ -18,4 +18,6 @@
 - (BOOL)tb_isAway;
 - (BOOL)tb_isUnavailable;
 
++ (XMPPPresence *)tb_awayPresence;
+
 @end
