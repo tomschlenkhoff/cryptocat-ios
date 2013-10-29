@@ -61,7 +61,8 @@
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
-  [defaultCenter removeObserver:self name:TBBuddiesListDidChangeNotification object:nil];
+  [defaultCenter removeObserver:self name:TBBuddyDidSignInNotification object:nil];
+  [defaultCenter removeObserver:self name:TBBuddyDidSignOutNotification object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,8 +88,12 @@
                         name:TBDidReceivePrivateChatMessageNotification
                       object:nil];
   [defaultCenter addObserver:self
-                    selector:@selector(buddiesListDidChange:)
-                        name:TBBuddiesListDidChangeNotification
+                    selector:@selector(buddyDidChangeState:)
+                        name:TBBuddyDidSignInNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(buddyDidChangeState:)
+                        name:TBBuddyDidSignOutNotification
                       object:nil];
 }
 
@@ -201,15 +206,13 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)buddiesListDidChange:(NSNotification *)notification {
-  self.buddies = notification.object;
-  if (self.currentRecipient!=nil && ![self.buddies containsObject:self.currentRecipient]) {
-    self.textField.backgroundColor = [UIColor redColor];
-    self.textField.enabled = NO;
-  }
-  else {
-    self.textField.backgroundColor = [UIColor whiteColor];
-    self.textField.enabled = YES;
+- (void)buddyDidChangeState:(NSNotification *)notification {
+  TBBuddy *buddy = notification.object;
+  
+  if ([self.currentRecipient isEqual:buddy]) {
+    BOOL isSignIn = [notification.name isEqualToString:TBBuddyDidSignInNotification];
+    self.textField.backgroundColor = isSignIn ? [UIColor whiteColor] : [UIColor redColor];
+    self.textField.enabled = isSignIn;
   }
 }
 

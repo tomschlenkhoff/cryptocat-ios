@@ -33,9 +33,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc {
-  [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:TBBuddiesListDidChangeNotification
-                                                object:nil];
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter removeObserver:self
+                           name:TBBuddyDidSignInNotification
+                         object:nil];
+  [defaultCenter removeObserver:self
+                           name:TBBuddyDidSignOutNotification
+                         object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -47,11 +51,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
-  
-  [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(buddiesListDidChange:)
-                                               name:TBBuddiesListDidChangeNotification
-                                             object:nil];
+
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter addObserver:self
+                    selector:@selector(buddiesListDidChange:)
+                        name:TBBuddyDidSignInNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(buddiesListDidChange:)
+                        name:TBBuddyDidSignOutNotification
+                      object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,7 +152,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)buddiesListDidChange:(NSNotification *)notification {
-  self.buddies = notification.object;
+  //TBBuddy *buddy = notification.object;
   [self.tableView reloadData];
 }
 

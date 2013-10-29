@@ -8,4 +8,6 @@
 
 #import "TBConstants.h"
 
-NSString * const TBBuddiesListDidChangeNotification = @"TBBuddiesListDidChangeNotification";
+NSString * const TBBuddyDidSignInNotification = @"TBBuddyDidSignInNotification";
+NSString * const TBBuddyDidSignOutNotification = @"TBBuddyDidSignOutNotification";
+NSString * const TBBuddyDidGoAwayNotification = @"TBBuddyDidGoAwayNotification";

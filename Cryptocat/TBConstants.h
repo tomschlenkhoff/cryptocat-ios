@@ -6,4 +6,6 @@
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
-extern NSString * const TBBuddiesListDidChangeNotification;
+extern NSString * const TBBuddyDidSignInNotification;
+extern NSString * const TBBuddyDidSignOutNotification;
+extern NSString * const TBBuddyDidGoAwayNotification;

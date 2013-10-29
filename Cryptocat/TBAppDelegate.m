@@ -251,7 +251,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
   if (![buddy isEqual:XMPPManager.me]) {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-    [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
+    [nc postNotificationName:TBBuddyDidSignInNotification object:buddy];
   }
 }
 
@@ -259,14 +259,14 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignOut:(TBBuddy *)buddy {
   TBLOG(@"-- %@ signed out", buddy.fullname);
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-  [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
+  [nc postNotificationName:TBBuddyDidSignOutNotification object:buddy];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidGoAway:(TBBuddy *)buddy {
   TBLOG(@"-- %@ went away", buddy.fullname);
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
-  [nc postNotificationName:TBBuddiesListDidChangeNotification object:XMPPManager.buddies];
+  [nc postNotificationName:TBBuddyDidGoAwayNotification object:buddy];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
