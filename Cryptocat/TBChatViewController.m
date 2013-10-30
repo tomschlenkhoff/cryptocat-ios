@@ -409,6 +409,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (IBAction)sendMessage:(id)sender {
   NSString *message = self.textField.text;
+  
+  if ([self.messagesForConversation objectForKey:self.currentRoomName]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.currentRoomName];
+  }
+
   [[self.messagesForConversation objectForKey:self.currentRoomName] addObject:message];
   [self.tableView reloadData];
   self.textField.text = @"";
