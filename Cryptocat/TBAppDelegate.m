@@ -48,7 +48,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 - (void)addCompletionBlock:(TBGoneSecureCompletionBlock)completionBlock
                    forUser:(TBBuddy *)user
                  recipient:(TBBuddy *)recipient;
-- (void)executeCompletionBlocisForUser:(NSString *)user recipient:(NSString *)recipient;
+- (void)executeGoneSecureCompletionBlocsForUser:(NSString *)user recipient:(NSString *)recipient;
 
 @end
 
@@ -207,7 +207,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)executeCompletionBlocisForUser:(NSString *)user recipient:(NSString *)recipient {
+- (void)executeGoneSecureCompletionBlocsForUser:(NSString *)user recipient:(NSString *)recipient {
   // check that there are completion blocks for the account/recipient
   if ([self.goneSecureCompletionBlocks objectForKey:user]==nil ||
       [[self.goneSecureCompletionBlocks objectForKey:user] objectForKey:recipient]==nil) return;
@@ -451,21 +451,15 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
   TBLOG(@"-- conversation with %@ is now %@", recipient, (isEncrypted ? @"secure" : @"insecure"));
   
   if (isEncrypted) {
-    // dirty workaround : I receive a gone_secure message before the key exchange is fully finished
-    double delayInSeconds = 1.0;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW,
-                                            (int64_t)(delayInSeconds * NSEC_PER_SEC));
-    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-      [self executeCompletionBlocisForUser:accountName recipient:recipient];
-      for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
-        if ([aBuddy.fullname isEqualToString:recipient]) {
-          aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
-                                                                accountName:accountName
-                                                                   protocol:TBMessagingProtocol];
-          break;
-        }
+    [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
+    for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
+      if ([aBuddy.fullname isEqualToString:recipient]) {
+        aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
+                                                              accountName:accountName
+                                                                 protocol:TBMessagingProtocol];
+        break;
       }
-    });
+    }
   }
 }
 
