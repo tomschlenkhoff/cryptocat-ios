@@ -42,6 +42,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 @property (nonatomic, strong) TBChatViewController *chatViewController;
 @property (nonatomic, strong) TBLoginViewController *loginViewController;
 @property (nonatomic, strong) NSMutableDictionary *goneSecureCompletionBlocks;
+@property (nonatomic, assign) UIBackgroundTaskIdentifier bgTaskIdentifier;
 
 - (BOOL)isLoginScreenPresented;
 - (BOOL)presentLoginVCAnimated:(BOOL)animated;
@@ -49,6 +50,8 @@ typedef void (^TBGoneSecureCompletionBlock)();
                    forUser:(TBBuddy *)user
                  recipient:(TBBuddy *)recipient;
 - (void)executeGoneSecureCompletionBlocsForUser:(NSString *)user recipient:(NSString *)recipient;
+- (void)startObservingForMessages;
+- (void)stopObservingForMessages;
 
 @end
 
@@ -114,25 +117,45 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
   // -- will send presence : <presence from="cryptocatdev@conference.crypto.cat/iOSTestApp"><status>away</status><show>away</show></presence>
   
+  // -- will send presence : <presence xmlns="jabber:client" from="cryptocatdev@conference.crypto.cat/iOSTestApp" to="cryptocatdev@conference.crypto.cat"><show>away</show><status>away</status><x xmlns="http://jabber.org/protocol/muc#user"><item affiliation="none" role="visitor"/></x></presence>
+  
   // TODO: should use something like [XMPPPresence tb_awayPresence]
-//  XMPPPresence *presence = [XMPPPresence presence];
-//  [presence addAttributeWithName:@"from" stringValue:self.XMPPManager.xmppRoom.myRoomJID.full];
-//  [presence addAttributeWithName:@"to" stringValue:@"cryptocatdev@conference.crypto.cat/safari"];
-//  //[presence addAttributeWithName:@"type" stringValue:@"available"];
-//  NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
-//  [status setStringValue:@"away"];
-//  [presence addChild:status];
-//  NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
-//  [show setStringValue:@"away"];
-//  [presence addChild:show];
-//  TBLOG(@"-- will send presence : %@", presence);
-//  [self.XMPPManager.xmppStream sendElement:presence];
+  /*
+  XMPPPresence *presence = [XMPPPresence presence];
+  [presence addAttributeWithName:@"xmlns" stringValue:@"jabber:client"];
+  [presence addAttributeWithName:@"from" stringValue:self.XMPPManager.xmppRoom.myRoomJID.full];
+  //[presence addAttributeWithName:@"to" stringValue:@"cryptocatdev@conference.crypto.cat/safari"];
+  //[presence addAttributeWithName:@"to" stringValue:self.XMPPManager.xmppRoom.roomJID.full];
+  [presence addAttributeWithName:@"to" stringValue:@"j5veih2gc4xx7t9g@crypto.cat/17798245201383226518959921"];
+  //[presence addAttributeWithName:@"type" stringValue:@"available"];
+  NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
+  [show setStringValue:@"away"];
+  [presence addChild:show];
+  NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
+  [status setStringValue:@"away"];
+  [presence addChild:status];
+  NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
+  NSXMLElement *item = [NSXMLElement elementWithName:@"item"];
+  [item addAttributeWithName:@"affiliation" stringValue:@"none"];
+  [item addAttributeWithName:@"role" stringValue:@"visitor"];
+  [x addChild:item];
+  [presence addChild:x];
+  TBLOG(@"-- will send presence : %@", presence);
+  [self.XMPPManager.xmppStream sendElement:presence];
+  */
+  
+  [self startObservingForMessages];
+  self.bgTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+    [application endBackgroundTask:self.bgTaskIdentifier];
+    self.bgTaskIdentifier = UIBackgroundTaskInvalid;
+  }];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)applicationWillEnterForeground:(UIApplication *)application {
   // Called as part of the transition from the background to the inactive state;
   // here you can undo many of the changes made on entering the background.
+  [self stopObservingForMessages];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -222,6 +245,26 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // empty the completion blocks array
   [[self.goneSecureCompletionBlocks objectForKey:user] setObject:[NSMutableArray array]
                                                           forKey:recipient];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)startObservingForMessages {
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceiveGroupMessage:)
+                        name:TBDidReceiveGroupChatMessageNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceivePrivateMessage:)
+                        name:TBDidReceivePrivateChatMessageNotification
+                      object:nil];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)stopObservingForMessages {
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
+  [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -487,5 +530,43 @@ didAskToConnectWithRoomName:(NSString *)roomName
   
   TBLOG(@"-- isConnected : %d", isConnected);
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Observers
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceiveGroupMessage:(NSNotification *)notification {
+  UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
+  if (messageNotification==nil) return;
+  
+  
+  NSString *roomName = notification.object;
+  //NSString *message = [notification.userInfo objectForKey:@"message"];
+  NSString *sender = [notification.userInfo objectForKey:@"sender"];
+  NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message in %@",
+                         sender, roomName];
+  messageNotification.alertBody = alertBody;
+  messageNotification.alertAction = @"Ok";
+  messageNotification.soundName = UILocalNotificationDefaultSoundName;
+  [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceivePrivateMessage:(NSNotification *)notification {
+  UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
+  if (messageNotification==nil) return;
+  
+  
+  TBBuddy *sender = notification.object;
+  //NSString *message = [notification.userInfo objectForKey:@"message"];
+  NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message", sender.nickname];
+  messageNotification.alertBody = alertBody;
+  messageNotification.alertAction = @"Ok";
+  messageNotification.soundName = UILocalNotificationDefaultSoundName;
+  [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
+}
+
 
 @end
