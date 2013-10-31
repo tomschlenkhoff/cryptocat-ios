@@ -125,8 +125,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [presence addAttributeWithName:@"xmlns" stringValue:@"jabber:client"];
   [presence addAttributeWithName:@"from" stringValue:self.XMPPManager.xmppRoom.myRoomJID.full];
   //[presence addAttributeWithName:@"to" stringValue:@"cryptocatdev@conference.crypto.cat/safari"];
-  //[presence addAttributeWithName:@"to" stringValue:self.XMPPManager.xmppRoom.roomJID.full];
-  [presence addAttributeWithName:@"to" stringValue:@"j5veih2gc4xx7t9g@crypto.cat/17798245201383226518959921"];
+  [presence addAttributeWithName:@"to" stringValue:self.XMPPManager.xmppRoom.roomJID.full];
+  //[presence addAttributeWithName:@"to" stringValue:@"j5veih2gc4xx7t9g@crypto.cat/17798245201383226518959921"];
   //[presence addAttributeWithName:@"type" stringValue:@"available"];
   NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
   [show setStringValue:@"away"];
@@ -146,6 +146,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   
   [self startObservingForMessages];
   self.bgTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
+    [self stopObservingForMessages];
+    [self.XMPPManager.xmppStream disconnect];
     [application endBackgroundTask:self.bgTaskIdentifier];
     self.bgTaskIdentifier = UIBackgroundTaskInvalid;
   }];
