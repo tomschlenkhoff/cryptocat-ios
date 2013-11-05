@@ -10,6 +10,8 @@
 #import "TBChatViewController.h"
 #import "NSString+Cryptocat.h"
 #import "NSError+Cryptocat.h"
+#import "UIColor+Cryptocat.h"
+#import "TBButtonCell.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -18,9 +20,10 @@
 
 @property (weak, nonatomic) IBOutlet UITextField *conversationNameField;
 @property (weak, nonatomic) IBOutlet UITextField *nicknameField;
-@property (weak, nonatomic) IBOutlet UIButton *connectButton;
+@property (weak, nonatomic) IBOutlet UILabel *legendLabel;
+@property (weak, nonatomic) IBOutlet TBButtonCell *buttonCell;
 
-- (IBAction)connect:(id)sender;
+- (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
 
 @end
@@ -44,41 +47,30 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  // -- colors
+  [self.navigationController setNavigationBarHidden:YES animated:NO];
+  self.tableView.backgroundColor = [UIColor tb_backgroundColor];
+  self.tableView.tableHeaderView.backgroundColor = [UIColor tb_backgroundColor];
+  self.legendLabel.textColor = [UIColor tb_tableViewSectionTitleColor];
+  self.conversationNameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.nicknameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.buttonCell.titleColor = [UIColor tb_buttonTitleColor];
+  
+  // -- labels
   self.title = @"Cryptocat";
-  self.conversationNameField.placeholder = NSLocalizedString(@"Conversation Name",
-                                                            @"Conversation Name Field Placeholder");
-  self.nicknameField.placeholder = NSLocalizedString(@"Nickname", @"Nickname Field Placeholder");
-  [self.connectButton setTitle:NSLocalizedString(@"Connect", @"Connect Button Title")
-                      forState:UIControlStateNormal];
+  self.legendLabel.text = NSLocalizedString(
+                @"Enter a name for your conversation.\nShare it with people you'd like to talk to.",
+                @"Login Screen Legend");
+  self.conversationNameField.placeholder = NSLocalizedString(@"conversation name",
+                                                            @"conversation name Field Placeholder");
+  self.nicknameField.placeholder = NSLocalizedString(@"your nickname",
+                                                     @"your nickname Field Placeholder");
+  self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
   
-#if DEBUG
-  self.conversationNameField.text = @"cryptocatdev";
-  self.nicknameField.text = @"iOSTestApp";
-#endif
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Actions
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (IBAction)connect:(id)sender {
-  NSString *conversationName = [self.conversationNameField.text tb_trim];
-  NSString *nickname = [self.nicknameField.text tb_trim];
-  
-  NSError *error = [self errorForConversationName:conversationName nickname:nickname];
-  if (error!=nil) {
-    [self showError:error];
-  }
-  else {
-    if ([self.delegate
-         respondsToSelector:@selector(loginController:didAskToConnectWithRoomName:nickname:)]) {
-      [self.delegate loginController:self
-         didAskToConnectWithRoomName:conversationName
-                            nickname:nickname];
-    }
-  }
+//#if DEBUG
+//  self.conversationNameField.text = @"cryptocatdev";
+//  self.nicknameField.text = @"iOSTestApp";
+//#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,6 +94,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)connect {
+  NSString *conversationName = [self.conversationNameField.text tb_trim];
+  NSString *nickname = [self.nicknameField.text tb_trim];
+  
+  NSError *error = [self errorForConversationName:conversationName nickname:nickname];
+  if (error!=nil) {
+    [self showError:error];
+  }
+  else {
+    if ([self.delegate
+         respondsToSelector:@selector(loginController:didAskToConnectWithRoomName:nickname:)]) {
+      [self.delegate loginController:self
+         didAskToConnectWithRoomName:conversationName
+                            nickname:nickname];
+    }
+  }
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname {
@@ -159,6 +170,26 @@ replacementString:(NSString *)string {
   
   NSUInteger newLength = textField.text.length + string.length - range.length;
   return (newLength > maxLength) ? NO : YES;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITableViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  // -- connect button
+  if (indexPath.section==1) {
+    [self connect];
+    
+    // deselect the cell
+    double delayInSeconds = 0.25;
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+      [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
+    });
+  }
 }
 
 @end

@@ -120,18 +120,42 @@
                         <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <button key="tableHeaderView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="i2c-oC-jPm">
-                            <rect key="frame" x="0.0" y="64" width="320" height="44"/>
+                        <view key="tableHeaderView" contentMode="scaleToFill" id="d59-bH-gfs">
+                            <rect key="frame" x="0.0" y="0.0" width="320" height="252"/>
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Button">
-                                <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                            </state>
-                        </button>
+                            <subviews>
+                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="y7i-3f-QjZ">
+                                    <rect key="frame" x="79" y="18" width="163" height="163"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="163" id="RoC-HV-aHz"/>
+                                        <constraint firstAttribute="width" constant="163" id="mzM-gD-Eya"/>
+                                    </constraints>
+                                </imageView>
+                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="H1S-Jz-WgW">
+                                    <rect key="frame" x="20" y="200" width="280" height="59"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <string key="text">Enter a name for your conversation.
+Share it with people you'd like to talk to.</string>
+                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                    <nil key="highlightedColor"/>
+                                </label>
+                            </subviews>
+                            <constraints>
+                                <constraint firstItem="H1S-Jz-WgW" firstAttribute="leading" secondItem="d59-bH-gfs" secondAttribute="leading" constant="20" id="6zO-LE-09d"/>
+                                <constraint firstItem="y7i-3f-QjZ" firstAttribute="top" secondItem="d59-bH-gfs" secondAttribute="top" constant="18" id="Mmn-dz-yCH"/>
+                                <constraint firstAttribute="trailing" secondItem="H1S-Jz-WgW" secondAttribute="trailing" constant="20" id="TE4-2e-VbA"/>
+                                <constraint firstItem="H1S-Jz-WgW" firstAttribute="top" secondItem="y7i-3f-QjZ" secondAttribute="bottom" constant="19" id="cjc-95-SvV"/>
+                                <constraint firstAttribute="centerX" secondItem="y7i-3f-QjZ" secondAttribute="centerX" constant="-0.5" id="g5L-p7-B0P"/>
+                                <constraint firstAttribute="centerY" secondItem="H1S-Jz-WgW" secondAttribute="centerY" constant="-103.5" id="mr8-4X-KJc"/>
+                            </constraints>
+                        </view>
                         <sections>
                             <tableViewSection id="B9Q-yg-JBO">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Mdc-oc-XOc">
-                                        <rect key="frame" x="0.0" y="108" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="252" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mdc-oc-XOc" id="ykn-fw-fOx">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -140,7 +164,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4sp-wg-dyh">
                                                     <rect key="frame" x="15" y="7" width="290" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="X1i-Rf-Km2" id="NKI-Ss-uT3"/>
@@ -150,7 +174,7 @@
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="87U-qT-Yzn">
-                                        <rect key="frame" x="0.0" y="152" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="296" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="87U-qT-Yzn" id="9ef-Cc-l0m">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -159,7 +183,7 @@
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RFZ-Da-OA5">
                                                     <rect key="frame" x="15" y="7" width="290" height="30"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
                                                         <outlet property="delegate" destination="X1i-Rf-Km2" id="cq5-wI-GLC"/>
@@ -172,28 +196,12 @@
                             </tableViewSection>
                             <tableViewSection id="URO-UF-ffF">
                                 <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="def-sm-u1P">
-                                        <rect key="frame" x="0.0" y="216" width="320" height="44"/>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="def-sm-u1P" customClass="TBButtonCell">
+                                        <rect key="frame" x="0.0" y="360" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="def-sm-u1P" id="Gce-dm-jaV">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hWq-DE-9Kz">
-                                                    <rect key="frame" x="131" y="7" width="59" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <state key="normal" title="Connect">
-                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                                    </state>
-                                                    <connections>
-                                                        <action selector="connect:" destination="X1i-Rf-Km2" eventType="touchUpInside" id="kbc-4C-ydz"/>
-                                                    </connections>
-                                                </button>
-                                            </subviews>
-                                            <constraints>
-                                                <constraint firstAttribute="centerY" secondItem="hWq-DE-9Kz" secondAttribute="centerY" constant="-0.5" id="ZDL-7F-Cba"/>
-                                                <constraint firstItem="hWq-DE-9Kz" firstAttribute="centerX" secondItem="Gce-dm-jaV" secondAttribute="centerX" id="nIJ-S2-jor"/>
-                                            </constraints>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </cells>
@@ -201,9 +209,11 @@
                         </sections>
                     </tableView>
                     <navigationItem key="navigationItem" id="Zjs-ds-vF5"/>
+                    <nil key="simulatedTopBarMetrics"/>
                     <connections>
-                        <outlet property="connectButton" destination="hWq-DE-9Kz" id="6Jo-YM-JWY"/>
+                        <outlet property="buttonCell" destination="def-sm-u1P" id="pTu-jd-YBG"/>
                         <outlet property="conversationNameField" destination="4sp-wg-dyh" id="bbm-o7-zYu"/>
+                        <outlet property="legendLabel" destination="H1S-Jz-WgW" id="1Kj-bA-oKL"/>
                         <outlet property="nicknameField" destination="RFZ-Da-OA5" id="pXB-UT-Y6J"/>
                     </connections>
                 </tableViewController>
@@ -464,6 +474,9 @@
             <point key="canvasLocation" x="936" y="-292"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="logo" width="163" height="163"/>
+    </resources>
     <simulatedMetricsContainer key="defaultSimulatedMetrics">
         <simulatedStatusBarMetrics key="statusBar"/>
         <simulatedOrientationMetrics key="orientation"/>
