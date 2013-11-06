@@ -25,6 +25,7 @@
 
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
+- (BOOL)shouldConnectButtonBeEnabled;
 
 @end
 
@@ -66,6 +67,8 @@
   self.nicknameField.placeholder = NSLocalizedString(@"your nickname",
                                                      @"your nickname Field Placeholder");
   self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
+  
+  self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
   
 //#if DEBUG
 //  self.conversationNameField.text = @"cryptocatdev";
@@ -152,6 +155,12 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)shouldConnectButtonBeEnabled {
+  return ![self.conversationNameField.text isEqualToString:@""] &&
+         ![self.nicknameField.text isEqualToString:@""];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark UITextFieldDelegate
@@ -160,15 +169,18 @@
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
 replacementString:(NSString *)string {
+  NSUInteger newLength = textField.text.length + string.length - range.length;
+
   NSUInteger maxLength = 0;
   if (textField==self.conversationNameField) {
+    self.buttonCell.enabled = newLength > 0 && self.nicknameField.text.length > 0;
     maxLength = 20;
   }
   else if (textField==self.nicknameField) {
+    self.buttonCell.enabled = newLength > 0 && self.conversationNameField.text.length > 0;
     maxLength = 16;
   }
   
-  NSUInteger newLength = textField.text.length + string.length - range.length;
   return (newLength > maxLength) ? NO : YES;
 }
 
@@ -178,6 +190,17 @@ replacementString:(NSString *)string {
 #pragma mark UITableViewDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSIndexPath *)tableView:(UITableView *)tableView
+  willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  // -- connect button
+  if (indexPath.section==1) {
+    return [self shouldConnectButtonBeEnabled] ? indexPath : nil;;
+  }
+  
+  return indexPath;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   // -- connect button
   if (indexPath.section==1) {
@@ -185,7 +208,8 @@ replacementString:(NSString *)string {
     
     // deselect the cell
     double delayInSeconds = 0.25;
-    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayInSeconds * NSEC_PER_SEC));
+    dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW,
+                                            (int64_t)(delayInSeconds * NSEC_PER_SEC));
     dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
       [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     });

@@ -83,4 +83,10 @@
   self.label.highlightedTextColor = [titleColor colorWithAlphaComponent:0.5];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setEnabled:(BOOL)enabled {
+  _enabled = enabled;
+  self.label.textColor = enabled ? self.titleColor : kDisabledTitleColor;
+}
+
 @end

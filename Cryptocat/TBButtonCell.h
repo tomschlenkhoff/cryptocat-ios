@@ -15,5 +15,6 @@
 
 @property (nonatomic, strong) NSString *title;
 @property (nonatomic, strong) UIColor *titleColor;
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
 @end
