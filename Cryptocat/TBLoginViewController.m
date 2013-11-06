@@ -187,6 +187,24 @@
 #pragma mark -
 #pragma mark UITextFieldDelegate
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)textFieldShouldReturn:(UITextField *)textField {
+  if (textField==self.conversationNameField) {
+    [self.nicknameField becomeFirstResponder];
+    return YES;
+  }
+  else if (textField==self.nicknameField) {
+    if ([self shouldConnectButtonBeEnabled]) {
+      [self connect];
+      return YES;
+    }
+    else {
+      return NO;
+    }
+  }
+  return YES;
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)textField:(UITextField *)textField
 shouldChangeCharactersInRange:(NSRange)range
