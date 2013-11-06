@@ -47,13 +47,14 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)viewWillAppear:(BOOL)animated {
-  [super viewWillAppear:animated];
-  
+- (void)viewDidAppear:(BOOL)animated {
+  [super viewDidAppear:animated];
+
   [[NSNotificationCenter defaultCenter] addObserver:self
                                            selector:@selector(keyboardDidShow:)
                                                name:UIKeyboardDidShowNotification
                                              object:nil];
+  self.shouldPreventTableViewAutoScrolling = YES;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -91,8 +92,6 @@
   
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
   
-  self.shouldPreventTableViewAutoScrolling = YES;
-
 //#if DEBUG
 //  self.conversationNameField.text = @"cryptocatdev";
 //  self.nicknameField.text = @"iOSTestApp";
