@@ -18,10 +18,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBLoginViewController () <UITextFieldDelegate>
 
+@property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UITextField *conversationNameField;
 @property (weak, nonatomic) IBOutlet UITextField *nicknameField;
 @property (weak, nonatomic) IBOutlet UILabel *legendLabel;
 @property (weak, nonatomic) IBOutlet TBButtonCell *buttonCell;
+@property (nonatomic, assign) BOOL shouldPreventTableViewAutoScrolling;
 
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
@@ -42,6 +44,25 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+  
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(keyboardDidShow:)
+                                               name:UIKeyboardDidShowNotification
+                                             object:nil];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)viewWillDisappear:(BOOL)animated {
+  [super viewWillDisappear:animated];
+  
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:UIKeyboardDidShowNotification
+                                                object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -70,6 +91,8 @@
   
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
   
+  self.shouldPreventTableViewAutoScrolling = YES;
+
 //#if DEBUG
 //  self.conversationNameField.text = @"cryptocatdev";
 //  self.nicknameField.text = @"iOSTestApp";
@@ -214,6 +237,46 @@ replacementString:(NSString *)string {
       [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     });
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UIScrollViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Trick to prevent the tableView from automatically scrolling when a field becomes first responder.
+ * The tableView will be manually scrolled when the keyboard is shown to show the whole form.
+ */
+- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
+  if (self.shouldPreventTableViewAutoScrolling) {
+    CGPoint contentOffset = scrollView.contentOffset;
+    contentOffset.y = 0;
+    self.tableView.contentOffset = contentOffset;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Observers
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * Trick to show the whole login form when a field becomes first responder.
+ */
+- (void)keyboardDidShow:(NSNotification *)notification {
+  double delayInSeconds = 0.01;
+  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW,
+                                          (int64_t)(delayInSeconds * NSEC_PER_SEC));
+  dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
+    self.shouldPreventTableViewAutoScrolling = NO;
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    [self.tableView scrollToRowAtIndexPath:indexPath
+                          atScrollPosition:UITableViewScrollPositionTop
+                                  animated:YES];
+  });
 }
 
 @end

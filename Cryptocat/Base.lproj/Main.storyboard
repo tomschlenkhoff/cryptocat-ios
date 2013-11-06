@@ -229,7 +229,7 @@ Share it with people you'd like to talk to.</string>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="X1i-Rf-Km2" kind="relationship" relationship="rootViewController" id="jGX-JC-d1z"/>
+                        <segue destination="X1i-Rf-Km2" kind="relationship" relationship="rootViewController" id="HpD-3G-2oC"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cQk-rG-Tht" userLabel="First Responder" sceneMemberID="firstResponder"/>
