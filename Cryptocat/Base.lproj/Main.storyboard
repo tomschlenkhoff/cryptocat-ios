@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="4514" systemVersion="13A603" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="rS3-R9-Ivy">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3746"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="3747"/>
     </dependencies>
     <scenes>
         <!--Navigation Controller-->
@@ -40,42 +40,12 @@
                                     <outlet property="delegate" destination="dJt-kJ-fWZ" id="vDw-sA-ZNV"/>
                                 </connections>
                             </tableView>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="95m-qY-31n">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="95m-qY-31n" customClass="TBChatToolbarView">
                                 <rect key="frame" x="0.0" y="524" width="320" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="gRT-CI-CT5">
-                                        <rect key="frame" x="15" y="7" width="246" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                        <connections>
-                                            <outlet property="delegate" destination="dJt-kJ-fWZ" id="byg-TF-F9A"/>
-                                        </connections>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3Q7-nD-AOB">
-                                        <rect key="frame" x="269" y="7" width="36" height="30"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <state key="normal" title="Send">
-                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                        </state>
-                                        <connections>
-                                            <action selector="sendMessage:" destination="dJt-kJ-fWZ" eventType="touchUpInside" id="fLg-Da-csq"/>
-                                        </connections>
-                                    </button>
-                                </subviews>
                                 <color key="backgroundColor" red="0.97254908080000002" green="0.97254908080000002" blue="0.97254908080000002" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
-                                    <constraint firstItem="gRT-CI-CT5" firstAttribute="top" secondItem="95m-qY-31n" secondAttribute="top" constant="7" id="B1D-HC-9OI"/>
-                                    <constraint firstAttribute="centerX" secondItem="3Q7-nD-AOB" secondAttribute="centerX" constant="-127" id="DW2-YI-YUg"/>
-                                    <constraint firstAttribute="trailing" secondItem="3Q7-nD-AOB" secondAttribute="trailing" constant="15" id="Gho-p8-n1Y"/>
-                                    <constraint firstItem="gRT-CI-CT5" firstAttribute="leading" secondItem="95m-qY-31n" secondAttribute="leading" constant="15" id="Hyy-Kf-bff"/>
-                                    <constraint firstAttribute="bottom" secondItem="gRT-CI-CT5" secondAttribute="bottom" constant="7" id="K6P-1S-ayI"/>
-                                    <constraint firstAttribute="bottom" secondItem="3Q7-nD-AOB" secondAttribute="bottom" constant="7" id="d7e-ja-jaX"/>
-                                    <constraint firstAttribute="centerX" secondItem="gRT-CI-CT5" secondAttribute="centerX" constant="22" id="eXl-hP-UXo"/>
-                                    <constraint firstItem="3Q7-nD-AOB" firstAttribute="leading" secondItem="gRT-CI-CT5" secondAttribute="trailing" constant="8" id="o0U-KF-g4Z"/>
                                     <constraint firstAttribute="height" constant="44" id="pUy-aA-hpb"/>
-                                    <constraint firstItem="3Q7-nD-AOB" firstAttribute="top" secondItem="95m-qY-31n" secondAttribute="top" constant="7" id="sr3-T1-92z"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -104,8 +74,8 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="9wI-zg-rtH" id="7jZ-kl-Clo"/>
-                        <outlet property="textField" destination="gRT-CI-CT5" id="Ndm-Dd-GgR"/>
                         <outlet property="toolbarView" destination="95m-qY-31n" id="gqy-ir-sS3"/>
+                        <outlet property="toolbarViewBottomConstraint" destination="k17-YB-f9k" id="NIe-Ir-uRI"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oOc-g7-lfK" userLabel="First Responder" sceneMemberID="firstResponder"/>

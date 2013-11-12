@@ -11,6 +11,7 @@
 #import "TBBuddiesViewController.h"
 #import "TBMeViewController.h"
 #import "TBBuddy.h"
+#import "TBMessageCell.h"
 
 #define kPausedMessageTimer 5.0
 
@@ -28,6 +29,7 @@
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet UIView *toolbarView;
 @property (weak, nonatomic) IBOutlet UITextField *textField;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarViewBottomConstraint;
 @property (nonatomic, strong) NSMutableDictionary *messagesForConversation;
 @property (nonatomic, strong) NSString *currentRoomName;
 @property (nonatomic, strong) TBBuddy *currentRecipient;
@@ -90,6 +92,13 @@
   self.messagesForConversation = [NSMutableDictionary dictionary];
   self.nbUnreadMessagesInRoom = 0;
   self.nbUnreadMessagesForBuddy = [NSMutableDictionary dictionary];
+  
+  // TODO : color -> category
+  self.view.backgroundColor = [UIColor colorWithRed:0.784 green:0.898 blue:0.957 alpha:1.000];
+  self.tableView.backgroundColor = self.view.backgroundColor;
+  self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+  self.tableView.contentInset = UIEdgeInsetsMake(17.0, 0.0, 0.0, 0.0);
+
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
@@ -162,16 +171,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  static NSString *cellID = @"cellID";
-  UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
+  // TODO : register/dequeue cell
+  static NSString *cellID = @"MessageCellID";
+  TBMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
   if (cell == nil) {
-    cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                  reuseIdentifier:cellID];
+    [tableView registerClass:[TBMessageCell class] forCellReuseIdentifier:cellID];
+    cell = [[TBMessageCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                reuseIdentifier:cellID];
   }
 
   NSMutableArray *messages = [self.messagesForConversation objectForKey:self.currentRoomName];
-  cell.textLabel.text = [messages objectAtIndex:indexPath.row];
   
+  cell.senderName = @"balky";
+  cell.meSpeaking = YES;
+  cell.message = [messages objectAtIndex:indexPath.row];
+  cell.backgroundColor = self.tableView.backgroundColor;
+
   return cell;
 }
 
@@ -179,6 +194,23 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
   NSMutableArray *messages = [self.messagesForConversation objectForKey:self.currentRoomName];
   return [messages count];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  return [TBMessageCell heightForCellWithText:
+    [[self.messagesForConversation objectForKey:self.currentRoomName] objectAtIndex:indexPath.row]];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITableViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSIndexPath *)tableView:(UITableView *)tableView
+  willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  return nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -256,30 +288,29 @@
   NSDictionary* info = [notification userInfo];
   CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
   
-  UIEdgeInsets contentInsets = self.tableView.contentInset;
-  contentInsets.bottom+=keyboardSize.height;
+  // get the keyboard height depending on the device orientation
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
+  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
   
-  self.tableView.contentInset = contentInsets;
-  self.tableView.scrollIndicatorInsets = contentInsets;
-  
-  CGRect toolbarFrame = self.toolbarView.frame;
-  toolbarFrame.origin.y-=keyboardSize.height;
-
+  // get the animation info
   double keyboardTransitionDuration;
   [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey]
    getValue:&keyboardTransitionDuration];
-  
   UIViewAnimationCurve keyboardTransitionAnimationCurve;
   [[notification.userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey]
    getValue:&keyboardTransitionAnimationCurve];
-
+  
+  // update the toolbarView constraints
+  self.toolbarViewBottomConstraint.constant = keyboardHeight;
+  
   // start animation
   [UIView beginAnimations:nil context:NULL];
   [UIView setAnimationDuration:keyboardTransitionDuration];
   [UIView setAnimationCurve:keyboardTransitionAnimationCurve];
   [UIView setAnimationBeginsFromCurrentState:YES];
   
-  self.toolbarView.frame = toolbarFrame;
+  [self.view layoutIfNeeded];
   
   [UIView commitAnimations];
   // end animation
@@ -290,15 +321,15 @@
   NSDictionary* info = [notification userInfo];
   CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
   
-  UIEdgeInsets contentInsets = self.tableView.contentInset;
-  contentInsets.bottom-=keyboardSize.height;
+  // get the keyboard height depending on the device orientation
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
+  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
   
-  self.tableView.contentInset = contentInsets;
-  self.tableView.scrollIndicatorInsets = contentInsets;
-
-  CGRect toolbarFrame = self.toolbarView.frame;
-  toolbarFrame.origin.y+=keyboardSize.height;
-  self.toolbarView.frame = toolbarFrame;
+  // update the toolbarView constraints
+  self.toolbarViewBottomConstraint.constant = keyboardHeight;
+  
+  [self.view layoutIfNeeded];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

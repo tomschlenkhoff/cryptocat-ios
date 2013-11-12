@@ -1,0 +1,22 @@
+//
+//  TBMessageCell.h
+//  ChatView
+//
+//  Created by Thomas Balthazar on 07/11/13.
+//  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface TBMessageCell : UITableViewCell
+
+@property (nonatomic, strong) NSString *senderName;
+@property (nonatomic, strong) NSString *message;
+@property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
+
++ (CGFloat)heightForCellWithText:(NSString *)text;
+
+@end
