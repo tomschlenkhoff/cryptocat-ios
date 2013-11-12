@@ -12,8 +12,11 @@
 #import "TBMeViewController.h"
 #import "TBBuddy.h"
 #import "TBMessageCell.h"
+#import "TBChatToolbarView.h"
+#import "UIColor+Cryptocat.h"
 
-#define kPausedMessageTimer 5.0
+#define kPausedMessageTimer   5.0
+#define kTableViewPaddingTop  17.0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -23,12 +26,11 @@
   UITableViewDelegate,
   TBBuddiesViewControllerDelegate,
   TBMeViewControllerDelegate,
-  UITextFieldDelegate
+  UITextViewDelegate
 >
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UIView *toolbarView;
-@property (weak, nonatomic) IBOutlet UITextField *textField;
+@property (weak, nonatomic) IBOutlet TBChatToolbarView *toolbarView;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarViewBottomConstraint;
 @property (nonatomic, strong) NSMutableDictionary *messagesForConversation;
 @property (nonatomic, strong) NSString *currentRoomName;
@@ -93,12 +95,15 @@
   self.nbUnreadMessagesInRoom = 0;
   self.nbUnreadMessagesForBuddy = [NSMutableDictionary dictionary];
   
-  // TODO : color -> category
-  self.view.backgroundColor = [UIColor colorWithRed:0.784 green:0.898 blue:0.957 alpha:1.000];
+  self.view.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.backgroundColor = self.view.backgroundColor;
   self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
-  self.tableView.contentInset = UIEdgeInsetsMake(17.0, 0.0, 0.0, 0.0);
+  self.tableView.contentInset = UIEdgeInsetsMake(kTableViewPaddingTop, 0.0, 0.0, 0.0);
 
+  self.toolbarView.textView.delegate = self;
+  [self.toolbarView.sendButton addTarget:self
+                                  action:@selector(sendMessage:)
+                        forControlEvents:UIControlEventTouchUpInside];
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
@@ -171,7 +176,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  // TODO : register/dequeue cell
   static NSString *cellID = @"MessageCellID";
   TBMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
   if (cell == nil) {
@@ -278,8 +282,9 @@
   
   if ([self.currentRecipient isEqual:buddy]) {
     BOOL isSignIn = [notification.name isEqualToString:TBBuddyDidSignInNotification];
-    self.textField.backgroundColor = isSignIn ? [UIColor whiteColor] : [UIColor redColor];
-    self.textField.enabled = isSignIn;
+    self.toolbarView.textView.backgroundColor = isSignIn ?
+                                                  [UIColor whiteColor] : [UIColor redColor];
+    self.toolbarView.textView.editable = isSignIn;
   }
 }
 
@@ -439,7 +444,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (IBAction)sendMessage:(id)sender {
-  NSString *message = self.textField.text;
+  NSString *message = self.toolbarView.textView.text;
   
   if ([self.messagesForConversation objectForKey:self.currentRoomName]==nil) {
     [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.currentRoomName];
@@ -447,7 +452,7 @@
 
   [[self.messagesForConversation objectForKey:self.currentRoomName] addObject:message];
   [self.tableView reloadData];
-  self.textField.text = @"";
+  self.toolbarView.textView.text = @"";
   
   [self cancelTypingTimer];
   
@@ -542,14 +547,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark UITextFieldDelegate
+#pragma mark UITextViewDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)textField:(UITextField *)textField
-shouldChangeCharactersInRange:(NSRange)range
-replacementString:(NSString *)string {
-  NSUInteger oldLength = textField.text.length;
-  NSUInteger newLength = textField.text.length + string.length - range.length;
+- (BOOL)textView:(UITextView *)textView
+shouldChangeTextInRange:(NSRange)range
+ replacementText:(NSString *)text {
+  NSUInteger oldLength = textView.text.length;
+  NSUInteger newLength = textView.text.length + text.length - range.length;
   
   // if there's a string in the input field
   if (newLength > 0) {

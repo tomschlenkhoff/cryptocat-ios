@@ -74,7 +74,7 @@
                     </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="9wI-zg-rtH" id="7jZ-kl-Clo"/>
-                        <outlet property="toolbarView" destination="95m-qY-31n" id="gqy-ir-sS3"/>
+                        <outlet property="toolbarView" destination="95m-qY-31n" id="Tlc-s8-due"/>
                         <outlet property="toolbarViewBottomConstraint" destination="k17-YB-f9k" id="NIe-Ir-uRI"/>
                     </connections>
                 </viewController>
