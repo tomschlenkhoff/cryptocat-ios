@@ -31,6 +31,7 @@
   if (self=[super init]) {
     _nickname = XMPPJID.resource;
     _fullname = XMPPJID.full;
+    _roomName = XMPPJID.user;
     _chatFingerprint = nil;
     _groupChatFingerprint = nil;
   }

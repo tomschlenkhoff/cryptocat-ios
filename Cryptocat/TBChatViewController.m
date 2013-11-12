@@ -10,6 +10,7 @@
 #import "TBXMPPMessagesHandler.h"
 #import "TBBuddiesViewController.h"
 #import "TBMeViewController.h"
+#import "TBMessage.h"
 #import "TBBuddy.h"
 #import "TBMessageCell.h"
 #import "TBChatToolbarView.h"
@@ -185,10 +186,11 @@
   }
 
   NSMutableArray *messages = [self.messagesForConversation objectForKey:self.currentRoomName];
+  TBMessage *message = [messages objectAtIndex:indexPath.row];
   
-  cell.senderName = @"balky";
+  cell.senderName = message.sender.nickname;
   cell.meSpeaking = YES;
-  cell.message = [messages objectAtIndex:indexPath.row];
+  cell.message = message.text;
   cell.backgroundColor = self.tableView.backgroundColor;
 
   return cell;
@@ -202,8 +204,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  return [TBMessageCell heightForCellWithText:
-    [[self.messagesForConversation objectForKey:self.currentRoomName] objectAtIndex:indexPath.row]];
+  TBMessage *message = [[self.messagesForConversation objectForKey:self.currentRoomName]
+                        objectAtIndex:indexPath.row];
+  return [TBMessageCell heightForCellWithText:message.text];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -224,17 +227,14 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveGroupMessage:(NSNotification *)notification {
-  NSString *roomName = notification.object;
-  NSString *message = [notification.userInfo objectForKey:@"message"];
-  NSString *sender = [notification.userInfo objectForKey:@"sender"];
-  
-  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", sender, message];
+  TBMessage *message = notification.object;
+  NSString *roomName = message.sender.roomName;
   
   if ([self.messagesForConversation objectForKey:roomName]==nil) {
     [self.messagesForConversation setObject:[NSMutableArray array] forKey:roomName];
   }
 
-  [[self.messagesForConversation objectForKey:roomName] addObject:receivedMessage];
+  [[self.messagesForConversation objectForKey:roomName] addObject:message];
   
   if ([self isInConversationRoom]) {
     [self.tableView reloadData];
@@ -243,28 +243,26 @@
     self.nbUnreadMessagesInRoom+=1;
     [self updateUnreadMessagesCounter];
   }
-  TBLOG(@"-- received message in %@ from %@: %@", roomName, sender, message);
+  TBLOG(@"-- received message in %@ from %@: %@", roomName, message.sender.fullname, message.text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceivePrivateMessage:(NSNotification *)notification {
-  NSString *message = [notification.userInfo objectForKey:@"message"];
-  if ([message isEqualToString:@""]) return ;
+  TBMessage *message = notification.object;
   
-  TBBuddy *sender = notification.object;
-  NSString *receivedMessage = [NSString stringWithFormat:@"%@ : %@", self.title, message];
+  if ([message.text isEqualToString:@""]) return ;
   
-  if ([self.messagesForConversation objectForKey:sender.fullname]==nil) {
-    [self.messagesForConversation setObject:[NSMutableArray array] forKey:sender.fullname];
+  if ([self.messagesForConversation objectForKey:message.sender.fullname]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:message.sender.fullname];
   }
   
-  [[self.messagesForConversation objectForKey:sender.fullname] addObject:receivedMessage];
+  [[self.messagesForConversation objectForKey:message.sender.fullname] addObject:message];
   
-  if (![self isInConversationRoom] && [self.currentRecipient isEqual:sender]) {
+  if (![self isInConversationRoom] && [self.currentRecipient isEqual:message.sender]) {
     [self.tableView reloadData];
   }
   else {
-    NSString *buddyName = sender.fullname;
+    NSString *buddyName = message.sender.fullname;
     NSInteger nbUnreadMessages = [[self.nbUnreadMessagesForBuddy objectForKey:buddyName]
                                   integerValue];
     nbUnreadMessages+=1;
@@ -273,7 +271,7 @@
     [self updateUnreadMessagesCounter];
   }
   
-  TBLOG(@"-- received private message from %@: %@", sender.fullname, message);
+  TBLOG(@"-- received private message from %@: %@", message.sender.fullname, message.text);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

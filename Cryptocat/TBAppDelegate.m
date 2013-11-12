@@ -17,6 +17,7 @@
 #import "XMPPRoom.h"
 #import "NSError+Cryptocat.h"
 #import "TBBuddy.h"
+#import "TBMessage.h"
 #import "XMPPPresence+Cryptocat.h"
 
 typedef void (^TBGoneSecureCompletionBlock)();
@@ -543,10 +544,10 @@ didAskToConnectWithRoomName:(NSString *)roomName
   UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
   if (messageNotification==nil) return;
   
+  TBMessage *message = notification.object;
   
-  NSString *roomName = notification.object;
-  //NSString *message = [notification.userInfo objectForKey:@"message"];
-  NSString *sender = [notification.userInfo objectForKey:@"sender"];
+  NSString *roomName = message.sender.roomName;
+  NSString *sender = message.sender.nickname;
   NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message in %@",
                          sender, roomName];
   messageNotification.alertBody = alertBody;
@@ -560,9 +561,9 @@ didAskToConnectWithRoomName:(NSString *)roomName
   UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
   if (messageNotification==nil) return;
   
-  
-  TBBuddy *sender = notification.object;
-  //NSString *message = [notification.userInfo objectForKey:@"message"];
+  TBMessage *message = notification.object;
+  TBBuddy *sender = message.sender;
+
   NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message", sender.nickname];
   messageNotification.alertBody = alertBody;
   messageNotification.alertAction = @"Ok";

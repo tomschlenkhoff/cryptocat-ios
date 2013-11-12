@@ -7,6 +7,7 @@
 //
 
 #import "TBXMPPMessagesHandler.h"
+#import "TBMessage.h"
 #import "TBBuddy.h"
 #import "XMPP.h"
 #import "XMPPRoom.h"
@@ -227,18 +228,20 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   if (message.body==nil || [message.body isEqualToString:@""]) return;
   
-  NSString *sender = message.from.resource;
-  NSString *roomName = message.from.user;
+  TBBuddy *sender = [[TBBuddy alloc] initWithXMPPJID:message.from];
   NSString *decryptedMessage = [self.multipartyProtocolManager decryptMessage:message.body
-                                                                 fromUsername:sender];
-  NSDictionary *userInfo = @{@"message": decryptedMessage, @"sender": sender};
+                                                                 fromUsername:sender.nickname];
+
+  TBMessage *receivedMsg = [[TBMessage alloc] init];
+  receivedMsg.sender = sender;
+  receivedMsg.text = decryptedMessage;
   
   TBLOG(@"-- decrypted message : %@", decryptedMessage);
   
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter postNotificationName:TBDidReceiveGroupChatMessageNotification
-                               object:roomName
-                             userInfo:userInfo];  
+                               object:receivedMsg
+                             userInfo:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -295,11 +298,14 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   TBLOG(@"-- decoded message : |%@|", decodedMessage);
   
-  NSDictionary *userInfo = @{@"message": decodedMessage};
+  TBMessage *receivedMsg = [[TBMessage alloc] init];
+  receivedMsg.sender = sender;
+  receivedMsg.text = decodedMessage;
+
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
-                               object:sender
-                             userInfo:userInfo];
+                               object:receivedMsg
+                             userInfo:nil];
 }
 
 @end
