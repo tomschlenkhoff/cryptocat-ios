@@ -97,7 +97,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // customize appearance
   [[UINavigationBar appearance] setBarTintColor:[UIColor tb_navigationBarColor]];
   [[UIView appearance] setTintColor:[UIColor tb_buttonTitleColor]];
-  [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+  [[UINavigationBar appearance] setTitleTextAttributes:
+    @{NSForegroundColorAttributeName: [UIColor whiteColor]}];
+  [[UITableView appearance] setBackgroundColor:[UIColor tb_backgroundColor]];
   
   return YES;
 }
