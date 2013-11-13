@@ -17,5 +17,6 @@
 + (UIColor *)tb_tableViewSectionTitleColor;
 + (UIColor *)tb_tableViewCellTextColor;
 + (UIColor *)tb_buttonTitleColor;
++ (UIColor *)tb_navigationBarColor;
 
 @end

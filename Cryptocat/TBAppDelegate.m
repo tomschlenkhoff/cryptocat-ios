@@ -19,6 +19,7 @@
 #import "TBBuddy.h"
 #import "TBMessage.h"
 #import "XMPPPresence+Cryptocat.h"
+#import "UIColor+Cryptocat.h"
 
 typedef void (^TBGoneSecureCompletionBlock)();
 
@@ -92,6 +93,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
   self.chatViewController = (TBChatViewController *)nc.topViewController;
   self.chatViewController.delegate = self;
+  
+  // customize appearance
+  [[UINavigationBar appearance] setBarTintColor:[UIColor tb_navigationBarColor]];
+  [[UIView appearance] setTintColor:[UIColor tb_buttonTitleColor]];
+  [[UINavigationBar appearance] setTitleTextAttributes:@{NSForegroundColorAttributeName: [UIColor whiteColor]}];
   
   return YES;
 }

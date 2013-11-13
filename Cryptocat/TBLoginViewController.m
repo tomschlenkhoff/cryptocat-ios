@@ -92,10 +92,10 @@
   
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
   
-//#if DEBUG
-//  self.conversationNameField.text = @"cryptocatdev";
-//  self.nicknameField.text = @"iOSTestApp";
-//#endif
+#if DEBUG
+  self.conversationNameField.text = @"cryptocatdev";
+  self.nicknameField.text = @"iOSTestApp";
+#endif
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

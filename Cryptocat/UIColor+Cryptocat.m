@@ -33,4 +33,9 @@
   return [UIColor colorWithRed:0.435 green:0.624 blue:0.784 alpha:1.000];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (UIColor *)tb_navigationBarColor {
+  return [UIColor colorWithRed:0.082 green:0.075 blue:0.145 alpha:1.000];
+}
+
 @end

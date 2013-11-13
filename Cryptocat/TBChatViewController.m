@@ -85,6 +85,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	 
   self.defaultNavLeftItemTitle = NSLocalizedString(@"Buddies",
                                                    @"Buddies Button Title on Chat Screen");
@@ -130,6 +132,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidAppear:(BOOL)animated {
   [super viewDidAppear:animated];
+  [self setNeedsStatusBarAppearanceUpdate];
 
   // the first time the view appears, after the loginVC is dismissed
   if (self.currentRoomName==nil) {
@@ -294,7 +297,7 @@
 - (void)keyboardWillShow:(NSNotification *)notification {
   NSDictionary* info = [notification userInfo];
   CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-  
+
   // get the keyboard height depending on the device orientation
   UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
