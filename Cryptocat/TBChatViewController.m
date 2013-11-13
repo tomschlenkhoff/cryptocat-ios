@@ -41,6 +41,7 @@
 @property (nonatomic, assign) NSUInteger nbUnreadMessagesInRoom;
 @property (nonatomic, strong) NSMutableDictionary *nbUnreadMessagesForBuddy;
 @property (nonatomic, strong) NSString *defaultNavLeftItemTitle;
+@property (nonatomic, readonly) NSMutableArray *messages;
 
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
@@ -52,6 +53,7 @@
 - (void)didPauseComposing;
 - (void)didEndComposing;
 - (void)updateUnreadMessagesCounter;
+- (void)scrollToLatestMessage;
 
 @end
 
@@ -185,7 +187,7 @@
                                 reuseIdentifier:cellID];
   }
 
-  NSMutableArray *messages = [self.messagesForConversation objectForKey:self.currentRoomName];
+  NSMutableArray *messages = self.messages;
   TBMessage *message = [messages objectAtIndex:indexPath.row];
   
   cell.senderName = message.sender.nickname;
@@ -198,13 +200,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  NSMutableArray *messages = [self.messagesForConversation objectForKey:self.currentRoomName];
+  NSMutableArray *messages = self.messages;
   return [messages count];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  TBMessage *message = [[self.messagesForConversation objectForKey:self.currentRoomName]
+  TBMessage *message = [self.messages
                         objectAtIndex:indexPath.row];
   return [TBMessageCell heightForCellWithText:message.text];
 }
@@ -238,6 +240,7 @@
   
   if ([self isInConversationRoom]) {
     [self.tableView reloadData];
+    [self scrollToLatestMessage];
   }
   else {
     self.nbUnreadMessagesInRoom+=1;
@@ -260,6 +263,7 @@
   
   if (![self isInConversationRoom] && [self.currentRecipient isEqual:message.sender]) {
     [self.tableView reloadData];
+    [self scrollToLatestMessage];
   }
   else {
     NSString *buddyName = message.sender.fullname;
@@ -428,6 +432,19 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)scrollToLatestMessage {
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.messages count]-1 inSection:0];
+  [self.tableView scrollToRowAtIndexPath:indexPath
+                        atScrollPosition:UITableViewScrollPositionBottom
+                                animated:YES];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSMutableArray *)messages {
+  return [self.messagesForConversation objectForKey:self.currentRoomName];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Actions
@@ -438,11 +455,11 @@
   message.text = self.toolbarView.textView.text;
   message.sender = self.me;
   
-  if ([self.messagesForConversation objectForKey:self.currentRoomName]==nil) {
+  if (self.messages==nil) {
     [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.currentRoomName];
   }
 
-  [[self.messagesForConversation objectForKey:self.currentRoomName] addObject:message];
+  [self.messages addObject:message];
   [self.tableView reloadData];
   self.toolbarView.textView.text = @"";
   
