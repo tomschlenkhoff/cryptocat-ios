@@ -42,6 +42,7 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  self.title = NSLocalizedString(@"Me", @"Me Screen Title");
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
   self.groupFingerprintCell.textLabel.text = self.me.groupChatFingerprint;

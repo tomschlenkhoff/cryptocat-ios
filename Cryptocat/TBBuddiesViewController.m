@@ -53,6 +53,7 @@
   [super viewDidLoad];
 
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+  self.title = NSLocalizedString(@"Buddies", @"Buddies Screen Title");
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
