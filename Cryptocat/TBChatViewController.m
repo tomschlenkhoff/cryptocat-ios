@@ -189,7 +189,7 @@
   TBMessage *message = [messages objectAtIndex:indexPath.row];
   
   cell.senderName = message.sender.nickname;
-  cell.meSpeaking = YES;
+  cell.meSpeaking = [message.sender isEqual:self.me];;
   cell.message = message.text;
   cell.backgroundColor = self.tableView.backgroundColor;
 
@@ -442,7 +442,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (IBAction)sendMessage:(id)sender {
-  NSString *message = self.toolbarView.textView.text;
+  TBMessage *message = [[TBMessage alloc] init];
+  message.text = self.toolbarView.textView.text;
+  message.sender = self.me;
   
   if ([self.messagesForConversation objectForKey:self.currentRoomName]==nil) {
     [self.messagesForConversation setObject:[NSMutableArray array] forKey:self.currentRoomName];
@@ -457,7 +459,7 @@
   // group chat message
   if ([self isInConversationRoom]) {
     if ([self.delegate respondsToSelector:@selector(chatViewController:didAskToSendMessage:)]) {
-      [self.delegate chatViewController:self didAskToSendMessage:message];
+      [self.delegate chatViewController:self didAskToSendMessage:message.text];
     }
   }
   // private chat message
@@ -465,7 +467,7 @@
     if ([self.delegate
          respondsToSelector:@selector(chatViewController:didAskToSendMessage:toUser:)]) {
       [self.delegate chatViewController:self
-                    didAskToSendMessage:message
+                    didAskToSendMessage:message.text
                                  toUser:self.currentRecipient];
     }
   }
