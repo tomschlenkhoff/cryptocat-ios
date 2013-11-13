@@ -189,7 +189,7 @@
   TBMessage *message = [messages objectAtIndex:indexPath.row];
   
   cell.senderName = message.sender.nickname;
-  cell.meSpeaking = [message.sender isEqual:self.me];;
+  cell.meSpeaking = [message.sender isEqual:self.me];
   cell.message = message.text;
   cell.backgroundColor = self.tableView.backgroundColor;
 
@@ -321,16 +321,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillBeHidden:(NSNotification *)notification {
-  NSDictionary* info = [notification userInfo];
-  CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-  
-  // get the keyboard height depending on the device orientation
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
-  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
-  
   // update the toolbarView constraints
-  self.toolbarViewBottomConstraint.constant = keyboardHeight;
+  self.toolbarViewBottomConstraint.constant = 0; //keyboardHeight;
   
   [self.view layoutIfNeeded];
 }
