@@ -8,14 +8,15 @@
 
 #import "TBBuddyViewController.h"
 #import "TBBuddy.h"
+#import "TBFingerprintCell.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBBuddyViewController ()
 
-@property (weak, nonatomic) IBOutlet UITableViewCell *groupFingerprintCell;
-@property (weak, nonatomic) IBOutlet UITableViewCell *privateFingerprintCell;
+@property (weak, nonatomic) IBOutlet TBFingerprintCell *groupFingerprintCell;
+@property (weak, nonatomic) IBOutlet TBFingerprintCell *privateFingerprintCell;
 
 @end
 
@@ -45,8 +46,8 @@
   [super viewDidLoad];
 
   self.title = self.buddy.nickname;
-  self.groupFingerprintCell.textLabel.text = self.buddy.groupChatFingerprint;
-  self.privateFingerprintCell.textLabel.text = self.buddy.chatFingerprint;
+  self.groupFingerprintCell.fingerprint = self.buddy.groupChatFingerprint;
+  self.privateFingerprintCell.fingerprint = self.buddy.chatFingerprint;
   
   [self.buddy addObserver:self forKeyPath:@"groupChatFingerprint" options:0 context:NULL];
   [self.buddy addObserver:self forKeyPath:@"chatFingerprint" options:0 context:NULL];
@@ -63,8 +64,8 @@
                         change:(NSDictionary *)change
                        context:(void *)context {
   if (object==self.buddy) {
-    self.groupFingerprintCell.textLabel.text = self.buddy.groupChatFingerprint;
-    self.privateFingerprintCell.textLabel.text = self.buddy.chatFingerprint;
+    self.groupFingerprintCell.fingerprint = self.buddy.groupChatFingerprint;
+    self.privateFingerprintCell.fingerprint = self.buddy.chatFingerprint;
     [self.tableView reloadData];
   }
 }

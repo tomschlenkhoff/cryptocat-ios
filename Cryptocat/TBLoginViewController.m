@@ -237,7 +237,7 @@ replacementString:(NSString *)string {
     return [self shouldConnectButtonBeEnabled] ? indexPath : nil;;
   }
   
-  return indexPath;
+  return nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

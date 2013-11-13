@@ -38,6 +38,7 @@
 		33B936DF18327EDC003497AC /* TBChatToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936DE18327EDC003497AC /* TBChatToolbarView.m */; };
 		33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B936E018327EF4003497AC /* Monda-Regular.ttf */; };
 		33B936E4183289A0003497AC /* TBMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936E3183289A0003497AC /* TBMessage.m */; };
+		33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936E61833E7D7003497AC /* TBFingerprintCell.m */; };
 		33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C3651318102413003EAF93 /* TBBuddiesViewController.m */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
@@ -110,6 +111,8 @@
 		33B936E018327EF4003497AC /* Monda-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Monda-Regular.ttf"; sourceTree = "<group>"; };
 		33B936E2183289A0003497AC /* TBMessage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMessage.h; sourceTree = "<group>"; };
 		33B936E3183289A0003497AC /* TBMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMessage.m; sourceTree = "<group>"; };
+		33B936E51833E7D7003497AC /* TBFingerprintCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBFingerprintCell.h; sourceTree = "<group>"; };
+		33B936E61833E7D7003497AC /* TBFingerprintCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBFingerprintCell.m; sourceTree = "<group>"; };
 		33C3651218102413003EAF93 /* TBBuddiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddiesViewController.h; sourceTree = "<group>"; };
 		33C3651318102413003EAF93 /* TBBuddiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddiesViewController.m; sourceTree = "<group>"; };
 		33E6C7FA181512FD009EC642 /* TBLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLoginViewController.h; sourceTree = "<group>"; };
@@ -300,6 +303,8 @@
 			isa = PBXGroup;
 			children = (
 				33B936D318327EB6003497AC /* Chat Cells */,
+				33B936E51833E7D7003497AC /* TBFingerprintCell.h */,
+				33B936E61833E7D7003497AC /* TBFingerprintCell.m */,
 				3346522B1829044600280518 /* TBButtonCell.h */,
 				3346522C1829044600280518 /* TBButtonCell.m */,
 				33B936DD18327EDC003497AC /* TBChatToolbarView.h */,
@@ -479,6 +484,7 @@
 				33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */,
 				33B936DF18327EDC003497AC /* TBChatToolbarView.m in Sources */,
 				33B936DB18327EC4003497AC /* TBMessageCellView.m in Sources */,
+				33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */,
 				33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */,
 				332CA4D0181955B500233E92 /* TBBuddy.m in Sources */,
 				3301305017F18A5E00287253 /* XMPPInBandRegistration.m in Sources */,

@@ -8,17 +8,21 @@
 
 #import "TBMeViewController.h"
 #import "TBBuddy.h"
+#import "TBFingerprintCell.h"
+#import "TBButtonCell.h"
+#import "UIColor+Cryptocat.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBMeViewController ()
 
-@property (weak, nonatomic) IBOutlet UITableViewCell *groupFingerprintCell;
-@property (weak, nonatomic) IBOutlet UITableViewCell *privateFingerprintCell;
+@property (weak, nonatomic) IBOutlet TBFingerprintCell *groupFingerprintCell;
+@property (weak, nonatomic) IBOutlet TBFingerprintCell *privateFingerprintCell;
+@property (weak, nonatomic) IBOutlet TBButtonCell *logoutCell;
 
 - (IBAction)done:(id)sender;
-- (IBAction)logout:(id)sender;
+- (void)logout;
 
 @end
 
@@ -45,8 +49,10 @@
   self.title = NSLocalizedString(@"Me", @"Me Screen Title");
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
-  self.groupFingerprintCell.textLabel.text = self.me.groupChatFingerprint;
-  self.privateFingerprintCell.textLabel.text = self.me.chatFingerprint;
+  self.groupFingerprintCell.fingerprint = self.me.groupChatFingerprint;
+  self.privateFingerprintCell.fingerprint = self.me.chatFingerprint;
+  self.logoutCell.title = NSLocalizedString(@"Logout", @"Logout Button Title");
+  self.logoutCell.titleColor = [UIColor tb_buttonTitleColor];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -62,9 +68,38 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (IBAction)logout:(id)sender {
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)logout {
   if ([self.delegate respondsToSelector:@selector(meViewControllerDidAskToLogout:)]) {
     [self.delegate meViewControllerDidAskToLogout:self];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITableViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSIndexPath *)tableView:(UITableView *)tableView
+  willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  // logout
+  if (indexPath.section==2) {
+    return indexPath;
+  }
+  
+  return nil;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  // logout
+  if (indexPath.section==2) {
+    [self logout];
   }
 }
 
