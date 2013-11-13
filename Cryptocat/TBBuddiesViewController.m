@@ -52,6 +52,8 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
 
+  self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
                     selector:@selector(buddiesListDidChange:)

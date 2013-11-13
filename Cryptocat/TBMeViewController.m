@@ -42,6 +42,8 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+
   self.groupFingerprintCell.textLabel.text = self.me.groupChatFingerprint;
   self.privateFingerprintCell.textLabel.text = self.me.chatFingerprint;
 }
