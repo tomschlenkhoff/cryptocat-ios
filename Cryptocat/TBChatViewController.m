@@ -438,7 +438,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)scrollToLatestMessage {
-  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:[self.messages count]-1 inSection:0];
+  NSUInteger nbMessages = [self.messages count];
+  if (nbMessages==0) return;
+  
+  NSIndexPath *indexPath = [NSIndexPath indexPathForRow:nbMessages-1 inSection:0];
   [self.tableView scrollToRowAtIndexPath:indexPath
                         atScrollPosition:UITableViewScrollPositionBottom
                                 animated:YES];
