@@ -324,6 +324,8 @@
   
   [UIView commitAnimations];
   // end animation
+
+  [self scrollToLatestMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -464,6 +466,7 @@
 
   [self.messages addObject:message];
   [self.tableView reloadData];
+  [self scrollToLatestMessage];
   self.toolbarView.textView.text = @"";
   
   [self cancelTypingTimer];
