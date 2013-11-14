@@ -376,6 +376,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   TBLOG(@"-- %@ signed out", buddy.fullname);
   NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
   [nc postNotificationName:TBBuddyDidSignOutNotification object:buddy];
+  [self.OTRManager disconnectRecipient:buddy.fullname
+                        forAccountName:self.XMPPManager.me.fullname
+                              protocol:TBMessagingProtocol];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
