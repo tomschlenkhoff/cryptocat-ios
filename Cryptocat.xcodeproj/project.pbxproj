@@ -39,6 +39,7 @@
 		33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B936E018327EF4003497AC /* Monda-Regular.ttf */; };
 		33B936E4183289A0003497AC /* TBMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936E3183289A0003497AC /* TBMessage.m */; };
 		33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936E61833E7D7003497AC /* TBFingerprintCell.m */; };
+		33B936E91835082E003497AC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33B936E81835082E003497AC /* MobileCoreServices.framework */; };
 		33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C3651318102413003EAF93 /* TBBuddiesViewController.m */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
@@ -113,6 +114,7 @@
 		33B936E3183289A0003497AC /* TBMessage.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMessage.m; sourceTree = "<group>"; };
 		33B936E51833E7D7003497AC /* TBFingerprintCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBFingerprintCell.h; sourceTree = "<group>"; };
 		33B936E61833E7D7003497AC /* TBFingerprintCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBFingerprintCell.m; sourceTree = "<group>"; };
+		33B936E81835082E003497AC /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		33C3651218102413003EAF93 /* TBBuddiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddiesViewController.h; sourceTree = "<group>"; };
 		33C3651318102413003EAF93 /* TBBuddiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddiesViewController.m; sourceTree = "<group>"; };
 		33E6C7FA181512FD009EC642 /* TBLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLoginViewController.h; sourceTree = "<group>"; };
@@ -132,6 +134,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33B936E91835082E003497AC /* MobileCoreServices.framework in Frameworks */,
 				339DD1AE17F0399400C3E8E6 /* CoreGraphics.framework in Frameworks */,
 				339DD1B017F0399400C3E8E6 /* UIKit.framework in Frameworks */,
 				339DD1AC17F0399400C3E8E6 /* Foundation.framework in Frameworks */,
@@ -222,6 +225,7 @@
 		339DD1AA17F0399400C3E8E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				33B936E81835082E003497AC /* MobileCoreServices.framework */,
 				339DD1AB17F0399400C3E8E6 /* Foundation.framework */,
 				339DD1AD17F0399400C3E8E6 /* CoreGraphics.framework */,
 				339DD1AF17F0399400C3E8E6 /* UIKit.framework */,

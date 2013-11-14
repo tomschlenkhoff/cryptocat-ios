@@ -11,6 +11,7 @@
 #import "TBFingerprintCell.h"
 #import "TBButtonCell.h"
 #import "UIColor+Cryptocat.h"
+#import <MobileCoreServices/UTCoreTypes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -100,6 +101,58 @@
   // logout
   if (indexPath.section==2) {
     [self logout];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+  // logout
+  if (indexPath.section==2) {
+    return YES;
+  }
+  return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView
+shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+  // fingerprints
+  if (indexPath.section==0 || indexPath.section==1) {
+    TBFingerprintCell *cell = (TBFingerprintCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
+    if (cell.fingerprint!=nil) {
+      return YES;
+    }
+    else {
+      return NO;
+    }
+  }
+  else {
+    return NO;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView
+ canPerformAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)sender {
+  if (action==@selector(copy:)) {
+    return YES;
+  }
+  return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)tableView:(UITableView *)tableView
+    performAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)sender {
+  TBFingerprintCell *cell = (TBFingerprintCell *)[tableView cellForRowAtIndexPath:indexPath];
+  
+  if (cell.fingerprint!=nil) {
+    UIPasteboard *gpBoard = [UIPasteboard generalPasteboard];
+    [gpBoard setValue:cell.fingerprint forPasteboardType:(NSString *)kUTTypeUTF8PlainText];
   }
 }
 

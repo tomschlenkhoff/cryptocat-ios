@@ -9,6 +9,7 @@
 #import "TBBuddyViewController.h"
 #import "TBBuddy.h"
 #import "TBFingerprintCell.h"
+#import <MobileCoreServices/UTCoreTypes.h>
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -67,6 +68,59 @@
     self.groupFingerprintCell.fingerprint = self.buddy.groupChatFingerprint;
     self.privateFingerprintCell.fingerprint = self.buddy.chatFingerprint;
     [self.tableView reloadData];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITableViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+  return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView
+shouldShowMenuForRowAtIndexPath:(NSIndexPath *)indexPath {
+  // fingerprints
+  if (indexPath.section==0 || indexPath.section==1) {
+    TBFingerprintCell *cell = (TBFingerprintCell *)[tableView cellForRowAtIndexPath:indexPath];
+    
+    if (cell.fingerprint!=nil) {
+      return YES;
+    }
+    else {
+      return NO;
+    }
+  }
+  else {
+    return NO;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView
+ canPerformAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)sender {
+  if (action==@selector(copy:)) {
+    return YES;
+  }
+  return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)tableView:(UITableView *)tableView
+    performAction:(SEL)action
+forRowAtIndexPath:(NSIndexPath *)indexPath
+       withSender:(id)sender {
+  TBFingerprintCell *cell = (TBFingerprintCell *)[tableView cellForRowAtIndexPath:indexPath];
+  
+  if (cell.fingerprint!=nil) {
+    UIPasteboard *gpBoard = [UIPasteboard generalPasteboard];
+    [gpBoard setValue:cell.fingerprint forPasteboardType:(NSString *)kUTTypeUTF8PlainText];
   }
 }
 
