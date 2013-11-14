@@ -54,6 +54,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 - (void)executeGoneSecureCompletionBlocsForUser:(NSString *)user recipient:(NSString *)recipient;
 - (void)startObservingForMessages;
 - (void)stopObservingForMessages;
+- (void)logout;
 
 @end
 
@@ -71,23 +72,6 @@ typedef void (^TBGoneSecureCompletionBlock)();
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.goneSecureCompletionBlocks = [NSMutableDictionary dictionary];
-  
-  // xmpp manager
-  self.XMPPManager = [[TBXMPPManager alloc] init];
-  self.XMPPManager.delegate = self;
-
-  // multiparty chat manager
-  self.multipartyProtocolManager = [TBMultipartyProtocolManager sharedMultipartyProtocolManager];
-  self.multipartyProtocolManager.delegate = self;
-  
-  // otr manager
-  self.OTRManager = [TBOTRManager sharedOTRManager];
-  self.OTRManager.delegate = self;
-
-  // message handler
-  self.XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithOTRManager:self.OTRManager
-                                                    multipartyProtocolManager:
-                                                                    self.multipartyProtocolManager];
   
   // get the chatVC
   UINavigationController *nc = (UINavigationController *)self.window.rootViewController;
@@ -156,7 +140,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [self startObservingForMessages];
   self.bgTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
     [self stopObservingForMessages];
-    [self.XMPPManager.xmppStream disconnect];
+    [self logout];
     [application endBackgroundTask:self.bgTaskIdentifier];
     self.bgTaskIdentifier = UIBackgroundTaskInvalid;
   }];
@@ -180,6 +164,51 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)applicationWillTerminate:(UIApplication *)application {
   // Called when the application is about to terminate.
   // Save data if appropriate. See also applicationDidEnterBackground:.
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Properties
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (TBXMPPManager *)XMPPManager {
+  if (_XMPPManager==nil) {
+    _XMPPManager = [[TBXMPPManager alloc] init];
+    _XMPPManager.delegate = self;
+  }
+  
+  return _XMPPManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (TBMultipartyProtocolManager *)multipartyProtocolManager {
+  if (_multipartyProtocolManager==nil) {
+    _multipartyProtocolManager = [[TBMultipartyProtocolManager alloc] init];
+    _multipartyProtocolManager.delegate = self;
+  }
+  
+  return _multipartyProtocolManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (TBOTRManager *)OTRManager {
+  if (_OTRManager==nil) {
+    _OTRManager = [TBOTRManager sharedOTRManager];
+    _OTRManager.delegate = self;
+  }
+  
+  return _OTRManager;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (TBXMPPMessagesHandler *)XMPPMessageHandler {
+  if (_XMPPMessageHandler==nil) {
+    _XMPPMessageHandler = [[TBXMPPMessagesHandler alloc] initWithOTRManager:self.OTRManager
+                                          multipartyProtocolManager:self.multipartyProtocolManager];
+  }
+  
+  return _XMPPMessageHandler;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -276,6 +305,18 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)logout {
+  [self.XMPPManager.xmppStream disconnect];
+  [self presentLoginVCAnimated:YES];
+  
+  [self.OTRManager reset];
+  self.OTRManager = nil;
+  
+  self.multipartyProtocolManager = nil;
+  self.XMPPMessageHandler = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -438,8 +479,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)chatViewControllerDidAskToLogout:(TBChatViewController *)controller {
-  [self.XMPPManager.xmppStream disconnect];
-  [self presentLoginVCAnimated:YES];
+  [self logout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

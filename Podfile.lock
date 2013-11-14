@@ -1,6 +1,11 @@
 PODS:
   - CocoaAsyncSocket (7.3.2)
-  - CocoaLumberjack (1.6.2)
+  - CocoaLumberjack (1.6.3):
+    - CocoaLumberjack/Core
+    - CocoaLumberjack/Extensions
+  - CocoaLumberjack/Core (1.6.3)
+  - CocoaLumberjack/Extensions (1.6.3):
+    - CocoaLumberjack/Core
   - TBMultipartyProtocolManager (0.0.1)
   - TBOTRManager (0.0.1)
   - XMPPFramework (3.6.2):
@@ -149,7 +154,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 977404129ec8505fee1c3701956b769e3bb10ea7
-  CocoaLumberjack: d73e1e317ced14ab930797dda6c17156ff17aaa1
+  CocoaLumberjack: 0af89e0de15835a499fcc6ee5e0b6d396bc95976
   TBMultipartyProtocolManager: 79ecea7ca725525cb90ffc6ccc54e3c14d170e69
   TBOTRManager: 375a4a20792b60a47dc6a8572bc2719a2f4957e0
   XMPPFramework: bf818623aba272b79fcc7bf8772043de33614503
