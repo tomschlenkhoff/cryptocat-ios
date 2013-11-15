@@ -11,6 +11,8 @@
 extern NSString * const TBMessagingProtocol;
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
 extern NSString * const TBDidReceivePrivateChatMessageNotification;
+extern NSString * const TBDidReceiveGroupChatStateNotification;
+extern NSString * const TBDidReceivePrivateChatStateNotification;
 
 @class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager, XMPPMessage, XMPPJID, TBBuddy;
 

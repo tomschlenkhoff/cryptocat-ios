@@ -12,6 +12,7 @@
 #import "TBMeViewController.h"
 #import "TBMessage.h"
 #import "TBBuddy.h"
+#import "TBChateStateNotification.h"
 #import "TBMessageCell.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
@@ -54,6 +55,7 @@
 - (void)didEndComposing;
 - (void)updateUnreadMessagesCounter;
 - (void)scrollToLatestMessage;
+- (void)addMessage:(id)message forKey:(NSString *)key;
 
 @end
 
@@ -72,6 +74,8 @@
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
+  [defaultCenter removeObserver:self name:TBDidReceiveGroupChatStateNotification object:nil];
+  [defaultCenter removeObserver:self name:TBDidReceivePrivateChatStateNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignInNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignOutNotification object:nil];
 }
@@ -118,6 +122,14 @@
   [defaultCenter addObserver:self
                     selector:@selector(didReceivePrivateMessage:)
                         name:TBDidReceivePrivateChatMessageNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceiveGroupStateNotification:)
+                        name:TBDidReceiveGroupChatStateNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceivePrivateStateNotification:)
+                        name:TBDidReceivePrivateChatStateNotification
                       object:nil];
   [defaultCenter addObserver:self
                     selector:@selector(buddyDidChangeState:)
@@ -191,11 +203,26 @@
   }
 
   NSMutableArray *messages = self.messages;
-  TBMessage *message = [messages objectAtIndex:indexPath.row];
+  id message = [messages objectAtIndex:indexPath.row];
   
-  cell.senderName = message.sender.nickname;
-  cell.meSpeaking = [message.sender isEqual:self.me];
-  cell.message = message.text;
+  NSString *senderName = nil;
+  BOOL meSpeaking = NO;
+  NSString *text = nil;
+
+  if ([message isKindOfClass:[TBMessage class]]) {
+    senderName = ((TBMessage *)message).sender.nickname;
+    meSpeaking = [((TBMessage *)message).sender isEqual:self.me];
+    text = ((TBMessage *)message).text;
+  }
+  else if ([message isKindOfClass:[TBChateStateNotification class]]) {
+    senderName = ((TBChateStateNotification *)message).sender.nickname;
+    meSpeaking = NO;
+    text = @"is composing ...";
+  }
+  
+  cell.senderName = senderName;
+  cell.meSpeaking = meSpeaking;
+  cell.message = text;
   cell.backgroundColor = self.tableView.backgroundColor;
 
   return cell;
@@ -209,9 +236,17 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  TBMessage *message = [self.messages
-                        objectAtIndex:indexPath.row];
-  return [TBMessageCell heightForCellWithText:message.text];
+  id message = [self.messages objectAtIndex:indexPath.row];
+  NSString *text = nil;
+  
+  if ([message isKindOfClass:[TBMessage class]]) {
+    text = ((TBMessage *)message).text;
+  }
+  else if ([message isKindOfClass:[TBChateStateNotification class]]) {
+    text = @"is composing ...";
+  }
+  
+  return [TBMessageCell heightForCellWithText:text];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -235,11 +270,7 @@
   TBMessage *message = notification.object;
   NSString *roomName = message.sender.roomName;
   
-  if ([self.messagesForConversation objectForKey:roomName]==nil) {
-    [self.messagesForConversation setObject:[NSMutableArray array] forKey:roomName];
-  }
-
-  [[self.messagesForConversation objectForKey:roomName] addObject:message];
+  [self addMessage:message forKey:roomName];
   
   if ([self isInConversationRoom]) {
     [self.tableView reloadData];
@@ -258,11 +289,7 @@
   
   if ([message.text isEqualToString:@""]) return ;
   
-  if ([self.messagesForConversation objectForKey:message.sender.fullname]==nil) {
-    [self.messagesForConversation setObject:[NSMutableArray array] forKey:message.sender.fullname];
-  }
-  
-  [[self.messagesForConversation objectForKey:message.sender.fullname] addObject:message];
+  [self addMessage:message forKey:message.sender.fullname];
   
   if (![self isInConversationRoom] && [self.currentRecipient isEqual:message.sender]) {
     [self.tableView reloadData];
@@ -279,6 +306,28 @@
   }
   
   TBLOG(@"-- received private message from %@: %@", message.sender.fullname, message.text);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceiveGroupStateNotification:(NSNotification *)notification {
+  if ([self isInConversationRoom]) {
+    TBChateStateNotification *csn = notification.object;
+    NSString *roomName = csn.sender.roomName;
+    [self addMessage:csn forKey:roomName];
+    [self.tableView reloadData];
+    [self scrollToLatestMessage];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)didReceivePrivateStateNotification:(NSNotification *)notification {
+  TBChateStateNotification *csn = notification.object;
+  
+  if (![self isInConversationRoom] && [self.currentRecipient isEqual:csn.sender]) {
+    [self addMessage:csn forKey:csn.sender.fullname];
+    [self.tableView reloadData];
+    [self scrollToLatestMessage];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -450,6 +499,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSMutableArray *)messages {
   return [self.messagesForConversation objectForKey:self.currentRoomName];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)addMessage:(id)message forKey:(NSString *)key {
+  if ([self.messagesForConversation objectForKey:key]==nil) {
+    [self.messagesForConversation setObject:[NSMutableArray array] forKey:key];
+  }
+  
+  [[self.messagesForConversation objectForKey:key] addObject:message];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

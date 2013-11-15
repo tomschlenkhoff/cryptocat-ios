@@ -17,12 +17,16 @@
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+XEP_0085.h"
 #import "XMPPMessage+Cryptocat.h"
+#import "TBChateStateNotification.h"
 
 NSString * const TBMessagingProtocol = @"xmpp";
 NSString * const TBDidReceiveGroupChatMessageNotification =
                                                         @"TBDidReceiveGroupChatMessageNotification";
 NSString * const TBDidReceivePrivateChatMessageNotification =
                                                       @"TBDidReceivePrivateChatMessageNotification";
+NSString * const TBDidReceiveGroupChatStateNotification = @"TBDidReceiveGroupChatStateNotification";
+NSString * const TBDidReceivePrivateChatStateNotification =
+                                                        @"TBDidReceivePrivateChatStateNotification";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,13 +250,20 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)handleChatStateMessage:(XMPPMessage *)message XMPPManager:(TBXMPPManager *)XMPPManager {
+  TBChateStateNotification *csn = nil;
+  NSString *notificationName = nil;
+  
   // -- composing
   if ([message tb_isComposingMessage]) {
     if ([message isGroupChatMessage]) {
       TBLOG(@"-- %@ is composing in meeting room", message.fromStr);
+      csn = [TBChateStateNotification composingNotification];
+      notificationName = TBDidReceiveGroupChatStateNotification;
     }
     else {
       TBLOG(@"-- %@ is composing in private", message.fromStr);
+      csn = [TBChateStateNotification composingNotification];
+      notificationName = TBDidReceivePrivateChatStateNotification;
     }
   }
   
@@ -260,9 +271,13 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   else if ([message tb_isPausedMessage]) {
     if ([message isGroupChatMessage]) {
       TBLOG(@"-- %@ is paused in meeting room", message.fromStr);
+      csn = [TBChateStateNotification pausedNotification];
+      notificationName = TBDidReceiveGroupChatStateNotification;
     }
     else {
       TBLOG(@"-- %@ is paused in private", message.fromStr);
+      csn = [TBChateStateNotification pausedNotification];
+      notificationName = TBDidReceivePrivateChatStateNotification;
     }
   }
   
@@ -270,11 +285,21 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   else if ([message tb_isActiveMessage]) {
     if ([message isGroupChatMessage]) {
       TBLOG(@"-- %@ is active in meeting room", message.fromStr);
+      csn = [TBChateStateNotification activeNotification];
+      notificationName = TBDidReceiveGroupChatStateNotification;
     }
     else {
       TBLOG(@"-- %@ is active in private", message.fromStr);
+      csn = [TBChateStateNotification activeNotification];
+      notificationName = TBDidReceivePrivateChatStateNotification;
     }
   }
+  
+  csn.sender = [[TBBuddy alloc] initWithXMPPJID:message.from];
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter postNotificationName:notificationName
+                               object:csn
+                             userInfo:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
