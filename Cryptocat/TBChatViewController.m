@@ -313,7 +313,14 @@
   if ([self isInConversationRoom]) {
     TBChateStateNotification *csn = notification.object;
     NSString *roomName = csn.sender.roomName;
-    [self addMessage:csn forKey:roomName];
+    
+    if ([csn isComposingNotification]) {
+      [self addMessage:csn forKey:roomName];
+    }
+    else {
+      [self removeChatStateNotification:csn forKey:roomName];
+    }
+    
     [self.tableView reloadData];
     [self scrollToLatestMessage];
   }
@@ -508,6 +515,23 @@
   }
   
   [[self.messagesForConversation objectForKey:key] addObject:message];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)removeChatStateNotification:(TBChateStateNotification *)chatStateNotification
+                             forKey:(NSString *)key {
+  NSMutableArray *messages = [self.messagesForConversation objectForKey:key];
+  id messageToRemove = nil;
+  
+  for (id message in messages) {
+    if ([message isKindOfClass:[TBChateStateNotification class]] &&
+        [((TBChateStateNotification *)message).sender isEqual:chatStateNotification.sender]) {
+      messageToRemove = message;
+      break;
+    }
+  }
+  
+  [messages removeObject:messageToRemove];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
