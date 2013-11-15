@@ -396,6 +396,9 @@
 				LastUpgradeCheck = 0500;
 				ORGANIZATIONNAME = "Thomas Balthazar";
 				TargetAttributes = {
+					339DD1A717F0399400C3E8E6 = {
+						DevelopmentTeam = 8MS7FJ2Z9D;
+					};
 					339DD1CB17F0399400C3E8E6 = {
 						TestTargetID = 339DD1A717F0399400C3E8E6;
 					};
@@ -624,6 +627,7 @@
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LIBRARY_SEARCH_PATHS = "";
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -635,6 +639,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cryptocat/Cryptocat-Prefix.pch";
 				INFOPLIST_FILE = "Cryptocat/Cryptocat-Info.plist";
@@ -653,6 +658,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Cryptocat/Cryptocat-Prefix.pch";
 				INFOPLIST_FILE = "Cryptocat/Cryptocat-Info.plist";
