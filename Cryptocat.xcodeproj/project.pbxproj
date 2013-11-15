@@ -43,6 +43,10 @@
 		33B936EC18362455003497AC /* TBChateStateNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936EB18362455003497AC /* TBChateStateNotification.m */; };
 		33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C3651318102413003EAF93 /* TBBuddiesViewController.m */; };
 		33D715DF1836808D003FA973 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 33D715DE1836808D003FA973 /* Settings.bundle */; };
+		33D715E918368887003FA973 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715E318368887003FA973 /* libTestFlight.a */; };
+		33D715EA18368887003FA973 /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 33D715E418368887003FA973 /* README.md */; };
+		33D715EB18368887003FA973 /* release_notes.md in Resources */ = {isa = PBXBuildFile; fileRef = 33D715E518368887003FA973 /* release_notes.md */; };
+		33D715ED18368A22003FA973 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715EC18368A22003FA973 /* libz.dylib */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
 		33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */; };
@@ -123,6 +127,13 @@
 		33C3651318102413003EAF93 /* TBBuddiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddiesViewController.m; sourceTree = "<group>"; };
 		33D715DE1836808D003FA973 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		33D715E0183682BF003FA973 /* set_versions_into_built_product_plist.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = set_versions_into_built_product_plist.rb; sourceTree = "<group>"; };
+		33D715E318368887003FA973 /* libTestFlight.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = libTestFlight.a; sourceTree = "<group>"; };
+		33D715E418368887003FA973 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
+		33D715E518368887003FA973 /* release_notes.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = release_notes.md; sourceTree = "<group>"; };
+		33D715E618368887003FA973 /* TestFlight+AsyncLogging.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+AsyncLogging.h"; sourceTree = "<group>"; };
+		33D715E718368887003FA973 /* TestFlight+ManualSessions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "TestFlight+ManualSessions.h"; sourceTree = "<group>"; };
+		33D715E818368887003FA973 /* TestFlight.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TestFlight.h; sourceTree = "<group>"; };
+		33D715EC18368A22003FA973 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		33E6C7FA181512FD009EC642 /* TBLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLoginViewController.h; sourceTree = "<group>"; };
 		33E6C7FB181512FD009EC642 /* TBLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginViewController.m; sourceTree = "<group>"; };
 		33E6C7FD18155870009EC642 /* NSError+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+Cryptocat.h"; sourceTree = "<group>"; };
@@ -140,9 +151,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33D715ED18368A22003FA973 /* libz.dylib in Frameworks */,
 				33B936E91835082E003497AC /* MobileCoreServices.framework in Frameworks */,
 				339DD1AE17F0399400C3E8E6 /* CoreGraphics.framework in Frameworks */,
 				339DD1B017F0399400C3E8E6 /* UIKit.framework in Frameworks */,
+				33D715E918368887003FA973 /* libTestFlight.a in Frameworks */,
 				339DD1AC17F0399400C3E8E6 /* Foundation.framework in Frameworks */,
 				976AB9436ED44BA3A75E898B /* libPods.a in Frameworks */,
 			);
@@ -232,6 +245,7 @@
 		339DD1AA17F0399400C3E8E6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				33D715EC18368A22003FA973 /* libz.dylib */,
 				33B936E81835082E003497AC /* MobileCoreServices.framework */,
 				339DD1AB17F0399400C3E8E6 /* Foundation.framework */,
 				339DD1AD17F0399400C3E8E6 /* CoreGraphics.framework */,
@@ -245,6 +259,7 @@
 		339DD1B117F0399400C3E8E6 /* Cryptocat */ = {
 			isa = PBXGroup;
 			children = (
+				33D715E218368887003FA973 /* TestFlightSDK2.0.2 */,
 				330130C317F431B800287253 /* Categories */,
 				3301304C17F18A2B00287253 /* XEP-0077 */,
 				330131DE17FB181F00287253 /* XMPP */,
@@ -351,6 +366,19 @@
 			name = "Chat Cells";
 			sourceTree = "<group>";
 		};
+		33D715E218368887003FA973 /* TestFlightSDK2.0.2 */ = {
+			isa = PBXGroup;
+			children = (
+				33D715E318368887003FA973 /* libTestFlight.a */,
+				33D715E418368887003FA973 /* README.md */,
+				33D715E518368887003FA973 /* release_notes.md */,
+				33D715E618368887003FA973 /* TestFlight+AsyncLogging.h */,
+				33D715E718368887003FA973 /* TestFlight+ManualSessions.h */,
+				33D715E818368887003FA973 /* TestFlight.h */,
+			);
+			path = TestFlightSDK2.0.2;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -434,9 +462,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				33D715EA18368887003FA973 /* README.md in Resources */,
 				339DD1C717F0399400C3E8E6 /* Images.xcassets in Resources */,
 				339DD1B617F0399400C3E8E6 /* InfoPlist.strings in Resources */,
 				33D715DF1836808D003FA973 /* Settings.bundle in Resources */,
+				33D715EB18368887003FA973 /* release_notes.md in Resources */,
 				339DD1BF17F0399400C3E8E6 /* Main.storyboard in Resources */,
 				33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */,
 			);
@@ -666,6 +696,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tba/Documents/dev/code/Cryptocat/Cryptocat/Cryptocat,
+					/Users/tba/Documents/dev/code/Cryptocat/Cryptocat/Cryptocat/TestFlightSDK2.0.2,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
@@ -685,6 +716,7 @@
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
 					/Users/tba/Documents/dev/code/Cryptocat/Cryptocat/Cryptocat,
+					/Users/tba/Documents/dev/code/Cryptocat/Cryptocat/Cryptocat/TestFlightSDK2.0.2,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				WRAPPER_EXTENSION = app;
