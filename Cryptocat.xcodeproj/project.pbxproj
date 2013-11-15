@@ -42,6 +42,7 @@
 		33B936E91835082E003497AC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33B936E81835082E003497AC /* MobileCoreServices.framework */; };
 		33B936EC18362455003497AC /* TBChateStateNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936EB18362455003497AC /* TBChateStateNotification.m */; };
 		33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C3651318102413003EAF93 /* TBBuddiesViewController.m */; };
+		33D715DF1836808D003FA973 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 33D715DE1836808D003FA973 /* Settings.bundle */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
 		33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */; };
@@ -120,6 +121,8 @@
 		33B936EB18362455003497AC /* TBChateStateNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBChateStateNotification.m; sourceTree = "<group>"; };
 		33C3651218102413003EAF93 /* TBBuddiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddiesViewController.h; sourceTree = "<group>"; };
 		33C3651318102413003EAF93 /* TBBuddiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddiesViewController.m; sourceTree = "<group>"; };
+		33D715DE1836808D003FA973 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
+		33D715E0183682BF003FA973 /* set_versions_into_built_product_plist.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = set_versions_into_built_product_plist.rb; sourceTree = "<group>"; };
 		33E6C7FA181512FD009EC642 /* TBLoginViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLoginViewController.h; sourceTree = "<group>"; };
 		33E6C7FB181512FD009EC642 /* TBLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginViewController.m; sourceTree = "<group>"; };
 		33E6C7FD18155870009EC642 /* NSError+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+Cryptocat.h"; sourceTree = "<group>"; };
@@ -208,6 +211,7 @@
 		339DD19F17F0399400C3E8E6 = {
 			isa = PBXGroup;
 			children = (
+				33D715DE1836808D003FA973 /* Settings.bundle */,
 				339DD1B117F0399400C3E8E6 /* Cryptocat */,
 				339DD1D317F0399400C3E8E6 /* CryptocatTests */,
 				339DD1AA17F0399400C3E8E6 /* Frameworks */,
@@ -262,6 +266,7 @@
 		339DD1B217F0399400C3E8E6 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				33D715E0183682BF003FA973 /* set_versions_into_built_product_plist.rb */,
 				339DD1E617F03ADC00C3E8E6 /* TBMacros.h */,
 				339DD1B317F0399400C3E8E6 /* Cryptocat-Info.plist */,
 				339DD1B417F0399400C3E8E6 /* InfoPlist.strings */,
@@ -358,6 +363,7 @@
 				339DD1A517F0399400C3E8E6 /* Frameworks */,
 				339DD1A617F0399400C3E8E6 /* Resources */,
 				340B4E4007974583B548E357 /* Copy Pods Resources */,
+				33D715E1183683EA003FA973 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -430,6 +436,7 @@
 			files = (
 				339DD1C717F0399400C3E8E6 /* Images.xcassets in Resources */,
 				339DD1B617F0399400C3E8E6 /* InfoPlist.strings in Resources */,
+				33D715DF1836808D003FA973 /* Settings.bundle in Resources */,
 				339DD1BF17F0399400C3E8E6 /* Main.storyboard in Resources */,
 				33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */,
 			);
@@ -446,6 +453,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		33D715E1183683EA003FA973 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/ruby;
+			shellScript = "# --------------------------------------------------------------------------------------------------\n# --- config\n\n# -- binary paths\nPLIST_BUDDY_BIN_PATH = \"/usr/libexec/PlistBuddy\"\nGIT_BIN_PATH = \"/usr/local/git/bin/git\"\n\n# --------------------------------------------------------------------------------------------------\n# --- helper methods\n\n# -- helper methods to write/read into a plist\ndef write_into_plist_with_key_value(plist_path, key, value)\n`#{PLIST_BUDDY_BIN_PATH} -c \"Add :#{key} string\" #{plist_path}`\n`#{PLIST_BUDDY_BIN_PATH} -c \"Set :#{key} #{value}\" #{plist_path}`\nend\n\ndef read_key_from_plist_path(plist_path, key)\nreturn `#{PLIST_BUDDY_BIN_PATH} -c \"Print :#{key}\" #{plist_path}`.chomp\nend\n\ndef escape_filepath(path)\nreturn path.gsub(\" \", \"\\\\ \").gsub(\"(\", \"\\\\(\").gsub(\")\", \"\\\\)\")\nend\n\n# --------------------------------------------------------------------------------------------------\n# --- actual script\n\n# -- build the git commands\ngit_sha_cmd = \"#{GIT_BIN_PATH} rev-parse --short HEAD\"\ngit_tag_cmd = \"#{GIT_BIN_PATH} describe --tags --abbrev=0\"\n\n# -- get the sha of the current commit and the latest git tag\nlatest_sha             = `#{git_sha_cmd}`.chomp\nlatest_tag             = `#{git_tag_cmd}`.chomp\nlatest_tag_clean       =  latest_tag.gsub(/\\.|a/, \"\").chomp\n\n# -- get built product paths\napp_name = \"#{ENV['FULL_PRODUCT_NAME']}\"\ndsym_name = \"#{ENV['DWARF_DSYM_FILE_NAME']}\"\nplist_path = escape_filepath(\"#{ENV['BUILT_PRODUCTS_DIR']}/#{ENV['INFOPLIST_PATH']}\")\nsettings_plist_path = escape_filepath(\"#{ENV['BUILT_PRODUCTS_DIR']}/#{app_name}/Settings.bundle/Root.plist\")\ndsym_plist_path = escape_filepath(\"#{ENV['BUILT_PRODUCTS_DIR']}/#{dsym_name}/Contents/Info.plist\")\nputs \"App plist path : #{plist_path}\"\nputs \"Settings plist path : #{settings_plist_path}\"\nputs \"Dsym plist path : #{dsym_plist_path}\"\n\n# -- write the new versions in app plist\nwrite_into_plist_with_key_value(plist_path, \"CFBundleVersion\", latest_tag_clean)\nwrite_into_plist_with_key_value(plist_path, \"CFBundleShortVersionString\", latest_tag)\nwrite_into_plist_with_key_value(plist_path, \"TBBundleGitCommitSHA\", latest_sha)\n\n# -- write the new versions in the Settings.bundle plist\n# -- App is at index 1 (2nd element in the plist)\nwrite_into_plist_with_key_value(settings_plist_path, \"PreferenceSpecifiers:1:DefaultValue\", \"#{latest_tag} (#{latest_sha})\")\n\n# -- write versions in dsym plist\nwrite_into_plist_with_key_value(dsym_plist_path, \"CFBundleVersion\", latest_tag_clean)\nwrite_into_plist_with_key_value(dsym_plist_path, \"CFBundleShortVersionString\", latest_tag)\n\n# -- logging\nputs \"Bumped to #{latest_tag} (#{latest_tag_clean} | #{latest_sha}) into #{plist_path}\"\nputs \"--\"\nputs \"Plist now reads :\"\nputs \" - CFBundleShortVersionString : #{read_key_from_plist_path(plist_path, 'CFBundleShortVersionString')}\"\nputs \" - CFBundleVersion : #{read_key_from_plist_path(plist_path, 'CFBundleVersion')}\"\nputs \" - TBBundleGitCommitSHA : #{read_key_from_plist_path(plist_path, 'TBBundleGitCommitSHA')}\"\n";
+		};
 		340B4E4007974583B548E357 /* Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
