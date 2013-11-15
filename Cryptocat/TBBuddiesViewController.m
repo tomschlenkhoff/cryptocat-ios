@@ -103,6 +103,7 @@
                                                           forIndexPath:indexPath];
   
   if (indexPath.row==0) {
+    cell.accessoryType = UITableViewCellAccessoryNone;
     NSString *conversationRoomTitle = NSLocalizedString(@"Conversation",
                                                         @"Conversation Room Label");
     if (self.nbUnreadMessagesInRoom == 0) {
