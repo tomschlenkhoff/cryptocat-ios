@@ -1,3 +1,11 @@
+## 2.1.1
+
+- Remove all access to `ASIdentifierManager`, add UIDevice's `identifierForVendor`
+
+## 2.1
+
+- Full support for the iPhone 5s’ ARM64 processor while still supporting down to iOS 4.3
+
 ## 2.0.2
 
 - Fixed a bug where the sdk would cause an app's CPU usage to rise significantly if the device had no internet connection when the app started
