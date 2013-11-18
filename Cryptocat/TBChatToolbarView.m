@@ -41,7 +41,9 @@
     
     // -- button
     _sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_sendButton setTitle:@"Send" forState:UIControlStateNormal];
+    [_sendButton setTitle:NSLocalizedString(@"Send", @"Send Button Title")
+                 forState:UIControlStateNormal];
+    _sendButton.enabled = NO;
     [_sendButton sizeToFit];
     _sendButton.translatesAutoresizingMaskIntoConstraints = NO;
     [self addSubview:_sendButton];
@@ -58,7 +60,7 @@
   NSDictionary *viewsDictionary = NSDictionaryOfVariableBindings(_textView, _sendButton);
   
   [self addConstraints:
-   [NSLayoutConstraint constraintsWithVisualFormat:@"|-[_textView]-[_sendButton]-|"
+   [NSLayoutConstraint constraintsWithVisualFormat:@"|-5-[_textView]-[_sendButton]-5-|"
                                            options:0
                                            metrics:0
                                              views:viewsDictionary]];

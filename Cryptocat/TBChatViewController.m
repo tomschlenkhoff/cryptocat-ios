@@ -665,6 +665,8 @@ shouldChangeTextInRange:(NSRange)range
   NSUInteger oldLength = textView.text.length;
   NSUInteger newLength = textView.text.length + text.length - range.length;
   
+  self.toolbarView.sendButton.enabled = newLength > 0;
+  
   // if there's a string in the input field
   if (newLength > 0) {
     // if there wasn't a string in the input field before or typing had paused

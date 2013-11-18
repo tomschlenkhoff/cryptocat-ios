@@ -517,6 +517,7 @@ didAskFingerprintsForBuddy:(TBBuddy *)buddy {
     if ([aBuddy.nickname isEqualToString:username]) {
       aBuddy.groupChatFingerprint = [self.multipartyProtocolManager
                                      fingerprintForUsername:username];
+      TBLOG(@"-- fingerprint for %@ is %@", username, aBuddy.groupChatFingerprint);
       break;
     }
   }
