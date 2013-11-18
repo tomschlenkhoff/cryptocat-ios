@@ -315,37 +315,33 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveGroupStateNotification:(NSNotification *)notification {
-  if ([self isInConversationRoom]) {
-    TBChateStateNotification *csn = notification.object;
-    NSString *roomName = csn.sender.roomName;
-    
-    if ([csn isComposingNotification]) {
-      [self addMessage:csn forKey:roomName];
-    }
-    else {
-      [self removeChatStateNotification:csn forKey:roomName];
-    }
-    
-    [self.tableView reloadData];
-    [self scrollToLatestMessage];
+  TBChateStateNotification *csn = notification.object;
+  NSString *roomName = csn.sender.roomName;
+  
+  if ([csn isComposingNotification]) {
+    [self addMessage:csn forKey:roomName];
   }
+  else {
+    [self removeChatStateNotification:csn forKey:roomName];
+  }
+  
+  [self.tableView reloadData];
+  [self scrollToLatestMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceivePrivateStateNotification:(NSNotification *)notification {
   TBChateStateNotification *csn = notification.object;
   
-  if (![self isInConversationRoom] && [self.currentRecipient isEqual:csn.sender]) {
-    if ([csn isComposingNotification]) {
-      [self addMessage:csn forKey:csn.sender.fullname];
-    }
-    else {
-      [self removeChatStateNotification:csn forKey:csn.sender.fullname];
-    }
-    
-    [self.tableView reloadData];
-    [self scrollToLatestMessage];
+  if ([csn isComposingNotification]) {
+    [self addMessage:csn forKey:csn.sender.fullname];
   }
+  else {
+    [self removeChatStateNotification:csn forKey:csn.sender.fullname];
+  }
+  
+  [self.tableView reloadData];
+  [self scrollToLatestMessage];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
