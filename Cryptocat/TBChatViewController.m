@@ -644,6 +644,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)meViewControllerDidAskToLogout:(TBMeViewController *)controller {
+  self.messagesForConversation = [NSMutableDictionary dictionary];
+  [self.tableView reloadData];
   if ([self.delegate respondsToSelector:@selector(chatViewControllerDidAskToLogout:)]) {
     [self dismissViewControllerAnimated:NO completion:^{
       [self.delegate chatViewControllerDidAskToLogout:self];
