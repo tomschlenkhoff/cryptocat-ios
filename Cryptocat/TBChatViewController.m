@@ -336,7 +336,13 @@
   TBChateStateNotification *csn = notification.object;
   
   if (![self isInConversationRoom] && [self.currentRecipient isEqual:csn.sender]) {
-    [self addMessage:csn forKey:csn.sender.fullname];
+    if ([csn isComposingNotification]) {
+      [self addMessage:csn forKey:csn.sender.fullname];
+    }
+    else {
+      [self removeChatStateNotification:csn forKey:csn.sender.fullname];
+    }
+    
     [self.tableView reloadData];
     [self scrollToLatestMessage];
   }

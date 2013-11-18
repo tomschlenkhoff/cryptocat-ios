@@ -68,7 +68,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  // buddy
+  // buddy info
   if ([segue.identifier isEqualToString:@"BuddySegueID"]) {
     NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
     TBBuddyViewController *bvc = segue.destinationViewController;

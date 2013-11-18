@@ -558,6 +558,7 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
         aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
                                                               accountName:accountName
                                                                  protocol:TBMessagingProtocol];
+        TBLOG(@"-- %@ now has a fingerprint : %@", recipient, aBuddy.chatFingerprint);
         break;
       }
     }
