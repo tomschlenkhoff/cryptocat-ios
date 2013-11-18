@@ -70,6 +70,12 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  // -- check for login info in defaults
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults synchronize];
+  NSString *conversationName = [defaults objectForKey:@"roomName"];
+  NSString *nickname = [defaults objectForKey:@"nickname"];
+  
   // -- colors
   [self.navigationController setNavigationBarHidden:YES animated:NO];
   self.tableView.backgroundColor = [UIColor tb_backgroundColor];
@@ -90,10 +96,10 @@
                                                      @"your nickname Field Placeholder");
   self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
   
-#if DEBUG
-  self.conversationNameField.text = @"cryptocatdev";
-  self.nicknameField.text = @"iOSTestApp";
-#endif
+  if (conversationName!=nil && nickname!=nil) {
+    self.conversationNameField.text = conversationName;
+    self.nicknameField.text = nickname;
+  }
   
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
 }

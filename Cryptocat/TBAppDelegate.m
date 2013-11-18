@@ -357,6 +357,11 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   if ([self isLoginScreenPresented]) {
     [self.chatViewController dismissViewControllerAnimated:YES completion:NULL];
   }
+  
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:room.roomJID.user forKey:@"roomName"];
+  [defaults setObject:XMPPManager.me.nickname forKey:@"nickname"];
+  [defaults synchronize];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
