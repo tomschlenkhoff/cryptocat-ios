@@ -90,12 +90,12 @@
                                                      @"your nickname Field Placeholder");
   self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
   
-  self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
-  
 #if DEBUG
   self.conversationNameField.text = @"cryptocatdev";
   self.nicknameField.text = @"iOSTestApp";
 #endif
+  
+  self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
