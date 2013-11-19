@@ -17,7 +17,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCell ()
+@interface TBMessageCell () <TBMessageCellViewDelegate>
 
 @property (nonatomic, strong) TBMessageCellView *messageView;
 
@@ -37,6 +37,7 @@
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
     _messageView = [[TBMessageCellView alloc] init];
+    _messageView.delegate = self;
     [self.contentView addSubview:_messageView];
   }
   return self;
@@ -100,5 +101,21 @@
   [super setBackgroundColor:backgroundColor];
   self.messageView.backgroundColor = backgroundColor;
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBMessageCellViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)messageCellView:(TBMessageCellView *)cellView
+  shouldInteractWithURL:(NSURL *)URL
+                inRange:(NSRange)characterRange {
+  if ([self.delegate respondsToSelector:@selector(messageCell:shouldInteractWithURL:inRange:)]) {
+    return [self.delegate messageCell:self shouldInteractWithURL:URL inRange:characterRange];
+  }
+  return NO;
+}
+
 
 @end

@@ -16,7 +16,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCellView ()
+@interface TBMessageCellView () <UITextViewDelegate>
 
 @property (nonatomic, strong) UITextView *textView;
 
@@ -48,6 +48,7 @@
     _textView.textContainerInset = UIEdgeInsetsMake(-0.5, 0.0, 0.0, 0.0);
     _textView.textContainer.lineFragmentPadding = 0.0;
     _textView.dataDetectorTypes = UIDataDetectorTypeLink;
+    _textView.delegate = self;
     [self addSubview:_textView];
   }
   
@@ -140,6 +141,23 @@
   UIBezierPath *exclusionPath = [UIBezierPath bezierPathWithRect:exclustionFrame];
   self.textView.textContainer.exclusionPaths = @[exclusionPath];
   self.textView.frame = textViewFrame;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark UITextViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)textView:(UITextView *)textView
+shouldInteractWithURL:(NSURL *)URL
+         inRange:(NSRange)characterRange {
+  if ([self.delegate
+       respondsToSelector:@selector(messageCellView:shouldInteractWithURL:inRange:)]) {
+    return [self.delegate messageCellView:self shouldInteractWithURL:URL inRange:characterRange];
+  }
+  
+  return NO;
 }
 
 @end

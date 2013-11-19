@@ -17,6 +17,7 @@
 #import "TBComposingCell.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
+#import "SVWebViewController.h"
 
 #define kPausedMessageTimer   5.0
 #define kTableViewPaddingTop  17.0
@@ -29,6 +30,7 @@
   UITableViewDelegate,
   TBBuddiesViewControllerDelegate,
   TBMeViewControllerDelegate,
+  TBMessageCellDelegate,
   UITextViewDelegate
 >
 
@@ -212,6 +214,7 @@
     cell.meSpeaking = [msg.sender isEqual:self.me];
     cell.message = msg.text;
     cell.backgroundColor = self.tableView.backgroundColor;
+    cell.delegate = self;
     return cell;
   }
   
@@ -693,5 +696,22 @@ shouldChangeTextInRange:(NSRange)range
   return YES;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBMessageCellDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)messageCell:(TBMessageCell *)cell
+shouldInteractWithURL:(NSURL *)URL
+            inRange:(NSRange)characterRange {
+  if ([URL.scheme isEqualToString:@"http"] || [URL.scheme isEqualToString:@"https"]) {
+    SVModalWebViewController *wvc = [[SVModalWebViewController alloc] initWithURL:URL];
+    wvc.navigationBar.barStyle = UIBarStyleBlack;
+    [self presentViewController:wvc animated:YES completion:NULL];
+  }
+  
+  return NO;
+}
 
 @end
