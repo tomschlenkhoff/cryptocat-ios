@@ -47,6 +47,7 @@
 		33D715F518368B48003FA973 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715EF18368B48003FA973 /* libTestFlight.a */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
+		33E8F9F1183B622A007DDAAB /* TBBubbleCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */; };
 		33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */; };
 		33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33F68320180EDDC100524C87 /* TBChatViewController.m */; };
 		976AB9436ED44BA3A75E898B /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = FB88AE4167A9417F92564155 /* libPods.a */; };
@@ -136,6 +137,8 @@
 		33E6C7FB181512FD009EC642 /* TBLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginViewController.m; sourceTree = "<group>"; };
 		33E6C7FD18155870009EC642 /* NSError+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+Cryptocat.h"; sourceTree = "<group>"; };
 		33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+Cryptocat.m"; sourceTree = "<group>"; };
+		33E8F9EF183B622A007DDAAB /* TBBubbleCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBubbleCellView.h; sourceTree = "<group>"; };
+		33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleCellView.m; sourceTree = "<group>"; };
 		33F6831C180ED21800524C87 /* XMPPPresence+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPPresence+Cryptocat.h"; sourceTree = "<group>"; };
 		33F6831D180ED21900524C87 /* XMPPPresence+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "XMPPPresence+Cryptocat.m"; sourceTree = "<group>"; };
 		33F6831F180EDDC100524C87 /* TBChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBChatViewController.h; sourceTree = "<group>"; };
@@ -354,6 +357,8 @@
 		33B936D318327EB6003497AC /* Chat Cells */ = {
 			isa = PBXGroup;
 			children = (
+				33E8F9EF183B622A007DDAAB /* TBBubbleCellView.h */,
+				33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */,
 				33B936D418327EC4003497AC /* TBMessageCell.h */,
 				33B936D518327EC4003497AC /* TBMessageCell.m */,
 				33B936D618327EC4003497AC /* TBMessageCellView.h */,
@@ -551,6 +556,7 @@
 				33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */,
 				339DD1B817F0399400C3E8E6 /* main.m in Sources */,
 				33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */,
+				33E8F9F1183B622A007DDAAB /* TBBubbleCellView.m in Sources */,
 				330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */,
 				332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */,
 				33B936DC18327EC4003497AC /* TBBubbleView.m in Sources */,
