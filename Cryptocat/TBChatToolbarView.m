@@ -13,7 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBChatToolbarView () <UITextViewDelegate>
+@interface TBChatToolbarView () <UITextViewDelegate, TBGrowingTextViewDelegate>
 
 @end
 
@@ -30,13 +30,14 @@
     //self.translatesAutoresizingMaskIntoConstraints = NO;
     
     // -- textView
-    _textView = [[UITextView alloc] initWithFrame:CGRectZero];
+    _textView = [[TBGrowingTextView alloc] initWithFrame:CGRectZero];
     _textView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
-    
+    _textView.maxNbLines = 3;
     _textView.font = [UIFont systemFontOfSize:14.0f];
     _textView.delegate = self;
     _textView.backgroundColor = [UIColor whiteColor];
     _textView.translatesAutoresizingMaskIntoConstraints = NO;
+    _textView.growingDelegate = self;
     [self addSubview:_textView];
     
     // -- button
@@ -65,16 +66,43 @@
                                            metrics:0
                                              views:viewsDictionary]];
 
-  [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-7-[_textView(30)]-7-|"
+  [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+                                                                      @"V:|-7-[_textView(>=30)]-7-|"
                                                                options:0
                                                                metrics:0
                                                                  views:viewsDictionary]];
 
-  [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:@"V:|-7-[_sendButton]-7-|"
+  [self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:
+                                                                      @"V:|-(>=7)-[_sendButton]-7-|"
                                                                options:0
                                                                metrics:0
                                                                  views:viewsDictionary]];
 
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBGrowingTextViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)growingTextView:(TBGrowingTextView *)textView
+   willChangeFromHeight:(CGFloat)fromHeight
+               toHeight:(CGFloat)toHeight {
+  if ([self.delegate
+       respondsToSelector:@selector(chatToolbarViewView:willChangeFromHeight:toHeight:)]) {
+    [self.delegate chatToolbarViewView:self willChangeFromHeight:fromHeight toHeight:toHeight];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)growingTextView:(TBGrowingTextView *)textView
+    didChangeFromHeight:(CGFloat)fromHeight
+               toHeight:(CGFloat)toHeight {
+  if ([self.delegate
+       respondsToSelector:@selector(chatToolbarViewView:didChangeFromHeight:toHeight:)]) {
+    [self.delegate chatToolbarViewView:self didChangeFromHeight:fromHeight toHeight:toHeight];
+  }
 }
 
 @end

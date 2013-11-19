@@ -31,11 +31,13 @@
   TBBuddiesViewControllerDelegate,
   TBMeViewControllerDelegate,
   TBMessageCellDelegate,
+  TBChatToolbarViewDelegate,
   UITextViewDelegate
 >
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (weak, nonatomic) IBOutlet TBChatToolbarView *toolbarView;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarViewHeightConstraint;
 @property (weak, nonatomic) IBOutlet NSLayoutConstraint *toolbarViewBottomConstraint;
 @property (nonatomic, strong) NSMutableDictionary *messagesForConversation;
 @property (nonatomic, strong) NSString *currentRoomName;
@@ -112,6 +114,7 @@
   self.tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
   self.tableView.contentInset = UIEdgeInsetsMake(kTableViewPaddingTop, 0.0, 0.0, 0.0);
 
+  self.toolbarView.delegate = self;
   self.toolbarView.textView.delegate = self;
   [self.toolbarView.sendButton addTarget:self
                                   action:@selector(sendMessage:)
@@ -713,6 +716,26 @@ shouldInteractWithURL:(NSURL *)URL
   }
   
   return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBChatToolbarViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatToolbarViewView:(TBChatToolbarView *)toolbarView
+       willChangeFromHeight:(CGFloat)fromHeight
+                   toHeight:(CGFloat)toHeight {
+  CGFloat diff = toHeight - fromHeight;
+  self.toolbarViewHeightConstraint.constant+=diff;
+  [self.view layoutIfNeeded];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)chatToolbarViewView:(TBChatToolbarView *)toolbarView
+        didChangeFromHeight:(CGFloat)fromHeight
+                   toHeight:(CGFloat)toHeight {
 }
 
 @end

@@ -76,6 +76,7 @@
                         <outlet property="tableView" destination="9wI-zg-rtH" id="7jZ-kl-Clo"/>
                         <outlet property="toolbarView" destination="95m-qY-31n" id="Tlc-s8-due"/>
                         <outlet property="toolbarViewBottomConstraint" destination="k17-YB-f9k" id="NIe-Ir-uRI"/>
+                        <outlet property="toolbarViewHeightConstraint" destination="pUy-aA-hpb" id="ukc-rE-p5b"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oOc-g7-lfK" userLabel="First Responder" sceneMemberID="firstResponder"/>
