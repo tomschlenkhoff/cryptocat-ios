@@ -1,13 +1,13 @@
 //
-//  TBMessageCell.m
-//  ChatView
+//  TBComposingCell.m
+//  Cryptocat
 //
-//  Created by Thomas Balthazar on 07/11/13.
+//  Created by Thomas Balthazar on 19/11/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
-#import "TBMessageCell.h"
-#import "TBMessageCellView.h"
+#import "TBComposingCell.h"
+#import "TBComposingCellView.h"
 
 #define kPaddingTop     0.0
 #define kPaddingBottom  10.0
@@ -17,16 +17,16 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCell ()
+@interface TBComposingCell ()
 
-@property (nonatomic, strong) TBMessageCellView *messageView;
+@property (nonatomic, strong) TBComposingCellView *composingView;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@implementation TBMessageCell
+@implementation TBComposingCell
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -36,8 +36,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-    _messageView = [[TBMessageCellView alloc] init];
-    [self.contentView addSubview:_messageView];
+    _composingView = [[TBComposingCellView alloc] init];
+    [self.contentView addSubview:_composingView];
   }
   return self;
 }
@@ -46,12 +46,12 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
   
-  CGRect messageViewFrame = self.contentView.frame;
-  messageViewFrame.origin.x+=kPaddingLeft;
-  messageViewFrame.origin.y+=kPaddingTop;
-  messageViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
-  messageViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
-  self.messageView.frame = messageViewFrame;
+  CGRect composingViewFrame = self.contentView.frame;
+  composingViewFrame.origin.x+=kPaddingLeft;
+  composingViewFrame.origin.y+=kPaddingTop;
+  composingViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
+  composingViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
+  self.composingView.frame = composingViewFrame;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,44 +61,33 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setSenderName:(NSString *)senderName {
-  self.messageView.senderName = senderName;
+  self.composingView.senderName = senderName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString *)senderName {
-  return self.messageView.senderName;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setMessage:(NSString *)message {
-  self.messageView.message = message;
-  [self setNeedsLayout];
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSString *)message {
-  return self.messageView.message;
+  return self.composingView.senderName;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMeSpeaking:(BOOL)meSpeaking {
-  self.messageView.meSpeaking = meSpeaking;
+  self.composingView.meSpeaking = meSpeaking;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)isMeSpeaking {
-  return self.messageView.isMeSpeaking;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForCellWithText:(NSString *)text {
-  return [TBMessageCellView sizeForText:text].height + kPaddingTop + kPaddingBottom;
+  return self.composingView.isMeSpeaking;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
   [super setBackgroundColor:backgroundColor];
-  self.messageView.backgroundColor = backgroundColor;
+  self.composingView.backgroundColor = backgroundColor;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)height {
+  return 51.5;
 }
 
 @end

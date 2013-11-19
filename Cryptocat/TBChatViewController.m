@@ -14,6 +14,7 @@
 #import "TBBuddy.h"
 #import "TBChateStateNotification.h"
 #import "TBMessageCell.h"
+#import "TBComposingCell.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
 
@@ -194,38 +195,43 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (UITableViewCell *)tableView:(UITableView *)tableView
          cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-  static NSString *cellID = @"MessageCellID";
-  TBMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:cellID];
-  if (cell == nil) {
-    [tableView registerClass:[TBMessageCell class] forCellReuseIdentifier:cellID];
-    cell = [[TBMessageCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                reuseIdentifier:cellID];
-  }
+  id message = [self.messages objectAtIndex:indexPath.row];
 
-  NSMutableArray *messages = self.messages;
-  id message = [messages objectAtIndex:indexPath.row];
-  
-  NSString *senderName = nil;
-  BOOL meSpeaking = NO;
-  NSString *text = nil;
-
+  // -- message cell
   if ([message isKindOfClass:[TBMessage class]]) {
-    senderName = ((TBMessage *)message).sender.nickname;
-    meSpeaking = [((TBMessage *)message).sender isEqual:self.me];
-    text = ((TBMessage *)message).text;
-  }
-  else if ([message isKindOfClass:[TBChateStateNotification class]]) {
-    senderName = ((TBChateStateNotification *)message).sender.nickname;
-    meSpeaking = NO;
-    text = @"is composing ...";
+    static NSString *messageCellID = @"MessageCellID";
+    TBMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:messageCellID];
+    if (cell == nil) {
+      [tableView registerClass:[TBMessageCell class] forCellReuseIdentifier:messageCellID];
+      cell = [[TBMessageCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                  reuseIdentifier:messageCellID];
+    }
+
+    TBMessage *msg = message;
+    cell.senderName = msg.sender.nickname;
+    cell.meSpeaking = [msg.sender isEqual:self.me];
+    cell.message = msg.text;
+    cell.backgroundColor = self.tableView.backgroundColor;
+    return cell;
   }
   
-  cell.senderName = senderName;
-  cell.meSpeaking = meSpeaking;
-  cell.message = text;
-  cell.backgroundColor = self.tableView.backgroundColor;
+  // -- composing cell
+  else if ([message isKindOfClass:[TBChateStateNotification class]]) {
+    static NSString *chatStateCellID = @"ChatStateCellID";
+    TBComposingCell *cell = [tableView dequeueReusableCellWithIdentifier:chatStateCellID];
+    if (cell == nil) {
+      [tableView registerClass:[TBComposingCell class] forCellReuseIdentifier:chatStateCellID];
+      cell = [[TBComposingCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                    reuseIdentifier:chatStateCellID];
+    }
 
-  return cell;
+    TBChateStateNotification *csn = message;
+    cell.senderName = csn.sender.nickname;
+    cell.backgroundColor = self.tableView.backgroundColor;
+    return cell;
+  }
+  
+  return nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,16 +243,15 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
   id message = [self.messages objectAtIndex:indexPath.row];
-  NSString *text = nil;
   
   if ([message isKindOfClass:[TBMessage class]]) {
-    text = ((TBMessage *)message).text;
+    return [TBMessageCell heightForCellWithText:((TBMessage *)message).text];
   }
   else if ([message isKindOfClass:[TBChateStateNotification class]]) {
-    text = @"is composing ...";
+    return [TBComposingCell height];
   }
   
-  return [TBMessageCell heightForCellWithText:text];
+  return 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
