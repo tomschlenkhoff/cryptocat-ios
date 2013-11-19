@@ -78,10 +78,10 @@
 - (void)setMeSpeaking:(BOOL)meSpeaking {
   if (self.isMeSpeaking!=meSpeaking) {
     self.bubbleView.shouldAlignTailToLeft = meSpeaking;
-    
-    [self updateColors];
-    [self.bubbleView setNeedsDisplay];
   }
+
+  [self updateColors];
+  [self.bubbleView setNeedsDisplay];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,9 +93,10 @@
 - (void)setIsWarningMessage:(BOOL)isWarningMessage {
   if (_isWarningMessage!=isWarningMessage) {
     _isWarningMessage = isWarningMessage;
-    [self updateColors];
-    [self.bubbleView setNeedsDisplay];
   }
+
+  [self updateColors];
+  [self.bubbleView setNeedsDisplay];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
