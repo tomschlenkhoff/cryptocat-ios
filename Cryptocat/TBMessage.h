@@ -17,5 +17,6 @@
 
 @property (nonatomic, strong) NSString *text;
 @property (nonatomic, strong) TBBuddy *sender;
+@property (nonatomic, assign) BOOL isWarningMessage;
 
 @end

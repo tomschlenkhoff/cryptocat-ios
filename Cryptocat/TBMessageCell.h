@@ -19,6 +19,7 @@
 @property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, strong) NSString *message;
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
+@property (nonatomic, assign) BOOL isWarningMessage;
 
 + (CGFloat)heightForCellWithText:(NSString *)text;
 

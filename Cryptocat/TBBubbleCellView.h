@@ -21,6 +21,7 @@
 
 @property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
+@property (nonatomic, assign) BOOL isWarningMessage;
 
 + (UIFont *)font;
 

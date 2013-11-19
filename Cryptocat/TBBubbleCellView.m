@@ -16,6 +16,16 @@
 
 #define kMeSpeakingColor    [UIColor colorWithRed: 0.396 green: 0.685 blue: 0.872 alpha: 1]
 #define kOtherSpeakingColor [UIColor colorWithRed:0.592 green:0.808 blue:0.925 alpha:1.000]
+#define kWarningColor       [UIColor redColor]
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface TBBubbleCellView ()
+
+- (void)updateColors;
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -27,6 +37,7 @@
   self = [super initWithFrame:frame];
   if (self) {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _isWarningMessage = NO;
     
     // -- bubble view
     _bubbleView = [[TBBubbleView alloc] init];
@@ -65,17 +76,26 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMeSpeaking:(BOOL)meSpeaking {
-  self.bubbleView.shouldAlignTailToLeft = meSpeaking;
-  self.bubbleView.bubbleColor = meSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
-  self.senderLabelBackground.backgroundColor = meSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
-  self.senderLabel.backgroundColor = meSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
-  
-  [self.bubbleView setNeedsDisplay];
+  if (self.isMeSpeaking!=meSpeaking) {
+    self.bubbleView.shouldAlignTailToLeft = meSpeaking;
+    
+    [self updateColors];
+    [self.bubbleView setNeedsDisplay];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)isMeSpeaking {
   return self.bubbleView.shouldAlignTailToLeft;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setIsWarningMessage:(BOOL)isWarningMessage {
+  if (_isWarningMessage!=isWarningMessage) {
+    _isWarningMessage = isWarningMessage;
+    [self updateColors];
+    [self.bubbleView setNeedsDisplay];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,6 +107,26 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (UIFont *)font {
   return kFont;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)updateColors {
+  if (self.isWarningMessage) {
+    self.bubbleView.bubbleColor = kWarningColor;
+    self.senderLabelBackground.backgroundColor = kWarningColor;
+    self.senderLabel.backgroundColor = kWarningColor;
+  }
+  else {
+    self.bubbleView.bubbleColor = self.isMeSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
+    self.senderLabelBackground.backgroundColor = self.isMeSpeaking ?
+                                                      kMeSpeakingColor : kOtherSpeakingColor;
+    self.senderLabel.backgroundColor = self.isMeSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

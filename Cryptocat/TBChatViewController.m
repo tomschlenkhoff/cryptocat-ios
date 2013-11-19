@@ -212,6 +212,7 @@
     TBMessage *msg = message;
     cell.senderName = msg.sender.nickname;
     cell.meSpeaking = [msg.sender isEqual:self.me];
+    cell.isWarningMessage = msg.isWarningMessage;
     cell.message = msg.text;
     cell.backgroundColor = self.tableView.backgroundColor;
     cell.delegate = self;

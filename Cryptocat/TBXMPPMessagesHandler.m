@@ -239,6 +239,14 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   TBMessage *receivedMsg = [[TBMessage alloc] init];
   receivedMsg.sender = sender;
   receivedMsg.text = decryptedMessage;
+  if (decryptedMessage==nil) {
+    NSString *warningMessage = @"Warning: You have received an unreadable message from %@. \
+This may indicate an untrustworthy user or messages that \
+failed to be received. You may also be running an outdated \
+version of Cryptocat. Please check for updates.";
+    receivedMsg.text = [NSString stringWithFormat:warningMessage, sender.nickname];
+    receivedMsg.isWarningMessage = YES;
+  }
   
   TBLOG(@"-- decrypted message : %@", decryptedMessage);
   

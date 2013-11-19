@@ -19,6 +19,7 @@
   if (self=[super init]) {
     _text = nil;
     _sender = nil;
+    _isWarningMessage = NO;
   }
   
   return self;
