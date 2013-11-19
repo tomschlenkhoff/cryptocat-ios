@@ -14,9 +14,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBMessageCellView : TBBubbleCellView
 
-//@property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, strong) NSString *message;
-//@property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
 
 + (CGSize)sizeForText:(NSString *)text;
 

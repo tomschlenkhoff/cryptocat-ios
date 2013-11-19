@@ -41,9 +41,6 @@
     _senderLabel.font = kFont;
     _senderLabel.textColor = [UIColor whiteColor];
     [self addSubview:_senderLabel];
-    
-//    [self bringSubviewToFront:_senderLabelBackground];
-//    [self bringSubviewToFront:_senderLabel];
   }
   
   return self;
@@ -102,7 +99,6 @@
   [super layoutSubviews];
   
   self.bubbleView.frame = self.bounds;
-  //CGRect textViewFrame = self.bubbleView.contentFrame;
   
   // sender label background
   CGRect senderLabelBackgroundFrame = self.senderLabelBackground.frame;
@@ -111,12 +107,6 @@
   senderLabelBackgroundFrame.size.width+=kSenderLabelPaddingLeft+kSenderLabelPaddingRight;
   senderLabelBackgroundFrame.size.height+=kSenderLabelPaddingTop+kSenderLabelPaddingBottom;
   self.senderLabelBackground.frame = senderLabelBackgroundFrame;
-
-  //BOOL textIsOnOneLine = textViewFrame.size.height < senderLabelBackgroundFrame.size.height;
-  
-//  if (textIsOnOneLine) {
-//    senderLabelBackgroundFrame.size.height+=1.0;
-//  }
   
   // sender label
   CGRect senderLabelFrame = self.senderLabel.frame;
@@ -127,14 +117,6 @@
   
   [self bringSubviewToFront:self.senderLabelBackground];
   [self bringSubviewToFront:self.senderLabel];
-  // textView
-//  CGRect exclustionFrame = senderLabelFrame;
-//  exclustionFrame.origin = CGPointZero;
-//  exclustionFrame.size.width+=kSenderLabelPaddingLeft+kSenderLabelPaddingRight;
-//  exclustionFrame.size.height-=4.0;
-//  UIBezierPath *exclusionPath = [UIBezierPath bezierPathWithRect:exclustionFrame];
-//  self.textView.textContainer.exclusionPaths = @[exclusionPath];
-//  self.textView.frame = textViewFrame;
 }
 
 @end

@@ -359,10 +359,10 @@
 			children = (
 				33E8F9EF183B622A007DDAAB /* TBBubbleCellView.h */,
 				33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */,
-				33B936D418327EC4003497AC /* TBMessageCell.h */,
-				33B936D518327EC4003497AC /* TBMessageCell.m */,
 				33B936D618327EC4003497AC /* TBMessageCellView.h */,
 				33B936D718327EC4003497AC /* TBMessageCellView.m */,
+				33B936D418327EC4003497AC /* TBMessageCell.h */,
+				33B936D518327EC4003497AC /* TBMessageCell.m */,
 				33B936D818327EC4003497AC /* TBBubbleView.h */,
 				33B936D918327EC4003497AC /* TBBubbleView.m */,
 			);
