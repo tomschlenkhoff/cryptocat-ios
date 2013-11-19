@@ -258,6 +258,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSString *username = user.fullname;
   NSString *recipientName = recipient.fullname;
   
+  if (username==nil || recipientName==nil) return;
+  
   // make sure to have a mutable dic for each username's recipients
   if ([self.goneSecureCompletionBlocks objectForKey:user]==nil) {
     [self.goneSecureCompletionBlocks setObject:[NSMutableDictionary dictionary] forKey:username];
