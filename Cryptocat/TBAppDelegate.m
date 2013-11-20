@@ -392,6 +392,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [self.OTRManager disconnectRecipient:buddy.fullname
                         forAccountName:self.XMPPManager.me.fullname
                               protocol:TBMessagingProtocol];
+  [self.multipartyProtocolManager disconnectUsername:buddy.nickname];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
