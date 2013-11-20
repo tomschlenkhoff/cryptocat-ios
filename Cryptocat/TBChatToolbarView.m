@@ -31,9 +31,9 @@
     
     // -- textView
     _textView = [[TBGrowingTextView alloc] initWithFrame:CGRectZero];
-    _textView.contentInset = UIEdgeInsetsMake(0, 0, 0, 0);
+    _textView.contentInset = UIEdgeInsetsMake(-4, 0, 0, 0); // needed to align the font
     _textView.maxNbLines = 3;
-    _textView.font = [UIFont systemFontOfSize:14.0f];
+    _textView.font = [UIFont fontWithName:@"Monda-Regular" size:14.0];
     _textView.delegate = self;
     _textView.backgroundColor = [UIColor whiteColor];
     _textView.translatesAutoresizingMaskIntoConstraints = NO;
