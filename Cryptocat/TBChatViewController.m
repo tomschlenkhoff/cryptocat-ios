@@ -760,6 +760,11 @@ shouldInteractWithURL:(NSURL *)URL
                    toHeight:(CGFloat)toHeight {
   CGFloat diff = toHeight - fromHeight;
   self.toolbarViewHeightConstraint.constant+=diff;
+  
+  CGPoint contentOffset = self.tableView.contentOffset;
+  contentOffset.y+=diff;
+  self.tableView.contentOffset = contentOffset;
+  
   [self.view layoutIfNeeded];
 }
 
