@@ -9,6 +9,7 @@
 #import "XMPPMessage+Cryptocat.h"
 #import "XMPP.h"
 #import "NSString+Cryptocat.h"
+#import "XMPPMessage+XEP_0085.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,7 +18,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)tb_isActiveMessage {
-  return [[self elementForName:@"x"] elementForName:@"active"]!=nil;
+  return [self hasActiveChatState] || [[self elementForName:@"x"] elementForName:@"active"]!=nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -61,17 +62,19 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)tb_isComposingMessage {
-  return [[self elementForName:@"x"] elementForName:@"composing"]!=nil;
+  return [self hasComposingChatState] ||
+          [[self elementForName:@"x"] elementForName:@"composing"]!=nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)tb_isPausedMessage {
-  return [[self elementForName:@"x"] elementForName:@"paused"]!=nil;
+  return [self hasPausedChatState] || [[self elementForName:@"x"] elementForName:@"paused"]!=nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)tb_isChatState {
-  return [self tb_isComposingMessage] || [self tb_isActiveMessage] || [self tb_isPausedMessage];
+  return [self hasChatState] || [self tb_isComposingMessage] ||
+          [self tb_isActiveMessage] || [self tb_isPausedMessage];
 }
 
 @end
