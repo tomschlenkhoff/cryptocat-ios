@@ -18,6 +18,8 @@
 
 @property (nonatomic, assign) CGFloat currentHeight;
 @property (nonatomic, readonly) CGRect boundingRectForText;
+@property (nonatomic, strong) NSCharacterSet *aNewLineCharSet;
+@property (nonatomic, assign) CGFloat oneLineHeight;
 
 - (CGRect)boundingRectForText:(NSString *)text;
 
@@ -39,8 +41,10 @@
 - (id)initWithFrame:(CGRect)frame {
   if (self=[super initWithFrame:frame]) {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
+    _oneLineHeight = [self boundingRectForText:@"f"].size.height;
     _currentHeight = self.boundingRectForText.size.height;
     _maxNbLines = 0;
+    _aNewLineCharSet = [NSCharacterSet newlineCharacterSet];
     
     // notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -59,6 +63,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)textDidChange:(NSNotification *)notification {
   CGFloat newHeight = self.boundingRectForText.size.height;
+
+  // hack : if last char is a newLine, add a line to the new height
+  NSUInteger textLength = [self.text length];
+  unichar lastChar = [self.text characterAtIndex:textLength - 1];
+  BOOL lastCharIsNewLine = [self.aNewLineCharSet characterIsMember:lastChar];
+  if (lastCharIsNewLine) {
+    newHeight+=self.oneLineHeight;
+  }
   
   if (self.currentHeight==newHeight) return;
   
@@ -110,12 +122,14 @@
 - (void)setFont:(UIFont *)font {
   [super setFont:font];
   self.currentHeight = self.boundingRectForText.size.height;
+  self.oneLineHeight = [self boundingRectForText:@"f"].size.height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setTypingAttributes:(NSDictionary *)typingAttributes {
   [super setTypingAttributes:typingAttributes];
   self.currentHeight = self.boundingRectForText.size.height;
+  self.oneLineHeight = [self boundingRectForText:@"f"].size.height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
