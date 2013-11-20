@@ -140,7 +140,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   TBLOG(@"-- will send presence : %@", presence);
   [self.XMPPManager.xmppStream sendElement:presence];
   */
-  
+
   [self startObservingForMessages];
   self.bgTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
     [self stopObservingForMessages];
@@ -315,6 +315,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)logout {
+  [self.chatViewController cleanupConversations];
+
   [self.XMPPManager.xmppStream disconnect];
   [self presentLoginVCAnimated:YES];
   

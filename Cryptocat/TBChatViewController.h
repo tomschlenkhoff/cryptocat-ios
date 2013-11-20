@@ -22,6 +22,8 @@
 @property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, strong) TBBuddy *me;
 
+- (void)cleanupConversations;
+
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
