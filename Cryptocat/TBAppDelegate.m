@@ -379,6 +379,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   if (![buddy isEqual:XMPPManager.me]) {
     NSNotificationCenter *nc = [NSNotificationCenter defaultCenter];
     [nc postNotificationName:TBBuddyDidSignInNotification object:buddy];
+    
+    [self.XMPPMessageHandler sendPublicKeyToRecipient:buddy XMPPManager:XMPPManager];
   }
 }
 

@@ -34,5 +34,6 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 - (void)sendStateNotification:(NSString *)state
                     recipient:(TBBuddy *)recipient
                   XMPPManager:(TBXMPPManager *)XMPPManager;
+- (void)sendPublicKeyToRecipient:(TBBuddy *)recipient XMPPManager:(TBXMPPManager *)XMPPManager;
 
 @end

@@ -198,6 +198,13 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)sendPublicKeyToRecipient:(TBBuddy *)recipient XMPPManager:(TBXMPPManager *)XMPPManager {
+  NSString *messageBody = [self.multipartyProtocolManager
+                           publicKeyMessageForUsername:recipient.nickname];
+  [XMPPManager.xmppRoom sendMessageWithBody:messageBody];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
@@ -219,12 +226,15 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
               </x>
    </message>
   */
-  [self.multipartyProtocolManager addPublicKeyFromMessage:message.body
-                                              forUsername:message.from.resource];
 
-  NSString *messageBody = [self.multipartyProtocolManager
-                           publicKeyMessageForUsername:message.from.resource];
-  [XMPPManager.xmppRoom sendMessageWithBody:messageBody];
+  TBBuddy *sender = [[TBBuddy alloc] initWithXMPPJID:message.from];
+  
+  [self.multipartyProtocolManager addPublicKeyFromMessage:message.body
+                                              forUsername:sender.nickname];
+
+  if (![self.multipartyProtocolManager hasPublicKeyForUsername:sender.nickname]) {
+    [self sendPublicKeyToRecipient:sender XMPPManager:XMPPManager];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
