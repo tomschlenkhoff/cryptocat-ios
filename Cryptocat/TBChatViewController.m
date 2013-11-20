@@ -61,6 +61,9 @@
 - (void)updateUnreadMessagesCounter;
 - (void)scrollToLatestMessage;
 - (void)addMessage:(id)message forKey:(NSString *)key;
+- (void)removeChatStateNotification:(TBChateStateNotification *)chatStateNotification
+                             forKey:(NSString *)key;
+- (void)removeAllChatStateNotificationsForBuddy:(TBBuddy *)buddy forKey:(NSString *)key;
 
 @end
 
@@ -331,6 +334,7 @@
   NSString *roomName = csn.sender.roomName;
   
   if ([csn isComposingNotification]) {
+    [self removeAllChatStateNotificationsForBuddy:csn.sender forKey:roomName];
     [self addMessage:csn forKey:roomName];
   }
   else {
@@ -346,6 +350,7 @@
   TBChateStateNotification *csn = notification.object;
   
   if ([csn isComposingNotification]) {
+    [self removeAllChatStateNotificationsForBuddy:csn.sender forKey:csn.sender.fullname];
     [self addMessage:csn forKey:csn.sender.fullname];
   }
   else {
@@ -551,6 +556,23 @@
   }
   
   [messages removeObject:messageToRemove];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)removeAllChatStateNotificationsForBuddy:(TBBuddy *)buddy forKey:(NSString *)key {
+  NSMutableArray *messages = [self.messagesForConversation objectForKey:key];
+  NSUInteger nbMessages = [messages count];
+  NSMutableIndexSet *indexesOfMessagesToRemove = [NSMutableIndexSet indexSet];
+  
+  for (NSUInteger i=0; i < nbMessages; i++) {
+    id message = [messages objectAtIndex:i];
+    if ([message isKindOfClass:[TBChateStateNotification class]] &&
+        [((TBChateStateNotification *)message).sender isEqual:buddy]) {
+      [indexesOfMessagesToRemove addIndex:i];
+    }
+  }
+  
+  [messages removeObjectsAtIndexes:indexesOfMessagesToRemove];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
