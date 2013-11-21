@@ -266,7 +266,10 @@
   id message = [self.messages objectAtIndex:indexPath.row];
   
   if ([message isKindOfClass:[TBMessage class]]) {
-    return [TBMessageCell heightForCellWithText:((TBMessage *)message).text];
+    // text height : add the sender name and some spaces for the sender label padding
+    TBMessage *msg = (TBMessage *)message;
+    NSString *txt = [msg.sender.nickname stringByAppendingFormat:@"   :   %@", msg.text];
+    return [TBMessageCell heightForCellWithText:txt];
   }
   else if ([message isKindOfClass:[TBChateStateNotification class]]) {
     return [TBComposingCell height];

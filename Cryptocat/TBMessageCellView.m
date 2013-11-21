@@ -88,7 +88,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGSize)textViewSizeForText:(NSString *)text {
-  // get the keyboard height depending on the device orientation
   UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
   BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
   CGFloat maxWidth = isPortrait ? kMaxWidthPortrait : kMaxWidthLandscape;
