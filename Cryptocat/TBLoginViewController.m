@@ -128,8 +128,10 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)connect {
-  NSString *conversationName = [self.conversationNameField.text tb_trim];
-  NSString *nickname = [self.nicknameField.text tb_trim];
+  NSString *conversationName = [[self.conversationNameField.text tb_trim] lowercaseString];
+  NSString *nickname = [[self.nicknameField.text tb_trim] lowercaseString];
+  self.conversationNameField.text = conversationName;
+  self.nicknameField.text = nickname;
   
   NSError *error = [self errorForConversationName:conversationName nickname:nickname];
   if (error!=nil) {
