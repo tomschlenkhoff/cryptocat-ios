@@ -97,6 +97,18 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (id)initWithCoder:(NSCoder *)aDecoder {
+  if (self=[super initWithCoder:aDecoder]) {
+    _typing = NO;
+    _messagesForConversation = [NSMutableDictionary dictionary];
+    _nbUnreadMessagesInRoom = 0;
+    _nbUnreadMessagesForBuddy = [NSMutableDictionary dictionary];
+  }
+  
+  return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
   
@@ -108,11 +120,6 @@
   self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Me",
                                                                 @"Me Button Title on Chat Screen");
   
-  
-  self.typing = NO;
-  self.messagesForConversation = [NSMutableDictionary dictionary];
-  self.nbUnreadMessagesInRoom = 0;
-  self.nbUnreadMessagesForBuddy = [NSMutableDictionary dictionary];
   
   self.view.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.backgroundColor = self.view.backgroundColor;
@@ -161,6 +168,7 @@
   if (self.currentRoomName==nil) {
     self.currentRoomName = self.roomName;
     self.title = self.roomName;
+    [self.tableView reloadData];
   }
   
   [self startObservingKeyboard];
@@ -413,6 +421,12 @@
   pn.sender = buddy;
   pn.online = isOnline;
   pn.timestamp = [NSDate date];
+  
+  // remove remaining typing notif since the user logged out
+  if (!isOnline) {
+    [self removeAllChatStateNotificationsForBuddy:buddy forKey:roomName];
+  }
+  
   [self addMessage:pn forKey:roomName];
   [self.tableView reloadData];
   [self scrollToLatestMessage];
