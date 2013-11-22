@@ -8,7 +8,8 @@
 
 #import "TBPresenceView.h"
 
-#define kFont                   [UIFont fontWithName:@"Monda-Regular" size:9.0]
+#define kTimestampFont          [UIFont fontWithName:@"Monda-Regular" size:10.0]
+#define kUsernameFont           [UIFont fontWithName:@"Monda-Regular" size:14.0]
 #define kFontColor              [UIColor whiteColor]
 #define kSignInBubbleColor      [UIColor colorWithRed:0.592 green:0.808 blue:0.925 alpha:1.000]
 #define kSignInTimeStampColor   [UIColor colorWithRed:0.475 green:0.647 blue:0.741 alpha:1.000]
@@ -56,11 +57,13 @@ static NSDictionary *_timestampFontAttributes = nil;
   timestampFrame.origin.x+=5.0;
   timestampFrame.size.width = 40.0;
   
-  CGFloat lineHeight = kFont.lineHeight;
-  CGFloat topInset = (bubbleFrame.size.height - lineHeight) / 2;
+  CGFloat timeStampLineHeight = kTimestampFont.lineHeight;
+  CGFloat timeStampTopInset = roundf((bubbleFrame.size.height - timeStampLineHeight) / 2) - 1;
+  CGFloat usernameLineHeight = kUsernameFont.lineHeight;
+  CGFloat usernameTopInset = roundf((bubbleFrame.size.height - usernameLineHeight) / 2) - 2;
 
-  CGRect timestampTextFrame = CGRectInset(timestampFrame, 0, topInset);
-  CGRect usernameTextFrame = CGRectInset(bubbleFrame, 0, topInset);
+  CGRect timestampTextFrame = CGRectInset(timestampFrame, 0, timeStampTopInset);
+  CGRect usernameTextFrame = CGRectInset(bubbleFrame, 0, usernameTopInset);
   usernameTextFrame.origin.x+=timestampFrame.origin.x + timestampFrame.size.width + 5.0;
   usernameTextFrame.size.width-=timestampFrame.origin.x + timestampFrame.size.width + 5.0;
   
@@ -127,7 +130,7 @@ static NSDictionary *_timestampFontAttributes = nil;
   if (_usernameFontAttributes==nil) {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     [style setAlignment:NSTextAlignmentLeft];
-    _usernameFontAttributes = @{NSFontAttributeName: kFont,
+    _usernameFontAttributes = @{NSFontAttributeName: kUsernameFont,
                                 NSForegroundColorAttributeName: kFontColor,
                                 NSParagraphStyleAttributeName: style};
   }
@@ -140,7 +143,7 @@ static NSDictionary *_timestampFontAttributes = nil;
   if (_timestampFontAttributes==nil) {
     NSMutableParagraphStyle *style = [[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy];
     [style setAlignment:NSTextAlignmentCenter];
-    _timestampFontAttributes = @{NSFontAttributeName: kFont,
+    _timestampFontAttributes = @{NSFontAttributeName: kTimestampFont,
                                  NSForegroundColorAttributeName: kFontColor,
                                  NSParagraphStyleAttributeName: style};
   }

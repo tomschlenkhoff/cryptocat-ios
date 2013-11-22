@@ -10,7 +10,7 @@
 #import "TBPresenceView.h"
 
 #define kPaddingTop     0.0
-#define kPaddingBottom  19.0
+#define kPaddingBottom  25.0
 #define kPaddingLeft    11.0
 #define kPaddingRight   120.0
 
@@ -70,7 +70,7 @@ static NSDateFormatter *_dateFormatter = nil;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGFloat)height {
-  return 39.0;
+  return 49.0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
