@@ -13,8 +13,10 @@
 #import "TBMessage.h"
 #import "TBBuddy.h"
 #import "TBChateStateNotification.h"
+#import "TBPresenceNotification.h"
 #import "TBMessageCell.h"
 #import "TBComposingCell.h"
+#import "TBPresenceCell.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
 #import "SVWebViewController.h"
@@ -141,11 +143,11 @@
                         name:TBDidReceivePrivateChatStateNotification
                       object:nil];
   [defaultCenter addObserver:self
-                    selector:@selector(buddyDidChangeState:)
+                    selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignInNotification
                       object:nil];
   [defaultCenter addObserver:self
-                    selector:@selector(buddyDidChangeState:)
+                    selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignOutNotification
                       object:nil];
 }
@@ -252,6 +254,24 @@
     return cell;
   }
   
+  // -- presence cell
+  else if ([message isKindOfClass:[TBPresenceNotification class]]) {
+    static NSString *presenceCellID = @"PresenceCellID";
+    TBPresenceCell *cell = [tableView dequeueReusableCellWithIdentifier:presenceCellID];
+    if (cell == nil) {
+      [tableView registerClass:[TBPresenceCell class] forCellReuseIdentifier:presenceCellID];
+      cell = [[TBPresenceCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                   reuseIdentifier:presenceCellID];
+    }
+    
+    TBPresenceNotification *pn = message;
+    cell.username = pn.sender.nickname;
+    cell.timestamp = pn.timestamp;
+    cell.isSignIn = pn.isOnline;
+    cell.backgroundColor = self.tableView.backgroundColor;
+    return cell;
+  }
+  
   return nil;
 }
 
@@ -265,14 +285,22 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
   id message = [self.messages objectAtIndex:indexPath.row];
   
+  // -- message
   if ([message isKindOfClass:[TBMessage class]]) {
     // text height : add the sender name and some spaces for the sender label padding
     TBMessage *msg = (TBMessage *)message;
     NSString *txt = [msg.sender.nickname stringByAppendingFormat:@"   :   %@", msg.text];
     return [TBMessageCell heightForCellWithText:txt];
   }
+  
+  // -- chat state
   else if ([message isKindOfClass:[TBChateStateNotification class]]) {
     return [TBComposingCell height];
+  }
+  
+  // -- presence
+  else if ([message isKindOfClass:[TBPresenceNotification class]]) {
+    return [TBPresenceCell height];
   }
   
   return 0;
@@ -376,15 +404,26 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)buddyDidChangeState:(NSNotification *)notification {
+- (void)buddiesListDidChange:(NSNotification *)notification {
   TBBuddy *buddy = notification.object;
+  NSString *roomName = buddy.roomName;
+  BOOL isOnline = [notification.name isEqualToString:TBBuddyDidSignInNotification];
   
-  if ([self.currentRecipient isEqual:buddy]) {
-    BOOL isSignIn = [notification.name isEqualToString:TBBuddyDidSignInNotification];
-    self.toolbarView.textView.backgroundColor = isSignIn ?
-                                                  [UIColor whiteColor] : [UIColor redColor];
-    self.toolbarView.textView.editable = isSignIn;
-  }
+  TBPresenceNotification *pn = [[TBPresenceNotification alloc] init];
+  pn.sender = buddy;
+  pn.online = isOnline;
+  pn.timestamp = [NSDate date];
+  [self addMessage:pn forKey:roomName];
+  [self.tableView reloadData];
+  [self scrollToLatestMessage];
+
+  // TODO : enable/disable textfield when current buddy signs in/out and reactivate if we switch to conversation room
+//  if ([self.currentRecipient isEqual:buddy]) {
+//    BOOL isSignIn = [notification.name isEqualToString:TBBuddyDidSignInNotification];
+//    self.toolbarView.textView.backgroundColor = isSignIn ?
+//                                                  [UIColor whiteColor] : [UIColor redColor];
+//    self.toolbarView.textView.editable = isSignIn;
+//  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
