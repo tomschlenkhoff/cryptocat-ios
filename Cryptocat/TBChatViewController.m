@@ -661,6 +661,7 @@
   [self.tableView reloadData];
   [self scrollToLatestMessage];
   self.toolbarView.textView.text = @"";
+  self.toolbarView.sendButton.enabled = NO;
   
   [self cancelTypingTimer];
   
