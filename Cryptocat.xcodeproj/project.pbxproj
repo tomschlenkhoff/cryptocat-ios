@@ -21,6 +21,8 @@
 		3388E26A183F5C5300102762 /* TBPresenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E267183F5C5300102762 /* TBPresenceCell.m */; };
 		3388E26B183F5C5300102762 /* TBPresenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E269183F5C5300102762 /* TBPresenceView.m */; };
 		3388E26E183F5CA500102762 /* TBPresenceNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E26D183F5CA500102762 /* TBPresenceNotification.m */; };
+		3388E271183FA50200102762 /* TBServersViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E270183FA50200102762 /* TBServersViewController.m */; };
+		3388E276183FA92800102762 /* TBServer.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E275183FA92800102762 /* TBServer.m */; };
 		339DD1AC17F0399400C3E8E6 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AB17F0399400C3E8E6 /* Foundation.framework */; };
 		339DD1AE17F0399400C3E8E6 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AD17F0399400C3E8E6 /* CoreGraphics.framework */; };
 		339DD1B017F0399400C3E8E6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 339DD1AF17F0399400C3E8E6 /* UIKit.framework */; };
@@ -111,6 +113,10 @@
 		3388E269183F5C5300102762 /* TBPresenceView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBPresenceView.m; sourceTree = "<group>"; };
 		3388E26C183F5CA500102762 /* TBPresenceNotification.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBPresenceNotification.h; sourceTree = "<group>"; };
 		3388E26D183F5CA500102762 /* TBPresenceNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBPresenceNotification.m; sourceTree = "<group>"; };
+		3388E26F183FA50200102762 /* TBServersViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBServersViewController.h; sourceTree = "<group>"; };
+		3388E270183FA50200102762 /* TBServersViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBServersViewController.m; sourceTree = "<group>"; };
+		3388E274183FA92800102762 /* TBServer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBServer.h; sourceTree = "<group>"; };
+		3388E275183FA92800102762 /* TBServer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBServer.m; sourceTree = "<group>"; };
 		339DD1A817F0399400C3E8E6 /* Cryptocat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Cryptocat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		339DD1AB17F0399400C3E8E6 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		339DD1AD17F0399400C3E8E6 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
@@ -278,6 +284,30 @@
 			name = XMPP;
 			sourceTree = "<group>";
 		};
+		3388E272183FA51200102762 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				33E6C7FA181512FD009EC642 /* TBLoginViewController.h */,
+				33E6C7FB181512FD009EC642 /* TBLoginViewController.m */,
+				3388E26F183FA50200102762 /* TBServersViewController.h */,
+				3388E270183FA50200102762 /* TBServersViewController.m */,
+			);
+			name = Login;
+			sourceTree = "<group>";
+		};
+		3388E273183FA52200102762 /* Buddies */ = {
+			isa = PBXGroup;
+			children = (
+				33C3651218102413003EAF93 /* TBBuddiesViewController.h */,
+				33C3651318102413003EAF93 /* TBBuddiesViewController.m */,
+				3379BA22181EBAE0002A316F /* TBBuddyViewController.h */,
+				3379BA23181EBAE0002A316F /* TBBuddyViewController.m */,
+				332CA4CB1819108C00233E92 /* TBMeViewController.h */,
+				332CA4CC1819108C00233E92 /* TBMeViewController.m */,
+			);
+			name = Buddies;
+			sourceTree = "<group>";
+		};
 		339DD19F17F0399400C3E8E6 = {
 			isa = PBXGroup;
 			children = (
@@ -369,16 +399,10 @@
 		339DD1E317F039DD00C3E8E6 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				33E6C7FA181512FD009EC642 /* TBLoginViewController.h */,
-				33E6C7FB181512FD009EC642 /* TBLoginViewController.m */,
+				3388E272183FA51200102762 /* Login */,
+				3388E273183FA52200102762 /* Buddies */,
 				33F6831F180EDDC100524C87 /* TBChatViewController.h */,
 				33F68320180EDDC100524C87 /* TBChatViewController.m */,
-				33C3651218102413003EAF93 /* TBBuddiesViewController.h */,
-				33C3651318102413003EAF93 /* TBBuddiesViewController.m */,
-				3379BA22181EBAE0002A316F /* TBBuddyViewController.h */,
-				3379BA23181EBAE0002A316F /* TBBuddyViewController.m */,
-				332CA4CB1819108C00233E92 /* TBMeViewController.h */,
-				332CA4CC1819108C00233E92 /* TBMeViewController.m */,
 			);
 			name = Controllers;
 			sourceTree = "<group>";
@@ -410,6 +434,8 @@
 				33B936EB18362455003497AC /* TBChateStateNotification.m */,
 				3388E26C183F5CA500102762 /* TBPresenceNotification.h */,
 				3388E26D183F5CA500102762 /* TBPresenceNotification.m */,
+				3388E274183FA92800102762 /* TBServer.h */,
+				3388E275183FA92800102762 /* TBServer.m */,
 			);
 			name = Models;
 			sourceTree = "<group>";
@@ -687,6 +713,7 @@
 				3388E26E183F5CA500102762 /* TBPresenceNotification.m in Sources */,
 				33E8FA1E183B95FC007DDAAB /* SVWebViewController.m in Sources */,
 				33B936E4183289A0003497AC /* TBMessage.m in Sources */,
+				3388E271183FA50200102762 /* TBServersViewController.m in Sources */,
 				33E8F9FB183B7095007DDAAB /* TBComposingCell.m in Sources */,
 				33B936DA18327EC4003497AC /* TBMessageCell.m in Sources */,
 				330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */,
@@ -708,6 +735,7 @@
 				33B936DB18327EC4003497AC /* TBMessageCellView.m in Sources */,
 				33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */,
 				33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */,
+				3388E276183FA92800102762 /* TBServer.m in Sources */,
 				332CA4D0181955B500233E92 /* TBBuddy.m in Sources */,
 				3301305017F18A5E00287253 /* XMPPInBandRegistration.m in Sources */,
 				3346522A1828EC8B00280518 /* UIColor+Cryptocat.m in Sources */,

@@ -58,6 +58,13 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)viewWillAppear:(BOOL)animated {
+  [super viewWillAppear:animated];
+
+  [self.navigationController setNavigationBarHidden:YES animated:YES];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewWillDisappear:(BOOL)animated {
   [super viewWillDisappear:animated];
   
@@ -77,7 +84,7 @@
   NSString *nickname = [defaults objectForKey:@"nickname"];
   
   // -- colors
-  [self.navigationController setNavigationBarHidden:YES animated:NO];
+  //[self.navigationController setNavigationBarHidden:YES animated:NO];
   self.tableView.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.tableHeaderView.backgroundColor = [UIColor tb_backgroundColor];
   self.legendLabel.textColor = [UIColor tb_tableViewSectionTitleColor];
@@ -102,6 +109,14 @@
   }
   
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
+  
+  TBLOG(@"-- tv originY : %.1f", self.tableView.frame.origin.y);
+  TBLOG(@"-- header height : %.1f", self.tableView.tableHeaderView.frame.size.height);
+  TBLOG(@"-- tv content height %.1f", self.tableView.contentSize.height);
+  TBLOG(@"-- footerViewHeight : %.1f", self.tableView.tableFooterView.frame.size.height);
+  TBLOG(@"-- tableViewHeight : %.1f", self.tableView.frame.size.height);
+  
+  TBLOG(@"-- footerview frame : %@", NSStringFromCGRect(self.tableView.tableFooterView.frame));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

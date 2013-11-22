@@ -122,6 +122,24 @@ Share it with people you'd like to talk to.</string>
                                 <constraint firstAttribute="centerY" secondItem="H1S-Jz-WgW" secondAttribute="centerY" constant="-103.5" id="mr8-4X-KJc"/>
                             </constraints>
                         </view>
+                        <view key="tableFooterView" contentMode="scaleToFill" id="fRD-MQ-w0Q">
+                            <rect key="frame" x="0.0" y="414" width="320" height="44"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Dp-tB-e5K">
+                                    <rect key="frame" x="20" y="7" width="45" height="30"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    <state key="normal" title="Server">
+                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                    </state>
+                                    <connections>
+                                        <action selector="serverConfig:" destination="X1i-Rf-Km2" eventType="touchUpInside" id="Tnh-QG-SFE"/>
+                                        <segue destination="Kd9-p3-PS4" kind="push" identifier="ServersSegueID" id="DDp-MQ-WGQ"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                            <color key="backgroundColor" red="0.082352943720000002" green="0.074509806930000005" blue="0.14509804549999999" alpha="1" colorSpace="deviceRGB"/>
+                        </view>
                         <sections>
                             <tableViewSection id="B9Q-yg-JBO">
                                 <cells>
@@ -191,6 +209,77 @@ Share it with people you'd like to talk to.</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n1F-n1-FE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="449" y="828"/>
+        </scene>
+        <!--Servers View Controller-->
+        <scene sceneID="ECp-4D-sar">
+            <objects>
+                <tableViewController id="Kd9-p3-PS4" customClass="TBServersViewController" sceneMemberID="viewController">
+                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="2Fj-JW-zgm">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                        <prototypes>
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ServerCellID" editingAccessoryType="disclosureIndicator" id="EK1-FM-3Wz">
+                                <rect key="frame" x="0.0" y="55" width="320" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="EK1-FM-3Wz" id="PeJ-vH-of1">
+                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="Kd9-p3-PS4" id="P7k-lS-MDZ"/>
+                            <outlet property="delegate" destination="Kd9-p3-PS4" id="mTj-Z8-fUi"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" id="44p-iw-tlA"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ybb-kd-FuA" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="40" y="1597"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="tbb-fp-lFS">
+            <objects>
+                <viewController id="fTe-6C-7DA" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="7to-rN-L8Q"/>
+                        <viewControllerLayoutGuide type="bottom" id="4Tz-4w-Bud"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="3bK-AV-01v">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="R7U-8T-6Tl">
+                                <rect key="frame" x="79" y="38" width="163" height="163"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="163" id="4B4-rf-fqk"/>
+                                    <constraint firstAttribute="height" constant="163" id="w5q-A5-tK1"/>
+                                </constraints>
+                            </imageView>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="ZFy-cA-V5S">
+                                <rect key="frame" x="20" y="220" width="280" height="59"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <string key="text">Enter a name for your conversation.
+Share it with people you'd like to talk to.</string>
+                                <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="Icj-We-Hbc">
+                                <rect key="frame" x="0.0" y="274" width="320" height="225"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="d7y-fw-yGX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="908" y="1141"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="zWz-Uc-J0I">
