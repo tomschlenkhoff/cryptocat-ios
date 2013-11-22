@@ -46,6 +46,13 @@
     _maxNbLines = 0;
     _aNewLineCharSet = [NSCharacterSet newlineCharacterSet];
     
+    self.layer.borderWidth = 0.5f;
+    self.layer.borderColor = [[UIColor colorWithRed:0.839
+                                              green:0.839
+                                               blue:0.843
+                                              alpha:1.000] CGColor];
+    self.layer.cornerRadius = 6.0;
+    
     // notifications
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(textDidChange:)
