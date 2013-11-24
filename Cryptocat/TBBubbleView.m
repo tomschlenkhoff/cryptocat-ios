@@ -65,8 +65,8 @@
   // constant values
   CGFloat lineWidth = 2.0;
   CGFloat shadowOffsetX = 1.5;
-  CGFloat shadowOffsetY = 4.5;
-  CGFloat cornerRadius = 4.0;
+  CGFloat shadowOffsetY = 3.5;
+  CGSize cornerRadius = CGSizeMake(4.0, 4.0);
   CGFloat arrowWidth = 16.0;
   CGFloat arrowHeight = 12.0;
   CGFloat arrowCenterDistanceFromBorder = 34.5;
@@ -81,7 +81,7 @@
   CGFloat shadowX = bubbleX + shadowOffsetX;
   CGFloat shadowY = bubbleY + shadowOffsetY;
   CGFloat shadowWidth = bubbleWidth;
-  CGFloat shadowHeight = bubbleHeight - 3.0;
+  CGFloat shadowHeight = bubbleHeight - 2.0;
   
   // arrow
   CGFloat arrowBottomX = 0;
@@ -100,7 +100,10 @@
   // -- Shadow Drawing
   CGRect shadowRect = CGRectMake(shadowX, shadowY, shadowWidth, shadowHeight);
   UIBezierPath *shadowPath = [UIBezierPath bezierPathWithRoundedRect:shadowRect
-                                                        cornerRadius:cornerRadius];
+                                                   byRoundingCorners:UIRectCornerTopLeft |
+                                                                      UIRectCornerBottomLeft |
+                                                                      UIRectCornerBottomRight
+                                                         cornerRadii:cornerRadius];
   [self.bubbleColor setFill];
   [shadowPath fill];
   [self.bubbleColor setStroke];
@@ -110,7 +113,10 @@
   // -- Bubble Frame Drawing
   CGRect bubbleRect = CGRectMake(bubbleX, bubbleY, bubbleWidth, bubbleHeight);
   UIBezierPath *bubbleFramePath = [UIBezierPath bezierPathWithRoundedRect:bubbleRect
-                                                             cornerRadius:cornerRadius];
+                                                        byRoundingCorners:UIRectCornerTopLeft |
+                                                                           UIRectCornerBottomLeft |
+                                                                           UIRectCornerBottomRight
+                                                              cornerRadii:cornerRadius];
   [self.insideColor setFill];
   [bubbleFramePath fill];
   [self.bubbleColor setStroke];
