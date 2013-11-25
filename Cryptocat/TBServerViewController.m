@@ -42,12 +42,14 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  // -- save button
-  UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]
-                                 initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                 target:self
-                                 action:@selector(save)];
-  self.navigationItem.rightBarButtonItem = saveButton;
+  // -- save button (for New or Edit not readonly)
+  if (self.server==nil || !self.server.isReadonly) {
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]
+                                   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
+                                   target:self
+                                   action:@selector(save)];
+    self.navigationItem.rightBarButtonItem = saveButton;
+  }
   
   // -- placeholder text
   self.nameCell.textField.placeholder = NSLocalizedString(@"Name", @"Server Name Placeholder");
