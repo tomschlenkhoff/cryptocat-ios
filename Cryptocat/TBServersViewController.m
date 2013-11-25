@@ -205,9 +205,26 @@ commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
       TBServer *server = [self.servers objectAtIndex:indexPath.row];
+      BOOL isCurrentServer = [[TBServer currentServer].name isEqualToString:server.name];
       [TBServer deleteServer:server];
-      [tableView deleteRowsAtIndexPaths:@[indexPath]
-                       withRowAnimation:UITableViewRowAnimationFade];
+      
+      // if the deleted server was the current server, set a new current server
+      if (isCurrentServer) {
+        TBServer *firstServer = [self.servers objectAtIndex:0];
+        [TBServer setCurrentServer:firstServer];
+        self.currentServer = firstServer;
+        NSIndexPath *firstServerIndexPath = [NSIndexPath indexPathForRow:0 inSection:0];
+        [tableView beginUpdates];
+        [tableView reloadRowsAtIndexPaths:@[firstServerIndexPath]
+                         withRowAnimation:UITableViewRowAnimationAutomatic];
+        [tableView deleteRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationFade];
+        [tableView endUpdates];
+      }
+      else {
+        [tableView deleteRowsAtIndexPaths:@[indexPath]
+                         withRowAnimation:UITableViewRowAnimationFade];
+      }
     }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
       [self performSegueWithIdentifier:@"NewServerSegueID" sender:nil];
