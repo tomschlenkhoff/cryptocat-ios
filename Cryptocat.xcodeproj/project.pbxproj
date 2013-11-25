@@ -12,6 +12,8 @@
 		330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 330130C517F431CF00287253 /* XMPPMessage+Cryptocat.m */; };
 		330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 330130C817F4453000287253 /* NSString+Cryptocat.m */; };
 		330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = 330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */; };
+		3306B7A418434CC3005B81DA /* TBServerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3306B7A318434CC3005B81DA /* TBServerViewController.m */; };
+		3306B7A718434EE0005B81DA /* TBTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3306B7A618434EE0005B81DA /* TBTextFieldCell.m */; };
 		3317DCDA181FD39E008353E5 /* TBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3317DCD9181FD39E008353E5 /* TBConstants.m */; };
 		332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CC1819108C00233E92 /* TBMeViewController.m */; };
 		332CA4D0181955B500233E92 /* TBBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CF181955B500233E92 /* TBBuddy.m */; };
@@ -95,6 +97,10 @@
 		330130C817F4453000287253 /* NSString+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+Cryptocat.m"; sourceTree = "<group>"; };
 		330131DB17FB0D6000287253 /* TBXMPPMessagesHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBXMPPMessagesHandler.h; sourceTree = "<group>"; };
 		330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXMPPMessagesHandler.m; sourceTree = "<group>"; };
+		3306B7A218434CC3005B81DA /* TBServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBServerViewController.h; sourceTree = "<group>"; };
+		3306B7A318434CC3005B81DA /* TBServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBServerViewController.m; sourceTree = "<group>"; };
+		3306B7A518434EE0005B81DA /* TBTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBTextFieldCell.h; sourceTree = "<group>"; };
+		3306B7A618434EE0005B81DA /* TBTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBTextFieldCell.m; sourceTree = "<group>"; };
 		3317DCD8181FD39E008353E5 /* TBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBConstants.h; sourceTree = "<group>"; };
 		3317DCD9181FD39E008353E5 /* TBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBConstants.m; sourceTree = "<group>"; };
 		332CA4CB1819108C00233E92 /* TBMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMeViewController.h; sourceTree = "<group>"; };
@@ -291,6 +297,8 @@
 				33E6C7FB181512FD009EC642 /* TBLoginViewController.m */,
 				3388E26F183FA50200102762 /* TBServersViewController.h */,
 				3388E270183FA50200102762 /* TBServersViewController.m */,
+				3306B7A218434CC3005B81DA /* TBServerViewController.h */,
+				3306B7A318434CC3005B81DA /* TBServerViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -419,6 +427,8 @@
 				33E8FA6D183BD7D4007DDAAB /* TBGrowingTextView.m */,
 				33B936DD18327EDC003497AC /* TBChatToolbarView.h */,
 				33B936DE18327EDC003497AC /* TBChatToolbarView.m */,
+				3306B7A518434EE0005B81DA /* TBTextFieldCell.h */,
+				3306B7A618434EE0005B81DA /* TBTextFieldCell.m */,
 			);
 			name = Views;
 			sourceTree = "<group>";
@@ -744,10 +754,12 @@
 				33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */,
 				33E8F9F1183B622A007DDAAB /* TBBubbleCellView.m in Sources */,
 				330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */,
+				3306B7A718434EE0005B81DA /* TBTextFieldCell.m in Sources */,
 				33E8FA6E183BD7D4007DDAAB /* TBGrowingTextView.m in Sources */,
 				332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */,
 				33B936DC18327EC4003497AC /* TBBubbleView.m in Sources */,
 				33E8FA1C183B95FC007DDAAB /* SVModalWebViewController.m in Sources */,
+				3306B7A418434CC3005B81DA /* TBServerViewController.m in Sources */,
 				33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

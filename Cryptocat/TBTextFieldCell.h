@@ -1,8 +1,8 @@
 //
-//  TBServersViewController.h
+//  TBTextFieldCell.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 22/11/13.
+//  Created by Thomas Balthazar on 25/11/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 
@@ -11,6 +11,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBServersViewController : UITableViewController
+@interface TBTextFieldCell : UITableViewCell
+
+@property (nonatomic, strong) UITextField *textField;
+@property (nonatomic, assign, getter=isEnabled) BOOL enabled;
 
 @end
