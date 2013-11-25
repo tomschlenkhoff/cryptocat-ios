@@ -235,6 +235,7 @@ Share it with people you'd like to talk to.</string>
                     <navigationItem key="navigationItem" id="44p-iw-tlA"/>
                     <connections>
                         <segue destination="pM6-Nd-KiN" kind="push" identifier="ServerSegueID" id="c8i-0x-F6z"/>
+                        <segue destination="4Zh-Ak-cxa" kind="modal" identifier="NewServerSegueID" id="MQj-nS-myn"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ybb-kd-FuA" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -253,7 +254,7 @@ Share it with people you'd like to talk to.</string>
                             <tableViewSection id="PhT-Nz-OeC">
                                 <cells>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="mWC-QQ-4Be" customClass="TBTextFieldCell">
-                                        <rect key="frame" x="0.0" y="35" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="99" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="mWC-QQ-4Be" id="tVO-NA-2vV">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -261,7 +262,7 @@ Share it with people you'd like to talk to.</string>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Jay-dK-yAu" customClass="TBTextFieldCell">
-                                        <rect key="frame" x="0.0" y="79" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="143" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Jay-dK-yAu" id="8G9-5B-X9I">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -269,7 +270,7 @@ Share it with people you'd like to talk to.</string>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                     <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="ZP5-yL-zqp" customClass="TBTextFieldCell">
-                                        <rect key="frame" x="0.0" y="123" width="320" height="44"/>
+                                        <rect key="frame" x="0.0" y="187" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="ZP5-yL-zqp" id="nbf-cv-0xG">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
@@ -293,7 +294,22 @@ Share it with people you'd like to talk to.</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9aN-6v-hfU" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="449" y="1597"/>
+            <point key="canvasLocation" x="549" y="1597"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="FDi-5L-qrM">
+            <objects>
+                <navigationController definesPresentationContext="YES" id="4Zh-Ak-cxa" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="t5i-yL-Wmx">
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="pM6-Nd-KiN" kind="relationship" relationship="rootViewController" id="EwS-zv-22h"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="FRJ-4p-KhR" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="276" y="2330"/>
         </scene>
         <!--View Controller-->
         <scene sceneID="tbb-fp-lFS">
@@ -547,4 +563,7 @@ Share it with people you'd like to talk to.</string>
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="EwS-zv-22h"/>
+    </inferredMetricsTieBreakers>
 </document>

@@ -19,4 +19,9 @@
 @property (nonatomic, strong) NSString *boshRelay;
 @property (nonatomic, assign, getter=isReadonly) BOOL readonly;
 
++ (NSArray *)servers;
++ (BOOL)addServer:(TBServer *)server;
++ (BOOL)updateServer:(TBServer *)server atIndex:(NSUInteger)index;
++ (BOOL)deleteServer:(TBServer *)server;
+
 @end

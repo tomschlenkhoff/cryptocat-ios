@@ -14,12 +14,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBServersViewController ()
+@interface TBServersViewController () <TBServerViewControllerDelegate>
 
-@property (nonatomic, strong) NSMutableArray *servers;
+@property (nonatomic, readonly) NSArray *servers;
 @property (nonatomic, readonly) NSIndexPath *indexPathForAddCell;
+@property (nonatomic, strong) NSString *serverNameConflictErrorMessage;
+@property (nonatomic, strong) NSString *serverRequiredFieldsErrorMessage;
 
-- (void)loadDefaultServers;
+- (void)showErrorMessage:(NSString *)errorMessage;
 
 @end
 
@@ -42,7 +44,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithCoder:(NSCoder *)aDecoder {
   if (self=[super initWithCoder:aDecoder]) {
-    _servers = [NSMutableArray array];
+    _serverNameConflictErrorMessage = NSLocalizedString(
+                            @"A server with this name already exists. Please choose another name.", @"Server Name already exists error message");
+    _serverRequiredFieldsErrorMessage = NSLocalizedString(@"All fields are required.",
+                                            @"All Fields are required error message for server");
   }
   
   return self;
@@ -57,28 +62,27 @@
   
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-
-  [self loadDefaultServers];
-  
-  // load sample servers
-  for (int i = 1; i < 4; i++) {
-    TBServer *server = [[TBServer alloc] init];
-    server.name = [NSString stringWithFormat:@"Server %d", i];
-    server.domain = @"crypto.cat";
-    server.conferenceServer = @"conference.crypto.cat";
-    server.readonly = NO;
-    [self.servers addObject:server];
-  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-  // -- server
+  // -- server details
   if ([segue.identifier isEqualToString:@"ServerSegueID"]) {
     NSIndexPath *indexPath = sender;
     TBServer *server = [self.servers objectAtIndex:indexPath.row];
     TBServerViewController *svc = segue.destinationViewController;
+    svc.delegate = self;
     svc.server = server;
+    svc.serverIndexPath = indexPath;
+  }
+  
+  // -- new server
+  else if ([segue.identifier isEqualToString:@"NewServerSegueID"]) {
+    UINavigationController *nc = segue.destinationViewController;
+    nc.navigationBar.barStyle = UIBarStyleBlack;
+    TBServerViewController *svc = (TBServerViewController *)nc.topViewController;
+    svc.delegate = self;
+    svc.server = nil;
   }
 }
 
@@ -110,8 +114,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   if (self.isEditing) {
     if ([indexPath isEqual:[self indexPathForAddCell]]) {
-      // add server
-      TBLOG(@"-- add server");
+      [self performSegueWithIdentifier:@"NewServerSegueID" sender:nil];
     }
     else {
       [self performSegueWithIdentifier:@"ServerSegueID" sender:indexPath];
@@ -141,7 +144,7 @@
   static NSString *CellIdentifier = @"ServerCellID";
   UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
                                                           forIndexPath:indexPath];
-  
+  TBLOG(@"-- cellForRowAtIndexPath : %@", indexPath);
   if ([indexPath isEqual:self.indexPathForAddCell]) {
     cell.textLabel.text = NSLocalizedString(@"add server", @"add server");
     cell.editingAccessoryType = UITableViewCellAccessoryNone;
@@ -178,12 +181,14 @@
 commitEditingStyle:(UITableViewCellEditingStyle)editingStyle
 forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
+      TBServer *server = [self.servers objectAtIndex:indexPath.row];
+      [TBServer deleteServer:server];
+      [tableView deleteRowsAtIndexPaths:@[indexPath]
+                       withRowAnimation:UITableViewRowAnimationFade];
+    }
     else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
+      [self performSegueWithIdentifier:@"NewServerSegueID" sender:nil];
+    }
 }
 
 /*
@@ -220,20 +225,80 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 #pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSArray *)servers {
+  return [TBServer servers];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSIndexPath *)indexPathForAddCell {
   return [NSIndexPath indexPathForRow:[self.servers count]
                             inSection:0];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)loadDefaultServers {
-  TBServer *server = [[TBServer alloc] init];
-  server.name = @"Cryptocat";
-  server.domain = @"crypto.cat";
-  server.conferenceServer = @"conference.crypto.cat";
-  server.readonly = YES;
-  [self.servers addObject:server];
+- (void)showErrorMessage:(NSString *)errorMessage {
+  NSString *title = NSLocalizedString(@"Error", @"Server Creation/Modification Error Alert Title");
+  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Error Alert View Ok Button Title");
+  UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
+                                               message:errorMessage
+                                              delegate:self
+                                     cancelButtonTitle:cancelTitle
+                                     otherButtonTitles:nil];
+  [av show];
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBServerViewControllerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)serverViewController:(TBServerViewController *)controller
+             didCreateServer:(TBServer *)server {
+  if ([server.name isEqualToString:@""] ||
+      [server.domain isEqualToString:@""] ||
+      [server.conferenceServer isEqualToString:@""]) {
+    [self showErrorMessage:self.serverRequiredFieldsErrorMessage];
+  }
+  else {
+    if ([TBServer addServer:server]) {
+      [self dismissViewControllerAnimated:YES completion:^{
+        NSIndexPath *indexPath = [NSIndexPath indexPathForRow:([self.servers count]-1) inSection:0];
+        [self.tableView insertRowsAtIndexPaths:@[indexPath]
+                              withRowAnimation:UITableViewRowAnimationAutomatic];
+      }];
+    }
+    else {
+      [self showErrorMessage:self.serverNameConflictErrorMessage];
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)serverViewController:(TBServerViewController *)controller
+             didUpdateServer:(TBServer *)server
+                     atIndexPath:(NSIndexPath *)indexPath {
+  if ([server.name isEqualToString:@""] ||
+      [server.domain isEqualToString:@""] ||
+      [server.conferenceServer isEqualToString:@""]) {
+    [self showErrorMessage:self.serverRequiredFieldsErrorMessage];
+  }
+  else {
+    if ([TBServer updateServer:server atIndex:indexPath.row]) {
+      [self.navigationController popViewControllerAnimated:YES];
+      [self.tableView reloadRowsAtIndexPaths:@[indexPath]
+                            withRowAnimation:UITableViewRowAnimationAutomatic];
+    }
+    else {
+      [self showErrorMessage:self.serverNameConflictErrorMessage];
+    }
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)serverViewControllerDidCancel:(TBServerViewController *)controller {
+  TBLOGMARK;
+  [self dismissViewControllerAnimated:YES completion:NULL];
+}
 
 @end
