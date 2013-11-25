@@ -17,6 +17,7 @@
 @interface TBServersViewController () <TBServerViewControllerDelegate>
 
 @property (nonatomic, readonly) NSArray *servers;
+@property (nonatomic, strong) TBServer *currentServer;
 @property (nonatomic, readonly) NSIndexPath *indexPathForAddCell;
 @property (nonatomic, strong) NSString *serverNameConflictErrorMessage;
 @property (nonatomic, strong) NSString *serverRequiredFieldsErrorMessage;
@@ -48,6 +49,7 @@
                             @"A server with this name already exists. Please choose another name.", @"Server Name already exists error message");
     _serverRequiredFieldsErrorMessage = NSLocalizedString(@"All fields are required.",
                                             @"All Fields are required error message for server");
+    _currentServer = nil;
   }
   
   return self;
@@ -56,6 +58,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  self.currentServer = [TBServer currentServer];
   
   [self.navigationController setNavigationBarHidden:NO animated:YES];
   self.title = NSLocalizedString(@"Servers", @"Servers Screen Title");
@@ -112,6 +116,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+  // editing mode
   if (self.isEditing) {
     if ([indexPath isEqual:[self indexPathForAddCell]]) {
       [self performSegueWithIdentifier:@"NewServerSegueID" sender:nil];
@@ -119,6 +124,15 @@
     else {
       [self performSegueWithIdentifier:@"ServerSegueID" sender:indexPath];
     }
+  }
+  
+  // normal mode
+  else {
+    TBServer *server = [self.servers objectAtIndex:indexPath.row];
+    [TBServer setCurrentServer:server];
+    self.currentServer = server;
+    [self.tableView reloadData];
+    [self.navigationController popViewControllerAnimated:YES];
   }
 }
 
@@ -153,19 +167,17 @@
   else {
     TBServer *server = [self.servers objectAtIndex:indexPath.row];
     cell.textLabel.text = server.name;
-    cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
     cell.textLabel.textColor = [UIColor blackColor];
+    if ([server.name isEqualToString:self.currentServer.name]) {
+      cell.accessoryType = UITableViewCellAccessoryCheckmark;
+    }
+    else {
+      cell.accessoryType = UITableViewCellAccessoryNone;
+    }
+    cell.editingAccessoryType = UITableViewCellAccessoryDisclosureIndicator;
   }
   
   return cell;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
-  if ([indexPath isEqual:self.indexPathForAddCell]) return YES;
-  
-  TBServer *server = [self.servers objectAtIndex:indexPath.row];
-  return !server.isReadonly;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,7 +185,18 @@
            editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
   if ([indexPath isEqual:self.indexPathForAddCell]) return UITableViewCellEditingStyleInsert;
   
-  return UITableViewCellEditingStyleDelete;
+  TBServer *server = [self.servers objectAtIndex:indexPath.row];
+  
+  return server.isReadonly ? UITableViewCellEditingStyleNone : UITableViewCellEditingStyleDelete;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView
+shouldIndentWhileEditingRowAtIndexPath:(NSIndexPath *)indexPath {
+  if ([indexPath isEqual:self.indexPathForAddCell]) return YES;
+  
+  TBServer *server = [self.servers objectAtIndex:indexPath.row];
+  return server.isReadonly ? NO : YES;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

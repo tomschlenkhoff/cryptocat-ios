@@ -20,13 +20,11 @@
 #import "TBMessage.h"
 #import "XMPPPresence+Cryptocat.h"
 #import "UIColor+Cryptocat.h"
+#import "TBServer.h"
 
 #import "TestFlight.h"
 
 typedef void (^TBGoneSecureCompletionBlock)();
-
-#define kDomain           @"crypto.cat"
-#define kConferenceDomain @"conference.crypto.cat"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -589,13 +587,15 @@ didAskToConnectWithRoomName:(NSString *)roomName
                nickname:(NSString *)nickname {
   NSString *username = [NSString tb_randomStringWithLength:16];
   NSString *password = [NSString tb_randomStringWithLength:16];
-  NSString *domain = kDomain;
-  NSString *conferenceDomain = kConferenceDomain;
+  
+  TBServer *currentServer = [TBServer currentServer];
+  TBLOG(@"-- currentServer is : %@ (%@ - %@)",
+        currentServer.name, currentServer.domain, currentServer.conferenceServer);
   
   BOOL isConnected = [self.XMPPManager connectWithUsername:username
                                                   password:password
-                                                    domain:domain
-                                          conferenceDomain:conferenceDomain
+                                                    domain:currentServer.domain
+                                          conferenceDomain:currentServer.conferenceServer
                                                   roomName:roomName
                                                   nickname:nickname];
   self.multipartyProtocolManager.myName = self.XMPPManager.me.nickname;

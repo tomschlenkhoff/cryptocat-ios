@@ -9,6 +9,7 @@
 #import "TBServer.h"
 
 #define kDefaultsUserSavedServersKey  @"TBUserSavedServers"
+#define kDefaultsCurrentServerKey     @"TBCurrentServer"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -17,6 +18,7 @@
 
 - (NSDictionary *)serverDic;
 + (NSArray *)defaultServers;
++ (void)loadDefaultServers;
 + (NSInteger)indexForServerName:(NSString *)serverName;
 
 @end
@@ -90,22 +92,53 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSArray *)servers {
-  NSMutableArray *servers = [NSMutableArray arrayWithArray:[self defaultServers]];
+  [self loadDefaultServers];
+  
+  NSMutableArray *servers = [NSMutableArray array];
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   [defaults synchronize];
-  
   NSArray *serverDics = [defaults arrayForKey:kDefaultsUserSavedServersKey];
+  
   for (NSDictionary *serverDic in serverDics) {
-    TBServer *server = [[TBServer alloc] init];
-    server.name = [serverDic objectForKey:@"name"];
-    server.domain = [serverDic objectForKey:@"domain"];
-    server.conferenceServer = [serverDic objectForKey:@"conferenceServer"];
-    server.boshRelay = [serverDic objectForKey:@"boshRelay"];
-    server.readonly = NO;
-    [servers addObject:server];
+    [servers addObject:[TBServer serverFromDic:serverDic]];
   }
   
   return servers;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (TBServer *)currentServer {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults synchronize];
+  
+  NSDictionary *serverDic = [defaults objectForKey:kDefaultsCurrentServerKey];
+  
+  // no default found, choose the first server
+  if (serverDic==nil) {
+    return [[self servers] objectAtIndex:0];
+  }
+  else {
+    return [self serverFromDic:serverDic];
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (void)setCurrentServer:(TBServer *)server {
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults setObject:server.serverDic forKey:kDefaultsCurrentServerKey];
+  [defaults synchronize];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (TBServer *)serverFromDic:(NSDictionary *)serverDic {
+  TBServer *server = [[TBServer alloc] init];
+  server.name = [serverDic objectForKey:@"name"];
+  server.domain = [serverDic objectForKey:@"domain"];
+  server.conferenceServer = [serverDic objectForKey:@"conferenceServer"];
+  server.boshRelay = [serverDic objectForKey:@"boshRelay"];
+  server.readonly = [[serverDic objectForKey:@"readonly"] boolValue];
+  
+  return server;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -118,7 +151,8 @@
   return @{@"name": self.name,
            @"domain": self.domain,
            @"conferenceServer": self.conferenceServer,
-           @"boshRelay": self.boshRelay};
+           @"boshRelay": self.boshRelay,
+           @"readonly": [NSNumber numberWithBool:self.isReadonly]};
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -128,8 +162,15 @@
   server.domain = @"crypto.cat";
   server.conferenceServer = @"conference.crypto.cat";
   server.readonly = YES;
-  
+
   return @[server];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (void)loadDefaultServers {
+  for (TBServer *server in [self defaultServers]) {
+    [self addServer:server];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
