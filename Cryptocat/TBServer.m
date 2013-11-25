@@ -62,14 +62,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (BOOL)updateServer:(TBServer *)server atIndex:(NSUInteger)index {
-  NSUInteger nbDefaultServers = [[self defaultServers] count];
-  NSUInteger adjustedIndex = index - nbDefaultServers;
   NSInteger foundIndex = [self indexForServerName:server.name];
-  if (foundIndex!=-1 && foundIndex!=adjustedIndex) return NO; // name already exists
+  if (foundIndex!=-1 && foundIndex!=index) return NO; // name already exists
   
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
   NSMutableArray *serverDics = [defaults mutableArrayValueForKey:kDefaultsUserSavedServersKey];
-  [serverDics replaceObjectAtIndex:adjustedIndex withObject:server.serverDic];
+  [serverDics replaceObjectAtIndex:index withObject:server.serverDic];
   [defaults setObject:serverDics forKey:kDefaultsUserSavedServersKey];
   [defaults synchronize];
 
