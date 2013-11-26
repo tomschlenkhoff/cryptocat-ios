@@ -27,6 +27,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithCoder:(NSCoder *)aDecoder {
   if (self=[super initWithCoder:aDecoder]) {
+    self.selectionStyle = UITableViewCellSelectionStyleNone;
     _label = [[UILabel alloc] init];
     _label.textAlignment = NSTextAlignmentCenter;
     _label.font = [UIFont systemFontOfSize:18.0];

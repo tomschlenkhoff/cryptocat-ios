@@ -299,6 +299,16 @@ replacementString:(NSString *)string {
 #pragma mark UITableViewDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tableView:(UITableView *)tableView shouldHighlightRowAtIndexPath:(NSIndexPath *)indexPath {
+  // -- connect button
+  if (indexPath.section==1) {
+    return YES;
+  }
+  
+  return NO;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSIndexPath *)tableView:(UITableView *)tableView
   willSelectRowAtIndexPath:(NSIndexPath *)indexPath {
   // -- connect button
