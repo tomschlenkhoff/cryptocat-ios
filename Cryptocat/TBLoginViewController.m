@@ -12,18 +12,20 @@
 #import "NSError+Cryptocat.h"
 #import "UIColor+Cryptocat.h"
 #import "TBButtonCell.h"
+#import "TBTextFieldCell.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBLoginViewController () <UITextFieldDelegate>
 
-@property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (weak, nonatomic) IBOutlet UITextField *conversationNameField;
-@property (weak, nonatomic) IBOutlet UITextField *nicknameField;
+@property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (strong, nonatomic) UITextField *conversationNameField;
+@property (strong, nonatomic) UITextField *nicknameField;
 @property (weak, nonatomic) IBOutlet UILabel *legendLabel;
-@property (weak, nonatomic) IBOutlet TBButtonCell *buttonCell;
-@property (nonatomic, assign) BOOL shouldPreventTableViewAutoScrolling;
+@property (strong, nonatomic) TBButtonCell *buttonCell;
+@property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
+@property (weak, nonatomic) IBOutlet UIImageView *logoView;
 
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
@@ -51,10 +53,29 @@
   [super viewDidAppear:animated];
 
   [[NSNotificationCenter defaultCenter] addObserver:self
-                                           selector:@selector(keyboardDidShow:)
-                                               name:UIKeyboardDidShowNotification
+                                           selector:@selector(keyboardWillShow:)
+                                               name:UIKeyboardWillShowNotification
                                              object:nil];
-  self.shouldPreventTableViewAutoScrolling = YES;
+  
+  // -- check for login info in defaults
+  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+  [defaults synchronize];
+  NSString *conversationName = [defaults objectForKey:@"roomName"];
+  NSString *nickname = [defaults objectForKey:@"nickname"];
+  if (conversationName!=nil && nickname!=nil) {
+    self.conversationNameField.text = conversationName;
+    self.nicknameField.text = nickname;
+  }
+  
+  // -- configure cells
+  self.conversationNameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.nicknameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.buttonCell.titleColor = [UIColor tb_buttonTitleColor];
+  self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
+
+  // -- configure tableview
+  self.tableView.contentOffset = CGPointMake(0.0, 35.0);
+  self.tableView.scrollEnabled = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,7 +90,7 @@
   [super viewWillDisappear:animated];
   
   [[NSNotificationCenter defaultCenter] removeObserver:self
-                                                  name:UIKeyboardDidShowNotification
+                                                  name:UIKeyboardWillShowNotification
                                                 object:nil];
 }
 
@@ -77,46 +98,17 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  // -- check for login info in defaults
-  NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-  [defaults synchronize];
-  NSString *conversationName = [defaults objectForKey:@"roomName"];
-  NSString *nickname = [defaults objectForKey:@"nickname"];
-  
   // -- colors
-  //[self.navigationController setNavigationBarHidden:YES animated:NO];
+  self.view.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.tableHeaderView.backgroundColor = [UIColor tb_backgroundColor];
   self.legendLabel.textColor = [UIColor tb_tableViewSectionTitleColor];
-  self.conversationNameField.textColor = [UIColor tb_tableViewCellTextColor];
-  self.nicknameField.textColor = [UIColor tb_tableViewCellTextColor];
-  self.buttonCell.titleColor = [UIColor tb_buttonTitleColor];
-  
+
   // -- labels
   self.title = @"Cryptocat";
   self.legendLabel.text = NSLocalizedString(
                 @"Enter a name for your conversation.\nShare it with people you'd like to talk to.",
                 @"Login Screen Legend");
-  self.conversationNameField.placeholder = NSLocalizedString(@"conversation name",
-                                                            @"conversation name Field Placeholder");
-  self.nicknameField.placeholder = NSLocalizedString(@"your nickname",
-                                                     @"your nickname Field Placeholder");
-  self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
-  
-  if (conversationName!=nil && nickname!=nil) {
-    self.conversationNameField.text = conversationName;
-    self.nicknameField.text = nickname;
-  }
-  
-  self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
-  
-  TBLOG(@"-- tv originY : %.1f", self.tableView.frame.origin.y);
-  TBLOG(@"-- header height : %.1f", self.tableView.tableHeaderView.frame.size.height);
-  TBLOG(@"-- tv content height %.1f", self.tableView.contentSize.height);
-  TBLOG(@"-- footerViewHeight : %.1f", self.tableView.tableFooterView.frame.size.height);
-  TBLOG(@"-- tableViewHeight : %.1f", self.tableView.frame.size.height);
-  
-  TBLOG(@"-- footerview frame : %@", NSStringFromCGRect(self.tableView.tableFooterView.frame));
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -250,6 +242,60 @@ replacementString:(NSString *)string {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
+#pragma mark UITableViewDataSource
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView {
+  return 2;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
+  return section==0 ? 2 : 1;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (UITableViewCell *)tableView:(UITableView *)tableView
+         cellForRowAtIndexPath:(NSIndexPath *)indexPath {
+  // -- textField cells
+  if (indexPath.section==0) {
+    static NSString *TextFieldCellID = @"TextFieldCellID";
+    TBTextFieldCell *cell = [tableView dequeueReusableCellWithIdentifier:TextFieldCellID
+                                                            forIndexPath:indexPath];
+    cell.textField.delegate = self;
+    
+    // conversation name
+    if (indexPath.row==0) {
+      self.conversationNameField = cell.textField;
+      self.conversationNameField.placeholder = NSLocalizedString(@"conversation name",
+                                                                 @"conversation name Field Placeholder");
+    }
+    // nickname
+    else {
+      self.nicknameField = cell.textField;
+      self.nicknameField.placeholder = NSLocalizedString(@"your nickname",
+                                                         @"your nickname Field Placeholder");
+    }
+    
+    return cell;
+  }
+  
+  // -- button cell
+  else {
+    static NSString *ButtonCellID = @"ButtonCellID";
+    TBButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellID
+                                                         forIndexPath:indexPath];
+    self.buttonCell = cell;
+    self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
+    return cell;
+  }
+  
+  return nil;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
 #pragma mark UITableViewDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,41 +328,44 @@ replacementString:(NSString *)string {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark UIScrollViewDelegate
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
- * Trick to prevent the tableView from automatically scrolling when a field becomes first responder.
- * The tableView will be manually scrolled when the keyboard is shown to show the whole form.
- */
-- (void)scrollViewDidScroll:(UIScrollView *)scrollView {
-  if (self.shouldPreventTableViewAutoScrolling) {
-    CGPoint contentOffset = scrollView.contentOffset;
-    contentOffset.y = 0;
-    self.tableView.contentOffset = contentOffset;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
 #pragma mark Observers
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
- * Trick to show the whole login form when a field becomes first responder.
- */
-- (void)keyboardDidShow:(NSNotification *)notification {
-  double delayInSeconds = 0.01;
-  dispatch_time_t popTime = dispatch_time(DISPATCH_TIME_NOW,
-                                          (int64_t)(delayInSeconds * NSEC_PER_SEC));
-  dispatch_after(popTime, dispatch_get_main_queue(), ^(void){
-    self.shouldPreventTableViewAutoScrolling = NO;
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:1];
-    [self.tableView scrollToRowAtIndexPath:indexPath
-                          atScrollPosition:UITableViewScrollPositionTop
-                                  animated:YES];
-  });
+- (void)keyboardWillShow:(NSNotification *)notification {
+  NSDictionary* info = [notification userInfo];
+  CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+  
+  // get the keyboard height depending on the device orientation
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
+  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
+  
+  // get the animation info
+  double keyboardTransitionDuration;
+  [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey]
+   getValue:&keyboardTransitionDuration];
+  UIViewAnimationCurve keyboardTransitionAnimationCurve;
+  [[notification.userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey]
+   getValue:&keyboardTransitionAnimationCurve];
+  
+  CGRect tvFrame = self.tableView.frame;
+  tvFrame.origin.y-=keyboardHeight;
+  
+  CGRect bottomToolbarFrame = self.bottomToolbarView.frame;
+  bottomToolbarFrame.origin.y-=keyboardHeight;
+
+  // start animation
+  [UIView beginAnimations:nil context:NULL];
+  [UIView setAnimationDuration:keyboardTransitionDuration];
+  [UIView setAnimationCurve:keyboardTransitionAnimationCurve];
+  [UIView setAnimationBeginsFromCurrentState:YES];
+  
+  self.tableView.frame = tvFrame;
+  self.bottomToolbarView.frame = bottomToolbarFrame;
+  self.logoView.alpha = 0.0;
+  
+  [UIView commitAnimations];
+  // end animation
 }
 
 @end

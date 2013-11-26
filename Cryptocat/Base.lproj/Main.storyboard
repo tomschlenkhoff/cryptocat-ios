@@ -132,9 +132,6 @@ Share it with people you'd like to talk to.</string>
                                     <state key="normal" title="Server">
                                         <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                     </state>
-                                    <connections>
-                                        <segue destination="Kd9-p3-PS4" kind="push" identifier="ServersSegueID" id="DDp-MQ-WGQ"/>
-                                    </connections>
                                 </button>
                             </subviews>
                             <color key="backgroundColor" red="0.082352943720000002" green="0.074509806930000005" blue="0.14509804549999999" alpha="1" colorSpace="deviceRGB"/>
@@ -154,9 +151,6 @@ Share it with people you'd like to talk to.</string>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="X1i-Rf-Km2" id="NKI-Ss-uT3"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -173,9 +167,6 @@ Share it with people you'd like to talk to.</string>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no"/>
-                                                    <connections>
-                                                        <outlet property="delegate" destination="X1i-Rf-Km2" id="cq5-wI-GLC"/>
-                                                    </connections>
                                                 </textField>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -198,16 +189,10 @@ Share it with people you'd like to talk to.</string>
                     </tableView>
                     <navigationItem key="navigationItem" id="Zjs-ds-vF5"/>
                     <nil key="simulatedTopBarMetrics"/>
-                    <connections>
-                        <outlet property="buttonCell" destination="def-sm-u1P" id="pTu-jd-YBG"/>
-                        <outlet property="conversationNameField" destination="4sp-wg-dyh" id="bbm-o7-zYu"/>
-                        <outlet property="legendLabel" destination="H1S-Jz-WgW" id="1Kj-bA-oKL"/>
-                        <outlet property="nicknameField" destination="RFZ-Da-OA5" id="pXB-UT-Y6J"/>
-                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="n1F-n1-FE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="449" y="828"/>
+            <point key="canvasLocation" x="1517" y="1230"/>
         </scene>
         <!--Servers View Controller-->
         <scene sceneID="ECp-4D-sar">
@@ -311,10 +296,10 @@ Share it with people you'd like to talk to.</string>
             </objects>
             <point key="canvasLocation" x="276" y="2330"/>
         </scene>
-        <!--View Controller-->
+        <!--Login View Controller-->
         <scene sceneID="tbb-fp-lFS">
             <objects>
-                <viewController id="fTe-6C-7DA" sceneMemberID="viewController">
+                <viewController id="fTe-6C-7DA" customClass="TBLoginViewController" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="7to-rN-L8Q"/>
                         <viewControllerLayoutGuide type="bottom" id="4Tz-4w-Bud"/>
@@ -345,10 +330,10 @@ Share it with people you'd like to talk to.</string>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                                 <prototypes>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="x6J-j6-HuS" customClass="TBTextFieldCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="TextFieldCellID" id="x6J-j6-HuS" customClass="TBTextFieldCell">
                                         <rect key="frame" x="0.0" y="55" width="320" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x6J-j6-HuS">
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="x6J-j6-HuS" id="0xT-k5-Fk6">
                                             <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                         </tableViewCellContentView>
@@ -362,6 +347,10 @@ Share it with people you'd like to talk to.</string>
                                         </tableViewCellContentView>
                                     </tableViewCell>
                                 </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="fTe-6C-7DA" id="24e-T4-qUG"/>
+                                    <outlet property="delegate" destination="fTe-6C-7DA" id="nSu-iv-Fc7"/>
+                                </connections>
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="E1M-wR-ZA7" userLabel="Bottom View">
                                 <rect key="frame" x="0.0" y="546" width="320" height="22"/>
@@ -388,10 +377,18 @@ Share it with people you'd like to talk to.</string>
                             <constraint firstAttribute="centerX" secondItem="R7U-8T-6Tl" secondAttribute="centerX" id="zqd-Gx-lFr"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="lNQ-sw-46P"/>
+                    <nil key="simulatedTopBarMetrics"/>
+                    <connections>
+                        <outlet property="bottomToolbarView" destination="E1M-wR-ZA7" id="fec-R1-IpE"/>
+                        <outlet property="legendLabel" destination="ZFy-cA-V5S" id="4Sr-ba-oeh"/>
+                        <outlet property="logoView" destination="R7U-8T-6Tl" id="uD0-t4-2nd"/>
+                        <outlet property="tableView" destination="Icj-We-Hbc" id="aIi-gK-a01"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="d7y-fw-yGX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="908" y="1141"/>
+            <point key="canvasLocation" x="449" y="828"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="zWz-Uc-J0I">
@@ -401,7 +398,7 @@ Share it with people you'd like to talk to.</string>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="X1i-Rf-Km2" kind="relationship" relationship="rootViewController" id="HpD-3G-2oC"/>
+                        <segue destination="fTe-6C-7DA" kind="relationship" relationship="rootViewController" id="2E8-zA-5Cs"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="cQk-rG-Tht" userLabel="First Responder" sceneMemberID="firstResponder"/>
