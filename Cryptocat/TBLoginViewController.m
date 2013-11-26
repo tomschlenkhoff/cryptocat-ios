@@ -57,6 +57,10 @@
                                            selector:@selector(keyboardWillShow:)
                                                name:UIKeyboardWillShowNotification
                                              object:nil];
+  [[NSNotificationCenter defaultCenter] addObserver:self
+                                           selector:@selector(keyboardWillHide:)
+                                               name:UIKeyboardWillHideNotification
+                                             object:nil];
   
   // -- check for login info in defaults
   NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -93,6 +97,12 @@
   [[NSNotificationCenter defaultCenter] removeObserver:self
                                                   name:UIKeyboardWillShowNotification
                                                 object:nil];
+  [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                  name:UIKeyboardWillHideNotification
+                                                object:nil];
+
+  [self.conversationNameField resignFirstResponder];
+  [self.nicknameField resignFirstResponder];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -382,6 +392,46 @@ replacementString:(NSString *)string {
   
   [UIView commitAnimations];
   // end animation
+  TBLOGMARK;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)keyboardWillHide:(NSNotification *)notification {
+  NSDictionary* info = [notification userInfo];
+  CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+  
+  // get the keyboard height depending on the device orientation
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
+  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
+  
+  // get the animation info
+  double keyboardTransitionDuration;
+  [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey]
+   getValue:&keyboardTransitionDuration];
+  UIViewAnimationCurve keyboardTransitionAnimationCurve;
+  [[notification.userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey]
+   getValue:&keyboardTransitionAnimationCurve];
+  
+  CGRect tvFrame = self.tableView.frame;
+  tvFrame.origin.y+=keyboardHeight;
+  
+  CGRect bottomToolbarFrame = self.bottomToolbarView.frame;
+  bottomToolbarFrame.origin.y+=keyboardHeight;
+  
+  // start animation
+  [UIView beginAnimations:nil context:NULL];
+  [UIView setAnimationDuration:keyboardTransitionDuration];
+  [UIView setAnimationCurve:keyboardTransitionAnimationCurve];
+  [UIView setAnimationBeginsFromCurrentState:YES];
+  
+  self.tableView.frame = tvFrame;
+  self.bottomToolbarView.frame = bottomToolbarFrame;
+  self.logoView.alpha = 1.0;
+  
+  [UIView commitAnimations];
+  // end animation
+  TBLOGMARK;
 }
 
 @end
