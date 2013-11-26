@@ -404,10 +404,10 @@ Share it with people you'd like to talk to.</string>
             </objects>
             <point key="canvasLocation" x="449" y="828"/>
         </scene>
-        <!--Navigation Controller-->
+        <!--Login Navigation Controller-->
         <scene sceneID="zWz-Uc-J0I">
             <objects>
-                <navigationController storyboardIdentifier="LoginNCID" definesPresentationContext="YES" id="Xsu-ZO-5ho" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="LoginNCID" definesPresentationContext="YES" id="Xsu-ZO-5ho" customClass="TBLoginNavigationController" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="fos-Kl-ocQ">
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

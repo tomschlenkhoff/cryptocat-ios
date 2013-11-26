@@ -21,6 +21,7 @@
 #import "XMPPPresence+Cryptocat.h"
 #import "UIColor+Cryptocat.h"
 #import "TBServer.h"
+#import "TBLoginNavigationController.h"
 
 #import "TestFlight.h"
 
@@ -235,7 +236,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   if (!self.XMPPManager.xmppStream.isConnected && !self.XMPPManager.xmppStream.isConnecting) {
     // show loginVC
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
-    UINavigationController *loginNC = [storyboard
+    TBLoginNavigationController *loginNC = [storyboard
                                        instantiateViewControllerWithIdentifier:@"LoginNCID"];
     loginNC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
     self.loginViewController = (TBLoginViewController *)loginNC.topViewController;
