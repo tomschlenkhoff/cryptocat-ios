@@ -26,6 +26,7 @@
 @property (strong, nonatomic) TBButtonCell *buttonCell;
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
+@property (weak, nonatomic) IBOutlet UIButton *serverButton;
 
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
@@ -74,7 +75,7 @@
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
 
   // -- configure tableview
-  self.tableView.contentOffset = CGPointMake(0.0, 35.0);
+  self.tableView.contentInset = UIEdgeInsetsMake(-35.0, 0.0, 0.0, 0.0);
   self.tableView.scrollEnabled = NO;
 }
 
@@ -109,6 +110,11 @@
   self.legendLabel.text = NSLocalizedString(
                 @"Enter a name for your conversation.\nShare it with people you'd like to talk to.",
                 @"Login Screen Legend");
+
+  
+  // -- buttons
+  [self.serverButton setTitle:NSLocalizedString(@"Server", @"Server Button Title")
+                     forState:UIControlStateNormal];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
