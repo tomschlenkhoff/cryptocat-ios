@@ -67,14 +67,20 @@
   [defaults synchronize];
   NSString *conversationName = [defaults objectForKey:@"roomName"];
   NSString *nickname = [defaults objectForKey:@"nickname"];
-  if (conversationName!=nil && nickname!=nil) {
+  if (conversationName!=nil && nickname!=nil &&
+      [self.conversationNameField.text isEqualToString:@""] &&
+      [self.nicknameField.text isEqualToString:@""]) {
     self.conversationNameField.text = conversationName;
     self.nicknameField.text = nickname;
   }
   
   // -- configure cells
   self.conversationNameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.conversationNameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  self.conversationNameField.autocorrectionType = UITextAutocorrectionTypeNo;
   self.nicknameField.textColor = [UIColor tb_tableViewCellTextColor];
+  self.nicknameField.autocapitalizationType = UITextAutocapitalizationTypeNone;
+  self.nicknameField.autocorrectionType = UITextAutocorrectionTypeNo;
   self.buttonCell.titleColor = [UIColor tb_buttonTitleColor];
   self.buttonCell.enabled = [self shouldConnectButtonBeEnabled];
 
