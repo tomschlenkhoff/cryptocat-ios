@@ -341,16 +341,6 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     XMPPManager.me.chatFingerprint = [self.OTRManager fingerprintForAccountName:account
                                                                       protocol:TBMessagingProtocol];
     XMPPManager.me.groupChatFingerprint = self.multipartyProtocolManager.fingerprint;
-    TBLOG(@"-- my OTR fingerprint is : %@", XMPPManager.me.chatFingerprint);
-    TBLOG(@"-- my group fingerprint is : %@", XMPPManager.me.groupChatFingerprint);
-    
-    TBLOG(@"-- safari OTR fingerprint is : %@",
-          [self.OTRManager fingerprintForAccountName:@"cryptocatdev@conference.crypto.cat/safari"
-                                            protocol:TBMessagingProtocol]);
-    BOOL isChatWithSafariSecure = [self.OTRManager isConversationEncryptedForAccountName:account
-                                                                               recipient:@"cryptocatdev@conference.crypto.cat/safari"
-                                                                                protocol:TBMessagingProtocol];
-    TBLOG(@"-- chat with safari is %@", (isChatWithSafariSecure ? @"secure" : @"insecure"));
   }];
   
   self.chatViewController.roomName = room.roomJID.user;
