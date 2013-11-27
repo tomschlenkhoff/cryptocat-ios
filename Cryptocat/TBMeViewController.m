@@ -38,6 +38,12 @@
 #pragma mark Lifecycle
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)dealloc {
+  [self.me removeObserver:self forKeyPath:@"groupChatFingerprint"];
+  [self.me removeObserver:self forKeyPath:@"chatFingerprint"];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveMemoryWarning {
   [super didReceiveMemoryWarning];
   // Dispose of any resources that can be recreated.
@@ -54,6 +60,26 @@
   self.privateFingerprintCell.fingerprint = self.me.chatFingerprint;
   self.logoutCell.title = NSLocalizedString(@"Logout", @"Logout Button Title");
   self.logoutCell.titleColor = [UIColor tb_buttonTitleColor];
+  
+  [self.me addObserver:self forKeyPath:@"groupChatFingerprint" options:0 context:NULL];
+  [self.me addObserver:self forKeyPath:@"chatFingerprint" options:0 context:NULL];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Observers
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+  if (object==self.me) {
+    self.groupFingerprintCell.fingerprint = self.me.groupChatFingerprint;
+    self.privateFingerprintCell.fingerprint = self.me.chatFingerprint;
+    [self.tableView reloadData];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
