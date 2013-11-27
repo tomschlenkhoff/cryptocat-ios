@@ -18,6 +18,7 @@
 - (BOOL)tb_isAway;
 - (BOOL)tb_isUnavailable;
 
-+ (XMPPPresence *)tb_awayPresence;
++ (XMPPPresence *)tb_availablePresenceForJID:(XMPPJID *)JID;
++ (XMPPPresence *)tb_awayPresenceForJID:(XMPPJID *)JID;
 
 @end

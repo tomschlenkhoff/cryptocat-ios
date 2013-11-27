@@ -102,43 +102,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)applicationDidEnterBackground:(UIApplication *)application {
-  // Use this method to release shared resources, save user data, invalidate timers, and store
-  // enough application state information to restore your application to its current state in case
-  // it is terminated later. If your application supports background execution, this method is
-  // called instead of applicationWillTerminate: when the user quits.
-  
-  // <presence xmlns="jabber:client" from="cryptocatdev@conference.crypto.cat/safari" to="rx21bjikfqyzvyvq@crypto.cat/353544399813835940523576"><show>away</show><status>away</status><x xmlns="http://jabber.org/protocol/muc#user"><item affiliation="none" role="visitor"/></x></presence>
-  
-  // -- will send presence : <presence from="cryptocatdev@conference.crypto.cat/iOSTestApp" type="available"><status>away</status></presence>
-  
-  // -- will send presence : <presence from="cryptocatdev@conference.crypto.cat/iOSTestApp"><status>away</status><show>away</show></presence>
-  
-  // -- will send presence : <presence xmlns="jabber:client" from="cryptocatdev@conference.crypto.cat/iOSTestApp" to="cryptocatdev@conference.crypto.cat"><show>away</show><status>away</status><x xmlns="http://jabber.org/protocol/muc#user"><item affiliation="none" role="visitor"/></x></presence>
-  
-  // TODO: should use something like [XMPPPresence tb_awayPresence]
-  /*
-  XMPPPresence *presence = [XMPPPresence presence];
-  [presence addAttributeWithName:@"xmlns" stringValue:@"jabber:client"];
-  [presence addAttributeWithName:@"from" stringValue:self.XMPPManager.xmppRoom.myRoomJID.full];
-  //[presence addAttributeWithName:@"to" stringValue:@"cryptocatdev@conference.crypto.cat/safari"];
-  [presence addAttributeWithName:@"to" stringValue:self.XMPPManager.xmppRoom.roomJID.full];
-  //[presence addAttributeWithName:@"to" stringValue:@"j5veih2gc4xx7t9g@crypto.cat/17798245201383226518959921"];
-  //[presence addAttributeWithName:@"type" stringValue:@"available"];
-  NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
-  [show setStringValue:@"away"];
-  [presence addChild:show];
-  NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
-  [status setStringValue:@"away"];
-  [presence addChild:status];
-  NSXMLElement *x = [NSXMLElement elementWithName:@"x" xmlns:XMPPMUCUserNamespace];
-  NSXMLElement *item = [NSXMLElement elementWithName:@"item"];
-  [item addAttributeWithName:@"affiliation" stringValue:@"none"];
-  [item addAttributeWithName:@"role" stringValue:@"visitor"];
-  [x addChild:item];
-  [presence addChild:x];
-  TBLOG(@"-- will send presence : %@", presence);
+  XMPPPresence *presence = [XMPPPresence tb_awayPresenceForJID:self.XMPPManager.xmppRoom.myRoomJID];
   [self.XMPPManager.xmppStream sendElement:presence];
-  */
 
   [self startObservingForMessages];
   self.bgTaskIdentifier = [application beginBackgroundTaskWithExpirationHandler:^{
@@ -161,6 +126,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Restart any tasks that were paused (or not yet started) while the application was inactive.
   // If the application was previously in the background, optionally refresh the user interface.
   [self presentLoginVCAnimated:NO];
+  
+  XMPPPresence *presence = [XMPPPresence
+                            tb_availablePresenceForJID:self.XMPPManager.xmppRoom.myRoomJID];
+  [self.XMPPManager.xmppStream sendElement:presence];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

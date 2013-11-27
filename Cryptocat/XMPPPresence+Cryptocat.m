@@ -7,6 +7,7 @@
 //
 
 #import "XMPPPresence+Cryptocat.h"
+#import "XMPP.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,8 +55,28 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (XMPPPresence *)tb_awayPresence {
-  XMPPPresence *presence = [XMPPPresence presenceWithType:@"available"];
++ (XMPPPresence *)tb_availablePresenceForJID:(XMPPJID *)JID {
+  XMPPPresence *presence = [XMPPPresence presence];
+  [presence addAttributeWithName:@"xmlns" stringValue:@"jabber:client"];
+  // don't know why but to send an away presence for a user, I have to set the user name as the
+  // "to" field (I thought it would have been the "from" field). also, setting a "from" attribute
+  // logs me out.
+  [presence addAttributeWithName:@"to" stringValue:JID.full];
+
+  return presence;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (XMPPPresence *)tb_awayPresenceForJID:(XMPPJID *)JID {
+  XMPPPresence *presence = [XMPPPresence presence];
+  [presence addAttributeWithName:@"xmlns" stringValue:@"jabber:client"];
+  // don't know why but to send an away presence for a user, I have to set the user name as the
+  // "to" field (I thought it would have been the "from" field). also, setting a "from" attribute
+  // logs me out.
+  [presence addAttributeWithName:@"to" stringValue:JID.full];
+  NSXMLElement *show = [NSXMLElement elementWithName:@"show"];
+  [show setStringValue:@"away"];
+  [presence addChild:show];
   NSXMLElement *status = [NSXMLElement elementWithName:@"status"];
   [status setStringValue:@"away"];
   [presence addChild:status];
