@@ -9,6 +9,7 @@
 #import "TBBuddiesViewController.h"
 #import "TBBuddyViewController.h"
 #import "TBBuddy.h"
+#import "UIColor+Cryptocat.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -104,6 +105,12 @@
   
   if (indexPath.row==0) {
     cell.accessoryType = UITableViewCellAccessoryNone;
+    if ([self.roomName isEqualToString:self.currentRoomName]) {
+      cell.textLabel.textColor = [UIColor tb_buttonTitleColor];
+    }
+    else {
+      cell.textLabel.textColor = [UIColor blackColor];
+    }
     NSString *conversationRoomTitle = NSLocalizedString(@"Conversation",
                                                         @"Conversation Room Label");
     if (self.nbUnreadMessagesInRoom == 0) {
@@ -116,7 +123,13 @@
   }
   else {
     TBBuddy *buddy = [self buddyForIndexPath:indexPath];
-    
+    if ([buddy.fullname isEqualToString:self.currentRoomName]) {
+      cell.textLabel.textColor = [UIColor tb_buttonTitleColor];
+    }
+    else {
+      cell.textLabel.textColor = [UIColor blackColor];
+    }
+
     NSInteger nbUnreadMessages = [[self.nbUnreadMessagesForBuddy objectForKey:buddy.fullname]
                                   integerValue];
     if (nbUnreadMessages==0) {

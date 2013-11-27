@@ -19,6 +19,7 @@
 @property (nonatomic, weak) id <TBBuddiesViewControllerDelegate> delegate;
 
 @property (nonatomic, strong) NSString *roomName;
+@property (nonatomic, strong) NSString *currentRoomName;
 @property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, assign) NSUInteger nbUnreadMessagesInRoom;
 @property (nonatomic, strong) NSMutableDictionary *nbUnreadMessagesForBuddy;

@@ -191,6 +191,7 @@
     TBBuddiesViewController *bvc = (TBBuddiesViewController *)nc.topViewController;
     bvc.delegate = self;
     bvc.roomName = self.roomName;
+    bvc.currentRoomName = self.currentRoomName;
     bvc.buddies = self.buddies;
     bvc.nbUnreadMessagesInRoom = self.nbUnreadMessagesInRoom;
     bvc.nbUnreadMessagesForBuddy = self.nbUnreadMessagesForBuddy;
