@@ -66,6 +66,7 @@
 - (void)removeChatStateNotification:(TBChateStateNotification *)chatStateNotification
                              forKey:(NSString *)key;
 - (void)removeAllChatStateNotificationsForBuddy:(TBBuddy *)buddy forKey:(NSString *)key;
+- (void)setChatTextViewStateEnabled:(BOOL)enabled;
 
 @end
 
@@ -172,6 +173,7 @@
   }
   
   [self startObservingKeyboard];
+  [self setChatTextViewStateEnabled:YES];
   TBLOGMARK;
 }
 
@@ -432,13 +434,9 @@
   [self.tableView reloadData];
   [self scrollToLatestMessage];
 
-  // TODO : enable/disable textfield when current buddy signs in/out and reactivate if we switch to conversation room
-//  if ([self.currentRecipient isEqual:buddy]) {
-//    BOOL isSignIn = [notification.name isEqualToString:TBBuddyDidSignInNotification];
-//    self.toolbarView.textView.backgroundColor = isSignIn ?
-//                                                  [UIColor whiteColor] : [UIColor redColor];
-//    self.toolbarView.textView.editable = isSignIn;
-//  }
+  if ([self.currentRecipient isEqual:buddy]) {
+    [self setChatTextViewStateEnabled:isOnline];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -641,6 +639,23 @@
   }
   
   [messages removeObjectsAtIndexes:indexesOfMessagesToRemove];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setChatTextViewStateEnabled:(BOOL)enabled {
+  self.toolbarView.textView.backgroundColor = enabled ?
+    [UIColor whiteColor] : [UIColor colorWithRed:0.964 green:0.963 blue:0.984 alpha:1.000];
+  self.toolbarView.textView.textColor = enabled ?
+    [UIColor blackColor] : [UIColor colorWithRed:0.775 green:0.772 blue:0.779 alpha:1.000];
+  self.toolbarView.textView.editable = enabled;
+  
+  // if there was some text in the textView, enable the send button
+  if (enabled && ![self.toolbarView.textView.text isEqualToString:@""]) {
+    self.toolbarView.sendButton.enabled = YES;
+  }
+  else {
+    self.toolbarView.sendButton.enabled = NO;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
