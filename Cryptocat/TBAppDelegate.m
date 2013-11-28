@@ -574,11 +574,27 @@ didAskToConnectWithRoomName:(NSString *)roomName
   if (messageNotification==nil) return;
   
   TBMessage *message = notification.object;
+  NSError *error = [notification.userInfo objectForKey:@"error"];
   
-  NSString *roomName = message.sender.roomName;
-  NSString *sender = message.sender.nickname;
-  NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message in %@",
-                         sender, roomName];
+  TBBuddy *sender = nil;
+  if (message==nil) {
+    if (error!=nil &&
+        [error.domain isEqualToString:TBErrorDomainGroupChatMessage] &&
+        error.code==TBErrorCodeUnreadableMessage) {
+      sender = [error.userInfo objectForKey:TBErrorCodeUnreadableMessageSenderKey];
+    }
+  }
+  else {
+    sender = message.sender;
+  }
+  
+  if (sender==nil) return;
+  
+  NSString *roomName = sender.roomName;
+  NSString *nickname = sender.nickname;
+  NSString *body = NSLocalizedString(@"%@ sent you a message in %@",
+                                     @"Sender sent you a message in roomName notification text");
+  NSString *alertBody = [NSString stringWithFormat:body, nickname, roomName];
   messageNotification.alertBody = alertBody;
   messageNotification.alertAction = @"Ok";
   messageNotification.soundName = UILocalNotificationDefaultSoundName;

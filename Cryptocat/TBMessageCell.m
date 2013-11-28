@@ -81,6 +81,19 @@
   return self.messageView.message;
 }
 
+// TODO: implement the waringMessage setter/getter for real
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setWarningMessage:(NSString *)warningMessage {
+  self.messageView.message = [NSString stringWithFormat:@"%@ / %@",
+                              warningMessage, self.messageView.message];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSString *)warningMessage {
+  return @"WARNING!";
+}
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMeSpeaking:(BOOL)meSpeaking {
   self.messageView.meSpeaking = meSpeaking;
@@ -92,18 +105,22 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setIsWarningMessage:(BOOL)isWarningMessage {
-  self.messageView.isWarningMessage = isWarningMessage;
+- (void)setIsErrorMessage:(BOOL)isErrorMessage {
+  self.messageView.isErrorMessage = isErrorMessage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)isWarningMessage {
-  return self.messageView.isWarningMessage;
+- (BOOL)isErrorMessage {
+  return self.messageView.isErrorMessage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForCellWithText:(NSString *)text {
-  return [TBMessageCellView sizeForText:text].height + kPaddingTop + kPaddingBottom;
++ (CGFloat)heightForCellWithSenderName:(NSString *)senderName text:(NSString *)text {
+  // add the sender name and some spaces for the sender label padding
+  NSString *paddingString = @"     :     ";
+  NSString *fullText = [senderName stringByAppendingFormat:@"%@%@", paddingString, text];
+
+  return [TBMessageCellView sizeForText:fullText].height + kPaddingTop + kPaddingBottom;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

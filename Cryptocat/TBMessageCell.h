@@ -18,10 +18,11 @@
 @property (nonatomic, weak) id <TBMessageCellDelegate> delegate;
 @property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSString *warningMessage;
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
-@property (nonatomic, assign) BOOL isWarningMessage;
+@property (nonatomic, assign) BOOL isErrorMessage;
 
-+ (CGFloat)heightForCellWithText:(NSString *)text;
++ (CGFloat)heightForCellWithSenderName:(NSString *)senderName text:(NSString *)text;
 
 @end
 

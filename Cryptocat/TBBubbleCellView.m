@@ -37,7 +37,7 @@
   self = [super initWithFrame:frame];
   if (self) {
     self.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
-    _isWarningMessage = NO;
+    _isErrorMessage = NO;
     
     // -- bubble view
     _bubbleView = [[TBBubbleView alloc] init];
@@ -90,9 +90,9 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setIsWarningMessage:(BOOL)isWarningMessage {
-  if (_isWarningMessage!=isWarningMessage) {
-    _isWarningMessage = isWarningMessage;
+- (void)setIsErrorMessage:(BOOL)isErrorMessage {
+  if (_isErrorMessage!=isErrorMessage) {
+    _isErrorMessage = isErrorMessage;
   }
 
   [self updateColors];
@@ -117,7 +117,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)updateColors {
-  if (self.isWarningMessage) {
+  if (self.isErrorMessage) {
     self.bubbleView.bubbleColor = kWarningColor;
     self.senderLabelBackground.backgroundColor = kWarningColor;
     self.senderLabel.backgroundColor = kWarningColor;

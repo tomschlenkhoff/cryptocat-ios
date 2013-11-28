@@ -9,10 +9,19 @@
 #import <Foundation/Foundation.h>
 
 extern NSString * const TBMessagingProtocol;
+
+// message / state notifications
 extern NSString * const TBDidReceiveGroupChatMessageNotification;
 extern NSString * const TBDidReceivePrivateChatMessageNotification;
 extern NSString * const TBDidReceiveGroupChatStateNotification;
 extern NSString * const TBDidReceivePrivateChatStateNotification;
+
+// errors
+extern NSString * const TBErrorDomainGroupChatMessage;
+extern NSInteger const TBErrorCodeUnreadableMessage;
+extern NSInteger const TBErrorCodeMissingRecipients;
+extern NSString * const TBErrorCodeUnreadableMessageSenderKey;
+extern NSString * const TBErrorCodeMissingRecipientsKey;
 
 @class TBXMPPManager, TBOTRManager, TBMultipartyProtocolManager, XMPPMessage, XMPPJID, TBBuddy;
 

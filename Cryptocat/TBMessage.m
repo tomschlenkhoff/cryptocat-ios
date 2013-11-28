@@ -18,11 +18,17 @@
 - (id)init {
   if (self=[super init]) {
     _text = nil;
+    _warningText = nil;
     _sender = nil;
-    _isWarningMessage = NO;
+    _isErrorMessage = NO;
   }
   
   return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)isWarningMessage {
+  return self.warningText!=nil;
 }
 
 @end

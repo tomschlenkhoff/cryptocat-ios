@@ -20,6 +20,8 @@
 #import "TBChateStateNotification.h"
 
 NSString * const TBMessagingProtocol = @"xmpp";
+
+// message / state notifications
 NSString * const TBDidReceiveGroupChatMessageNotification =
                                                         @"TBDidReceiveGroupChatMessageNotification";
 NSString * const TBDidReceivePrivateChatMessageNotification =
@@ -27,6 +29,13 @@ NSString * const TBDidReceivePrivateChatMessageNotification =
 NSString * const TBDidReceiveGroupChatStateNotification = @"TBDidReceiveGroupChatStateNotification";
 NSString * const TBDidReceivePrivateChatStateNotification =
                                                         @"TBDidReceivePrivateChatStateNotification";
+
+// errors
+NSString * const TBErrorDomainGroupChatMessage = @"TBErrorDomainGroupChatMessage";
+NSInteger const TBErrorCodeUnreadableMessage = 13001;
+NSInteger const TBErrorCodeMissingRecipients = 13002;
+NSString * const TBErrorCodeUnreadableMessageSenderKey = @"TBErrorCodeUnreadableMessageSenderKey";
+NSString * const TBErrorCodeMissingRecipientsKey = @"TBErrorCodeMissingRecipientsKey";
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -242,28 +251,49 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   TBLOG(@"-- group message from %@ to %@ : %@", message.fromStr, message.toStr, message.body);
   if (message.body==nil || [message.body isEqualToString:@""]) return;
   
+  NSError *multyPartyError = nil;
   TBBuddy *sender = [[TBBuddy alloc] initWithXMPPJID:message.from];
   NSString *decryptedMessage = [self.multipartyProtocolManager decryptMessage:message.body
-                                                                 fromUsername:sender.nickname];
+                                                                 fromUsername:sender.nickname
+                                                                        error:&multyPartyError];
+  
+  TBMessage *receivedMsg = nil;
+  NSError *error = nil;
 
-  TBMessage *receivedMsg = [[TBMessage alloc] init];
-  receivedMsg.sender = sender;
-  receivedMsg.text = decryptedMessage;
-  if (decryptedMessage==nil) {
-    NSString *warningMessage = @"Warning: You have received an unreadable message from %@. \
-This may indicate an untrustworthy user or messages that \
-failed to be received. You may also be running an outdated \
-version of Cryptocat. Please check for updates.";
-    receivedMsg.text = [NSString stringWithFormat:warningMessage, sender.nickname];
-    receivedMsg.isWarningMessage = YES;
+  // if the message has been decrypted successfully
+  if (decryptedMessage!=nil) {
+    receivedMsg = [[TBMessage alloc] init];
+    receivedMsg.sender = sender;
+    receivedMsg.text = decryptedMessage;
+    
+    // prepare the error to pass it in the notification if needed
+    if (multyPartyError!=nil && multyPartyError.code==TBErrorCodeDecryptionMissingRecipients) {
+      // here, I "translate" the error codes from the multiparty error codes to the xmppManager
+      // error codes, so the classes receiving this notification do not have to know about the
+      // multiparty classes.
+      NSString *domain = TBErrorDomainGroupChatMessage;
+      NSInteger code = TBErrorCodeMissingRecipients;
+      NSArray *missingRecipients = [multyPartyError.userInfo
+                                    objectForKey:TBMDecryptionMissingRecipientsKey];
+      NSDictionary *userInfo = @{TBErrorCodeMissingRecipientsKey: missingRecipients};
+      error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+    }
   }
-  
-  TBLOG(@"-- decrypted message : %@", decryptedMessage);
-  
+  else {
+    NSString *domain = TBErrorDomainGroupChatMessage;
+    NSInteger code = TBErrorCodeUnreadableMessage;
+    NSDictionary *userInfo = @{TBErrorCodeUnreadableMessageSenderKey: sender};
+    error = [NSError errorWithDomain:domain code:code userInfo:userInfo];
+  }
+
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  NSDictionary *userInfo = nil;
+  if (error!=nil) {
+    userInfo = @{@"error": error};
+  }
   [defaultCenter postNotificationName:TBDidReceiveGroupChatMessageNotification
                                object:receivedMsg
-                             userInfo:nil];
+                             userInfo:userInfo];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

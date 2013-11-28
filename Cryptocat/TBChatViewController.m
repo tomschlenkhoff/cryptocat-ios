@@ -242,8 +242,11 @@
     TBMessage *msg = message;
     cell.senderName = msg.sender.nickname;
     cell.meSpeaking = [msg.sender isEqual:self.me];
-    cell.isWarningMessage = msg.isWarningMessage;
+    cell.isErrorMessage = msg.isErrorMessage;
     cell.message = msg.text;
+    if (msg.isWarningMessage) {
+      cell.warningMessage = msg.warningText;
+    }
     cell.backgroundColor = self.tableView.backgroundColor;
     cell.delegate = self;
     return cell;
@@ -298,10 +301,8 @@
   
   // -- message
   if ([message isKindOfClass:[TBMessage class]]) {
-    // text height : add the sender name and some spaces for the sender label padding
     TBMessage *msg = (TBMessage *)message;
-    NSString *txt = [msg.sender.nickname stringByAppendingFormat:@"   :   %@", msg.text];
-    return [TBMessageCell heightForCellWithText:txt];
+    return [TBMessageCell heightForCellWithSenderName:msg.sender.nickname text:msg.text];
   }
   
   // -- chat state
@@ -341,6 +342,37 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)didReceiveGroupMessage:(NSNotification *)notification {
   TBMessage *message = notification.object;
+  NSError *error = [notification.userInfo objectForKey:@"error"];
+  
+  // -- this is an error message
+  if (message==nil) {
+    if (error!=nil &&
+        [error.domain isEqualToString:TBErrorDomainGroupChatMessage] &&
+        error.code==TBErrorCodeUnreadableMessage) {
+      NSString *errorMessage = NSLocalizedString(@"Warning: You have received an unreadable \
+message from %@. This may indicate an untrustworthy user or messages that \
+failed to be received. You may also be running an outdated \
+version of Cryptocat. Please check for updates.", @"Error Message Text");
+      message = [[TBMessage alloc] init];
+      message.sender = [error.userInfo objectForKey:TBErrorCodeUnreadableMessageSenderKey];
+      message.text = [NSString stringWithFormat:errorMessage, message.sender.nickname];
+      message.isErrorMessage = YES;
+    }
+  }
+  
+  // -- this is a message, that may contains errors
+  else if (error!=nil &&
+           [error.domain isEqualToString:@"TBErrorDomainGroupChatMessage"] &&
+           error.code==TBErrorCodeMissingRecipients) {
+    NSArray *missingRecipients = [error.userInfo objectForKey:TBErrorCodeMissingRecipientsKey];
+    NSString *warningMessage = NSLocalizedString(@"Warning: this message was not sent to: %@",
+                                  @"Warning message when a message is not sent to all recipients");
+    NSString *missingRecipientsString = [missingRecipients componentsJoinedByString:@", "];
+    message.warningText = [NSString stringWithFormat:warningMessage, missingRecipientsString];
+  }
+  
+  if (message==nil) return;
+  
   NSString *roomName = message.sender.roomName;
   
   [self addMessage:message forKey:roomName];
