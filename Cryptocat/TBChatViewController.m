@@ -302,7 +302,9 @@
   // -- message
   if ([message isKindOfClass:[TBMessage class]]) {
     TBMessage *msg = (TBMessage *)message;
-    return [TBMessageCell heightForCellWithSenderName:msg.sender.nickname text:msg.text];
+    return [TBMessageCell heightForCellWithSenderName:msg.sender.nickname
+                                                 text:msg.text
+                                          warningText:msg.warningText];
   }
   
   // -- chat state

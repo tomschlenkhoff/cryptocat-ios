@@ -22,7 +22,9 @@
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
 @property (nonatomic, assign) BOOL isErrorMessage;
 
-+ (CGFloat)heightForCellWithSenderName:(NSString *)senderName text:(NSString *)text;
++ (CGFloat)heightForCellWithSenderName:(NSString *)senderName
+                                  text:(NSString *)text
+                           warningText:(NSString *)warningText;
 
 @end
 

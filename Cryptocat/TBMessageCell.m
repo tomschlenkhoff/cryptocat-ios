@@ -8,6 +8,7 @@
 
 #import "TBMessageCell.h"
 #import "TBMessageCellView.h"
+#import "TBWarningView.h"
 
 #define kPaddingTop     0.0
 #define kPaddingBottom  10.0
@@ -20,6 +21,7 @@
 @interface TBMessageCell () <TBMessageCellViewDelegate>
 
 @property (nonatomic, strong) TBMessageCellView *messageView;
+@property (nonatomic, strong) TBWarningView *warningView;
 
 @end
 
@@ -39,6 +41,8 @@
     _messageView = [[TBMessageCellView alloc] init];
     _messageView.delegate = self;
     [self.contentView addSubview:_messageView];
+    
+    _warningView = nil;
   }
   return self;
 }
@@ -47,11 +51,25 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
   
+  // message view
   CGRect messageViewFrame = self.contentView.frame;
   messageViewFrame.origin.x+=kPaddingLeft;
   messageViewFrame.origin.y+=kPaddingTop;
   messageViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
   messageViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
+
+  // warning view
+  if (self.warningMessage!=nil) {
+    CGRect warningViewFrame = messageViewFrame;
+    CGSize size = [TBWarningView sizeForText:self.warningMessage];
+    warningViewFrame.size.height = size.height;
+    self.warningView.frame = warningViewFrame;
+
+    messageViewFrame.size.height-=size.height;
+    messageViewFrame.origin.y+=size.height;
+    [self.warningView setNeedsDisplay];
+  }
+  
   self.messageView.frame = messageViewFrame;
 }
 
@@ -81,17 +99,20 @@
   return self.messageView.message;
 }
 
-// TODO: implement the waringMessage setter/getter for real
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setWarningMessage:(NSString *)warningMessage {
-  self.messageView.message = [NSString stringWithFormat:@"%@ / %@",
-                              warningMessage, self.messageView.message];
+  if (self.warningView==nil) {
+    self.warningView = [[TBWarningView alloc] init];
+    [self.contentView addSubview:self.warningView];
+  }
+  
+  self.warningView.message = warningMessage;
+  [self setNeedsLayout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString *)warningMessage {
-  return @"WARNING!";
+  return self.warningView==nil ? nil : self.warningView.message;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -115,18 +136,27 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForCellWithSenderName:(NSString *)senderName text:(NSString *)text {
++ (CGFloat)heightForCellWithSenderName:(NSString *)senderName
+                                  text:(NSString *)text
+                           warningText:(NSString *)warningText {
   // add the sender name and some spaces for the sender label padding
   NSString *paddingString = @"     :     ";
   NSString *fullText = [senderName stringByAppendingFormat:@"%@%@", paddingString, text];
+  
+  CGFloat height = [TBMessageCellView sizeForText:fullText].height + kPaddingTop + kPaddingBottom;
 
-  return [TBMessageCellView sizeForText:fullText].height + kPaddingTop + kPaddingBottom;
+  if (warningText!=nil) {
+    height+=[TBWarningView sizeForText:warningText].height;
+  }
+  
+  return height;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setBackgroundColor:(UIColor *)backgroundColor {
   [super setBackgroundColor:backgroundColor];
   self.messageView.backgroundColor = backgroundColor;
+  self.warningView.backgroundColor = backgroundColor;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -143,6 +173,5 @@
   }
   return NO;
 }
-
 
 @end
