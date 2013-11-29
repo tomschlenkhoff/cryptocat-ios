@@ -247,6 +247,9 @@
     if (msg.isWarningMessage) {
       cell.warningMessage = msg.warningText;
     }
+    else {
+      cell.warningMessage = nil;
+    }
     cell.backgroundColor = self.tableView.backgroundColor;
     cell.delegate = self;
     return cell;

@@ -101,13 +101,16 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setWarningMessage:(NSString *)warningMessage {
-  if (self.warningView==nil) {
+  if (warningMessage==nil) {
+    [self.warningView removeFromSuperview];
+    self.warningView = nil;
+  }
+  else if (self.warningView==nil) {
     self.warningView = [[TBWarningView alloc] init];
     [self.contentView addSubview:self.warningView];
+    self.warningView.message = warningMessage;
+    [self setNeedsLayout];
   }
-  
-  self.warningView.message = warningMessage;
-  [self setNeedsLayout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
