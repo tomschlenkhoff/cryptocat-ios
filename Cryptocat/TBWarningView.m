@@ -8,7 +8,7 @@
 
 #import "TBWarningView.h"
 
-#define kFont       [UIFont boldSystemFontOfSize:10.0]
+#define kFont       [UIFont fontWithName:@"Monda-Regular" size:10.0]
 #define kTextColor  [UIColor whiteColor]
 
 #define kPaddingTop     0.0
