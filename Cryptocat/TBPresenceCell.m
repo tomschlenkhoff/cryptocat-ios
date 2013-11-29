@@ -55,6 +55,7 @@ static NSDateFormatter *_dateFormatter = nil;
   frame.size.height-=(kPaddingTop+kPaddingBottom);
   
   self.presenceView.frame = frame;
+  [self.presenceView setNeedsDisplay];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
