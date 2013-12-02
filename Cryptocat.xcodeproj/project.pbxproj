@@ -465,7 +465,8 @@
 				332EBD97184C78460074E004 /* TBBubbleCell.m */,
 				332EBD98184C78460074E004 /* TBComposingCell.h */,
 				332EBD99184C78460074E004 /* TBComposingCell.m */,
-				33E8F9F5183B6E4A007DDAAB /* Cell Views */,
+				3388E268183F5C5300102762 /* TBPresenceView.h */,
+				3388E269183F5C5300102762 /* TBPresenceView.m */,
 				3388E266183F5C5300102762 /* TBPresenceCell.h */,
 				3388E267183F5C5300102762 /* TBPresenceCell.m */,
 			);
@@ -483,15 +484,6 @@
 				33D715F418368B48003FA973 /* TestFlight.h */,
 			);
 			path = TestFlightSDK2.1.1;
-			sourceTree = "<group>";
-		};
-		33E8F9F5183B6E4A007DDAAB /* Cell Views */ = {
-			isa = PBXGroup;
-			children = (
-				3388E268183F5C5300102762 /* TBPresenceView.h */,
-				3388E269183F5C5300102762 /* TBPresenceView.m */,
-			);
-			name = "Cell Views";
 			sourceTree = "<group>";
 		};
 		33E8F9FC183B95F0007DDAAB /* Vendor */ = {

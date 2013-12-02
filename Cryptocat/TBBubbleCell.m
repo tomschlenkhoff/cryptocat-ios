@@ -105,6 +105,7 @@
   [super setBackgroundColor:backgroundColor];
   
   self.messageView.backgroundColor = backgroundColor;
+  self.warningView.backgroundColor = backgroundColor;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
