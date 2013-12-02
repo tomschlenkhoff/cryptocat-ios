@@ -35,6 +35,7 @@
 #import "TBBubbleCell.h"
 #import "TBComposingCell.h"
 #import "TBPresenceCell.h"
+#import "DAKeyboardControl.h"
 
 #define kPausedMessageTimer   5.0
 #define kTableViewPaddingTop  17.0
@@ -127,6 +128,14 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  // swipe to dismiss the keyboard
+  [UIView setUseAutolayoutAnimationLogic:YES];
+  __weak TBChatViewController *weakSelf = self;
+  [self.view addKeyboardPanningWithActionHandler:^(CGRect keyboardFrameInView) {
+    weakSelf.toolbarViewBottomConstraint.constant = weakSelf.view.frame.size.height -
+                                                    keyboardFrameInView.origin.y;
+  }];
   
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	 
@@ -498,44 +507,12 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillShow:(NSNotification *)notification {
-  NSDictionary* info = [notification userInfo];
-  CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
-
-  // get the keyboard height depending on the device orientation
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
-  CGFloat keyboardHeight = isPortrait ? keyboardSize.height : keyboardSize.width;
-  
-  // get the animation info
-  double keyboardTransitionDuration;
-  [[notification.userInfo valueForKey:UIKeyboardAnimationDurationUserInfoKey]
-   getValue:&keyboardTransitionDuration];
-  UIViewAnimationCurve keyboardTransitionAnimationCurve;
-  [[notification.userInfo valueForKey:UIKeyboardAnimationCurveUserInfoKey]
-   getValue:&keyboardTransitionAnimationCurve];
-  
-  // update the toolbarView constraints
-  self.toolbarViewBottomConstraint.constant = keyboardHeight;
-  
-  // start animation
-  [UIView beginAnimations:nil context:NULL];
-  [UIView setAnimationDuration:keyboardTransitionDuration];
-  [UIView setAnimationCurve:keyboardTransitionAnimationCurve];
-  [UIView setAnimationBeginsFromCurrentState:YES];
-  
-  [self.view layoutIfNeeded];
-  
-  [UIView commitAnimations];
-  // end animation
-
   [self scrollToLatestMessage];
+  [self.view layoutIfNeeded];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillBeHidden:(NSNotification *)notification {
-  // update the toolbarView constraints
-  self.toolbarViewBottomConstraint.constant = 0; //keyboardHeight;
-  
   [self.view layoutIfNeeded];
 }
 

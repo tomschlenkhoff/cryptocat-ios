@@ -22,6 +22,7 @@
 		332EBD9C184C78460074E004 /* TBMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD95184C78460074E004 /* TBMessageView.m */; };
 		332EBD9D184C78460074E004 /* TBBubbleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD97184C78460074E004 /* TBBubbleCell.m */; };
 		332EBD9E184C78460074E004 /* TBComposingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD99184C78460074E004 /* TBComposingCell.m */; };
+		332EBDA9184CD8660074E004 /* DAKeyboardControl.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBDA8184CD8660074E004 /* DAKeyboardControl.m */; };
 		3346522A1828EC8B00280518 /* UIColor+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 334652291828EC8B00280518 /* UIColor+Cryptocat.m */; };
 		3346522D1829044600280518 /* TBButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3346522C1829044600280518 /* TBButtonCell.m */; };
 		3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA23181EBAE0002A316F /* TBBuddyViewController.m */; };
@@ -117,6 +118,8 @@
 		332EBD97184C78460074E004 /* TBBubbleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleCell.m; sourceTree = "<group>"; };
 		332EBD98184C78460074E004 /* TBComposingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBComposingCell.h; sourceTree = "<group>"; };
 		332EBD99184C78460074E004 /* TBComposingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBComposingCell.m; sourceTree = "<group>"; };
+		332EBDA7184CD8660074E004 /* DAKeyboardControl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DAKeyboardControl.h; sourceTree = "<group>"; };
+		332EBDA8184CD8660074E004 /* DAKeyboardControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DAKeyboardControl.m; sourceTree = "<group>"; };
 		334652281828EC8B00280518 /* UIColor+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Cryptocat.h"; sourceTree = "<group>"; };
 		334652291828EC8B00280518 /* UIColor+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Cryptocat.m"; sourceTree = "<group>"; };
 		3346522B1829044600280518 /* TBButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBButtonCell.h; sourceTree = "<group>"; };
@@ -288,6 +291,15 @@
 				330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */,
 			);
 			name = XMPP;
+			sourceTree = "<group>";
+		};
+		332EBDA6184CD8660074E004 /* DAKeyboardControl */ = {
+			isa = PBXGroup;
+			children = (
+				332EBDA7184CD8660074E004 /* DAKeyboardControl.h */,
+				332EBDA8184CD8660074E004 /* DAKeyboardControl.m */,
+			);
+			path = DAKeyboardControl;
 			sourceTree = "<group>";
 		};
 		3388E272183FA51200102762 /* Login */ = {
@@ -489,6 +501,7 @@
 		33E8F9FC183B95F0007DDAAB /* Vendor */ = {
 			isa = PBXGroup;
 			children = (
+				332EBDA6184CD8660074E004 /* DAKeyboardControl */,
 				33E8F9FD183B95FC007DDAAB /* SVWebViewController */,
 				33D715EE18368B48003FA973 /* TestFlightSDK2.1.1 */,
 			);
@@ -718,6 +731,7 @@
 				3388E271183FA50200102762 /* TBServersViewController.m in Sources */,
 				330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */,
 				33E8FA21183B95FC007DDAAB /* SVWebViewControllerActivityChrome.m in Sources */,
+				332EBDA9184CD8660074E004 /* DAKeyboardControl.m in Sources */,
 				3346522D1829044600280518 /* TBButtonCell.m in Sources */,
 				330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */,
 				3388E26A183F5C5300102762 /* TBPresenceCell.m in Sources */,
