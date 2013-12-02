@@ -70,6 +70,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 - (void)executeGoneSecureCompletionBlocsForUser:(NSString *)user recipient:(NSString *)recipient;
 - (void)startObservingForMessages;
 - (void)stopObservingForMessages;
+- (void)notifyUserOfBgSessionEnd;
 - (void)logout;
 
 @end
@@ -127,6 +128,15 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     [application endBackgroundTask:self.bgTaskIdentifier];
     self.bgTaskIdentifier = UIBackgroundTaskInvalid;
   }];
+  
+  // if a chat session is open, notify the user 60 sec before the bg task finishes
+  if (self.XMPPManager.xmppStream.isConnected) {
+    NSTimeInterval bgTimeoutDelay = application.backgroundTimeRemaining - 60.0;
+    [self performSelector:@selector(notifyUserOfBgSessionEnd)
+               withObject:nil
+               afterDelay:bgTimeoutDelay];
+    TBLOG(@"-- remaining time : %.1f", application.backgroundTimeRemaining);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -134,6 +144,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   // Called as part of the transition from the background to the inactive state;
   // here you can undo many of the changes made on entering the background.
   [self stopObservingForMessages];
+  [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                           selector:@selector(notifyUserOfBgSessionEnd)
+                                             object:nil];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -294,6 +307,21 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)notifyUserOfBgSessionEnd {
+  UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
+  if (messageNotification==nil) return;
+  
+  NSString *body = NSLocalizedString(
+                                     @"Your chat session will end in a minute if you don't come back",
+                                     @"Chat session expiration message");
+  
+  messageNotification.alertBody = body;
+  messageNotification.alertAction = @"Ok";
+  messageNotification.soundName = UILocalNotificationDefaultSoundName;
+  [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -624,7 +652,10 @@ didAskToConnectWithRoomName:(NSString *)roomName
   TBMessage *message = notification.object;
   TBBuddy *sender = message.sender;
 
-  NSString *alertBody = [NSString stringWithFormat:@"%@ sent you a message", sender.nickname];
+  NSString *body = NSLocalizedString(@"%@ sent you a message",
+                                     @"Sender sent you a message notification text");
+
+  NSString *alertBody = [NSString stringWithFormat:body, sender.nickname];
   messageNotification.alertBody = alertBody;
   messageNotification.alertAction = @"Ok";
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
