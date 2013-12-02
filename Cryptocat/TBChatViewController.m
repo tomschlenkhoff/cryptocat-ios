@@ -29,12 +29,12 @@
 #import "TBBuddy.h"
 #import "TBChateStateNotification.h"
 #import "TBPresenceNotification.h"
-#import "TBMessageCell.h"
-#import "TBComposingCell.h"
-#import "TBPresenceCell.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
 #import "SVWebViewController.h"
+#import "TBBubbleCell.h"
+#import "TBComposingCell.h"
+#import "TBPresenceCell.h"
 
 #define kPausedMessageTimer   5.0
 #define kTableViewPaddingTop  17.0
@@ -47,7 +47,7 @@
   UITableViewDelegate,
   TBBuddiesViewControllerDelegate,
   TBMeViewControllerDelegate,
-  TBMessageCellDelegate,
+  TBBubbleCellDelegate,
   TBChatToolbarViewDelegate,
   UITextViewDelegate
 >
@@ -247,14 +247,15 @@
   // -- message cell
   if ([message isKindOfClass:[TBMessage class]]) {
     static NSString *messageCellID = @"MessageCellID";
-    TBMessageCell *cell = [tableView dequeueReusableCellWithIdentifier:messageCellID];
+    TBBubbleCell *cell = [tableView dequeueReusableCellWithIdentifier:messageCellID];
     if (cell == nil) {
-      [tableView registerClass:[TBMessageCell class] forCellReuseIdentifier:messageCellID];
-      cell = [[TBMessageCell alloc] initWithStyle:UITableViewCellStyleDefault
-                                  reuseIdentifier:messageCellID];
+      [tableView registerClass:[TBBubbleCell class] forCellReuseIdentifier:messageCellID];
+      cell = [[TBBubbleCell alloc] initWithStyle:UITableViewCellStyleDefault
+                                 reuseIdentifier:messageCellID];
     }
 
     TBMessage *msg = message;
+    cell.delegate = self;
     cell.senderName = msg.sender.nickname;
     cell.meSpeaking = [msg.sender isEqual:self.me];
     cell.isErrorMessage = msg.isErrorMessage;
@@ -266,7 +267,6 @@
       cell.warningMessage = nil;
     }
     cell.backgroundColor = self.tableView.backgroundColor;
-    cell.delegate = self;
     return cell;
   }
   
@@ -315,19 +315,24 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
+  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
+  CGFloat maxWidth = isPortrait ? self.view.frame.size.width : self.view.frame.size.height;
+  
   id message = [self.messages objectAtIndex:indexPath.row];
   
   // -- message
   if ([message isKindOfClass:[TBMessage class]]) {
     TBMessage *msg = (TBMessage *)message;
-    return [TBMessageCell heightForCellWithSenderName:msg.sender.nickname
-                                                 text:msg.text
-                                          warningText:msg.warningText];
+    return [TBBubbleCell heightForSenderName:msg.sender.nickname
+                                     message:msg.text
+                              warningMessage:msg.warningText
+                                    maxWidth:maxWidth];
   }
   
   // -- chat state
   else if ([message isKindOfClass:[TBChateStateNotification class]]) {
-    return [TBComposingCell height];
+    return [TBComposingCell heightForMaxWidth:maxWidth];
   }
   
   // -- presence
@@ -859,12 +864,12 @@ shouldChangeTextInRange:(NSRange)range
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark TBMessageCellDelegate
+#pragma mark TBBubbleCellDelegate
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)messageCell:(TBMessageCell *)cell
+- (BOOL)bubbleCell:(TBBubbleCell *)bubbleCell
 shouldInteractWithURL:(NSURL *)URL
-            inRange:(NSRange)characterRange {
+           inRange:(NSRange)characterRange {
   if ([URL.scheme isEqualToString:@"http"] || [URL.scheme isEqualToString:@"https"]) {
     SVModalWebViewController *wvc = [[SVModalWebViewController alloc] initWithURL:URL];
     wvc.navigationBar.barStyle = UIBarStyleBlack;

@@ -17,9 +17,13 @@
 		3317DCDA181FD39E008353E5 /* TBConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = 3317DCD9181FD39E008353E5 /* TBConstants.m */; };
 		332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CC1819108C00233E92 /* TBMeViewController.m */; };
 		332CA4D0181955B500233E92 /* TBBuddy.m in Sources */ = {isa = PBXBuildFile; fileRef = 332CA4CF181955B500233E92 /* TBBuddy.m */; };
+		332EBD9A184C78460074E004 /* TBWarningView.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD91184C78460074E004 /* TBWarningView.m */; };
+		332EBD9B184C78460074E004 /* TBBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD93184C78460074E004 /* TBBubbleView.m */; };
+		332EBD9C184C78460074E004 /* TBMessageView.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD95184C78460074E004 /* TBMessageView.m */; };
+		332EBD9D184C78460074E004 /* TBBubbleCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD97184C78460074E004 /* TBBubbleCell.m */; };
+		332EBD9E184C78460074E004 /* TBComposingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 332EBD99184C78460074E004 /* TBComposingCell.m */; };
 		3346522A1828EC8B00280518 /* UIColor+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 334652291828EC8B00280518 /* UIColor+Cryptocat.m */; };
 		3346522D1829044600280518 /* TBButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3346522C1829044600280518 /* TBButtonCell.m */; };
-		336C4ACF184788B9005E9A48 /* TBWarningView.m in Sources */ = {isa = PBXBuildFile; fileRef = 336C4ACE184788B9005E9A48 /* TBWarningView.m */; };
 		3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA23181EBAE0002A316F /* TBBuddyViewController.m */; };
 		3388E26A183F5C5300102762 /* TBPresenceCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E267183F5C5300102762 /* TBPresenceCell.m */; };
 		3388E26B183F5C5300102762 /* TBPresenceView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3388E269183F5C5300102762 /* TBPresenceView.m */; };
@@ -41,9 +45,6 @@
 		339DD1DA17F0399400C3E8E6 /* CryptocatTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1D917F0399400C3E8E6 /* CryptocatTests.m */; };
 		339DD1EA17F0507F00C3E8E6 /* TBXMPPManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 339DD1E917F0507F00C3E8E6 /* TBXMPPManager.m */; };
 		33B08F601844EC4D00BC9BA3 /* TBLoginNavigationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B08F5F1844EC4D00BC9BA3 /* TBLoginNavigationController.m */; };
-		33B936DA18327EC4003497AC /* TBMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936D518327EC4003497AC /* TBMessageCell.m */; };
-		33B936DB18327EC4003497AC /* TBMessageCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936D718327EC4003497AC /* TBMessageCellView.m */; };
-		33B936DC18327EC4003497AC /* TBBubbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936D918327EC4003497AC /* TBBubbleView.m */; };
 		33B936DF18327EDC003497AC /* TBChatToolbarView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936DE18327EDC003497AC /* TBChatToolbarView.m */; };
 		33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 33B936E018327EF4003497AC /* Monda-Regular.ttf */; };
 		33B936E4183289A0003497AC /* TBMessage.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936E3183289A0003497AC /* TBMessage.m */; };
@@ -56,9 +57,6 @@
 		33D715F518368B48003FA973 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715EF18368B48003FA973 /* libTestFlight.a */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
-		33E8F9F1183B622A007DDAAB /* TBBubbleCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */; };
-		33E8F9F4183B695E007DDAAB /* TBComposingCellView.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8F9F3183B695E007DDAAB /* TBComposingCellView.m */; };
-		33E8F9FB183B7095007DDAAB /* TBComposingCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8F9FA183B7095007DDAAB /* TBComposingCell.m */; };
 		33E8FA1B183B95FC007DDAAB /* SVWebViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33E8F9FE183B95FC007DDAAB /* SVWebViewController.strings */; };
 		33E8FA1C183B95FC007DDAAB /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8FA06183B95FC007DDAAB /* SVModalWebViewController.m */; };
 		33E8FA1D183B95FC007DDAAB /* SVWebViewController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 33E8FA07183B95FC007DDAAB /* SVWebViewController.bundle */; };
@@ -109,12 +107,20 @@
 		332CA4CC1819108C00233E92 /* TBMeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMeViewController.m; sourceTree = "<group>"; };
 		332CA4CE181955B500233E92 /* TBBuddy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddy.h; sourceTree = "<group>"; };
 		332CA4CF181955B500233E92 /* TBBuddy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddy.m; sourceTree = "<group>"; };
+		332EBD90184C78460074E004 /* TBWarningView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBWarningView.h; sourceTree = "<group>"; };
+		332EBD91184C78460074E004 /* TBWarningView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBWarningView.m; sourceTree = "<group>"; };
+		332EBD92184C78460074E004 /* TBBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBubbleView.h; sourceTree = "<group>"; };
+		332EBD93184C78460074E004 /* TBBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleView.m; sourceTree = "<group>"; };
+		332EBD94184C78460074E004 /* TBMessageView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMessageView.h; sourceTree = "<group>"; };
+		332EBD95184C78460074E004 /* TBMessageView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMessageView.m; sourceTree = "<group>"; };
+		332EBD96184C78460074E004 /* TBBubbleCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBubbleCell.h; sourceTree = "<group>"; };
+		332EBD97184C78460074E004 /* TBBubbleCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleCell.m; sourceTree = "<group>"; };
+		332EBD98184C78460074E004 /* TBComposingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBComposingCell.h; sourceTree = "<group>"; };
+		332EBD99184C78460074E004 /* TBComposingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBComposingCell.m; sourceTree = "<group>"; };
 		334652281828EC8B00280518 /* UIColor+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Cryptocat.h"; sourceTree = "<group>"; };
 		334652291828EC8B00280518 /* UIColor+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Cryptocat.m"; sourceTree = "<group>"; };
 		3346522B1829044600280518 /* TBButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBButtonCell.h; sourceTree = "<group>"; };
 		3346522C1829044600280518 /* TBButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBButtonCell.m; sourceTree = "<group>"; };
-		336C4ACD184788B9005E9A48 /* TBWarningView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBWarningView.h; sourceTree = "<group>"; };
-		336C4ACE184788B9005E9A48 /* TBWarningView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBWarningView.m; sourceTree = "<group>"; };
 		3379BA22181EBAE0002A316F /* TBBuddyViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddyViewController.h; sourceTree = "<group>"; };
 		3379BA23181EBAE0002A316F /* TBBuddyViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddyViewController.m; sourceTree = "<group>"; };
 		3388E266183F5C5300102762 /* TBPresenceCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBPresenceCell.h; sourceTree = "<group>"; };
@@ -149,12 +155,6 @@
 		339DD1E917F0507F00C3E8E6 /* TBXMPPManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXMPPManager.m; sourceTree = "<group>"; };
 		33B08F5E1844EC4D00BC9BA3 /* TBLoginNavigationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLoginNavigationController.h; sourceTree = "<group>"; };
 		33B08F5F1844EC4D00BC9BA3 /* TBLoginNavigationController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginNavigationController.m; sourceTree = "<group>"; };
-		33B936D418327EC4003497AC /* TBMessageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMessageCell.h; sourceTree = "<group>"; };
-		33B936D518327EC4003497AC /* TBMessageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMessageCell.m; sourceTree = "<group>"; };
-		33B936D618327EC4003497AC /* TBMessageCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMessageCellView.h; sourceTree = "<group>"; };
-		33B936D718327EC4003497AC /* TBMessageCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBMessageCellView.m; sourceTree = "<group>"; };
-		33B936D818327EC4003497AC /* TBBubbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBubbleView.h; sourceTree = "<group>"; };
-		33B936D918327EC4003497AC /* TBBubbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleView.m; sourceTree = "<group>"; };
 		33B936DD18327EDC003497AC /* TBChatToolbarView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBChatToolbarView.h; sourceTree = "<group>"; };
 		33B936DE18327EDC003497AC /* TBChatToolbarView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBChatToolbarView.m; sourceTree = "<group>"; };
 		33B936E018327EF4003497AC /* Monda-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Monda-Regular.ttf"; sourceTree = "<group>"; };
@@ -180,12 +180,6 @@
 		33E6C7FB181512FD009EC642 /* TBLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginViewController.m; sourceTree = "<group>"; };
 		33E6C7FD18155870009EC642 /* NSError+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+Cryptocat.h"; sourceTree = "<group>"; };
 		33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+Cryptocat.m"; sourceTree = "<group>"; };
-		33E8F9EF183B622A007DDAAB /* TBBubbleCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBubbleCellView.h; sourceTree = "<group>"; };
-		33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBubbleCellView.m; sourceTree = "<group>"; };
-		33E8F9F2183B695E007DDAAB /* TBComposingCellView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBComposingCellView.h; sourceTree = "<group>"; };
-		33E8F9F3183B695E007DDAAB /* TBComposingCellView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBComposingCellView.m; sourceTree = "<group>"; };
-		33E8F9F9183B7095007DDAAB /* TBComposingCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBComposingCell.h; sourceTree = "<group>"; };
-		33E8F9FA183B7095007DDAAB /* TBComposingCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBComposingCell.m; sourceTree = "<group>"; };
 		33E8F9FF183B95FC007DDAAB /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
 		33E8FA00183B95FC007DDAAB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
 		33E8FA01183B95FC007DDAAB /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
@@ -461,13 +455,19 @@
 		33B936D318327EB6003497AC /* Chat Cells */ = {
 			isa = PBXGroup;
 			children = (
+				332EBD90184C78460074E004 /* TBWarningView.h */,
+				332EBD91184C78460074E004 /* TBWarningView.m */,
+				332EBD92184C78460074E004 /* TBBubbleView.h */,
+				332EBD93184C78460074E004 /* TBBubbleView.m */,
+				332EBD94184C78460074E004 /* TBMessageView.h */,
+				332EBD95184C78460074E004 /* TBMessageView.m */,
+				332EBD96184C78460074E004 /* TBBubbleCell.h */,
+				332EBD97184C78460074E004 /* TBBubbleCell.m */,
+				332EBD98184C78460074E004 /* TBComposingCell.h */,
+				332EBD99184C78460074E004 /* TBComposingCell.m */,
 				33E8F9F5183B6E4A007DDAAB /* Cell Views */,
 				3388E266183F5C5300102762 /* TBPresenceCell.h */,
 				3388E267183F5C5300102762 /* TBPresenceCell.m */,
-				33B936D418327EC4003497AC /* TBMessageCell.h */,
-				33B936D518327EC4003497AC /* TBMessageCell.m */,
-				33E8F9F9183B7095007DDAAB /* TBComposingCell.h */,
-				33E8F9FA183B7095007DDAAB /* TBComposingCell.m */,
 			);
 			name = "Chat Cells";
 			sourceTree = "<group>";
@@ -490,16 +490,6 @@
 			children = (
 				3388E268183F5C5300102762 /* TBPresenceView.h */,
 				3388E269183F5C5300102762 /* TBPresenceView.m */,
-				33E8F9EF183B622A007DDAAB /* TBBubbleCellView.h */,
-				33E8F9F0183B622A007DDAAB /* TBBubbleCellView.m */,
-				33E8F9F2183B695E007DDAAB /* TBComposingCellView.h */,
-				33E8F9F3183B695E007DDAAB /* TBComposingCellView.m */,
-				33B936D618327EC4003497AC /* TBMessageCellView.h */,
-				33B936D718327EC4003497AC /* TBMessageCellView.m */,
-				33B936D818327EC4003497AC /* TBBubbleView.h */,
-				33B936D918327EC4003497AC /* TBBubbleView.m */,
-				336C4ACD184788B9005E9A48 /* TBWarningView.h */,
-				336C4ACE184788B9005E9A48 /* TBWarningView.m */,
 			);
 			name = "Cell Views";
 			sourceTree = "<group>";
@@ -734,10 +724,7 @@
 				33E8FA1E183B95FC007DDAAB /* SVWebViewController.m in Sources */,
 				33B936E4183289A0003497AC /* TBMessage.m in Sources */,
 				3388E271183FA50200102762 /* TBServersViewController.m in Sources */,
-				33E8F9FB183B7095007DDAAB /* TBComposingCell.m in Sources */,
-				33B936DA18327EC4003497AC /* TBMessageCell.m in Sources */,
 				330130C617F431CF00287253 /* XMPPMessage+Cryptocat.m in Sources */,
-				33E8F9F4183B695E007DDAAB /* TBComposingCellView.m in Sources */,
 				33E8FA21183B95FC007DDAAB /* SVWebViewControllerActivityChrome.m in Sources */,
 				3346522D1829044600280518 /* TBButtonCell.m in Sources */,
 				330131DD17FB0D6000287253 /* TBXMPPMessagesHandler.m in Sources */,
@@ -746,30 +733,31 @@
 				339DD1BC17F0399400C3E8E6 /* TBAppDelegate.m in Sources */,
 				33E8FA25183B95FC007DDAAB /* SVWebViewControllerActivitySafari.m in Sources */,
 				339DD1EA17F0507F00C3E8E6 /* TBXMPPManager.m in Sources */,
-				336C4ACF184788B9005E9A48 /* TBWarningView.m in Sources */,
 				33E8FA27183B95FC007DDAAB /* SVWebViewControllerActivity.m in Sources */,
+				332EBD9E184C78460074E004 /* TBComposingCell.m in Sources */,
 				3301305317F18F0800287253 /* XMPPIQ+XEP_0077.m in Sources */,
+				332EBD9C184C78460074E004 /* TBMessageView.m in Sources */,
 				3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */,
 				33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */,
 				33B936DF18327EDC003497AC /* TBChatToolbarView.m in Sources */,
 				33B936EC18362455003497AC /* TBChateStateNotification.m in Sources */,
-				33B936DB18327EC4003497AC /* TBMessageCellView.m in Sources */,
 				33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */,
+				332EBD9B184C78460074E004 /* TBBubbleView.m in Sources */,
 				33F6831E180ED21900524C87 /* XMPPPresence+Cryptocat.m in Sources */,
 				3388E276183FA92800102762 /* TBServer.m in Sources */,
 				332CA4D0181955B500233E92 /* TBBuddy.m in Sources */,
 				3301305017F18A5E00287253 /* XMPPInBandRegistration.m in Sources */,
 				3346522A1828EC8B00280518 /* UIColor+Cryptocat.m in Sources */,
+				332EBD9D184C78460074E004 /* TBBubbleCell.m in Sources */,
 				33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */,
 				339DD1B817F0399400C3E8E6 /* main.m in Sources */,
 				33F68321180EDDC100524C87 /* TBChatViewController.m in Sources */,
-				33E8F9F1183B622A007DDAAB /* TBBubbleCellView.m in Sources */,
 				33B08F601844EC4D00BC9BA3 /* TBLoginNavigationController.m in Sources */,
 				330130C917F4453000287253 /* NSString+Cryptocat.m in Sources */,
+				332EBD9A184C78460074E004 /* TBWarningView.m in Sources */,
 				3306B7A718434EE0005B81DA /* TBTextFieldCell.m in Sources */,
 				33E8FA6E183BD7D4007DDAAB /* TBGrowingTextView.m in Sources */,
 				332CA4CD1819108C00233E92 /* TBMeViewController.m in Sources */,
-				33B936DC18327EC4003497AC /* TBBubbleView.m in Sources */,
 				33E8FA1C183B95FC007DDAAB /* SVModalWebViewController.m in Sources */,
 				3306B7A418434CC3005B81DA /* TBServerViewController.m in Sources */,
 				33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */,

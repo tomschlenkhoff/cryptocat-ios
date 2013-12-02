@@ -1,8 +1,8 @@
 //
-//  TBBubbleCellView.h
+//  TBBubbleCell.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 19/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -23,21 +23,34 @@
 
 #import <UIKit/UIKit.h>
 
-#import "TBBubbleView.h"
+@protocol TBBubbleCellDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBBubbleCellView : UIView
+@interface TBBubbleCell : UITableViewCell
 
-@property (nonatomic, strong) TBBubbleView *bubbleView;
-@property (nonatomic, strong) UIView *senderLabelBackground;
-@property (nonatomic, strong) UILabel *senderLabel;
-
+@property (nonatomic, weak) id <TBBubbleCellDelegate> delegate;
 @property (nonatomic, strong) NSString *senderName;
+@property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSString *warningMessage;
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
 @property (nonatomic, assign) BOOL isErrorMessage;
+@property (nonatomic, readonly) CGSize paddedSenderNameSize;
 
-+ (UIFont *)font;
++ (CGFloat)heightForSenderName:(NSString *)senderName
+                       message:(NSString *)message
+                warningMessage:(NSString *)warningMessage
+                      maxWidth:(CGFloat)maxWidth;
+@end
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+@protocol TBBubbleCellDelegate <NSObject>
+
+- (BOOL)bubbleCell:(TBBubbleCell *)bubbleCell
+shouldInteractWithURL:(NSURL *)URL
+            inRange:(NSRange)characterRange;
 
 @end

@@ -2,7 +2,7 @@
 //  TBComposingCell.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 19/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -21,16 +21,13 @@
 //  along with Cryptocat for iOS.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <UIKit/UIKit.h>
+#import "TBBubbleCell.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBComposingCell : UITableViewCell
+@interface TBComposingCell : TBBubbleCell
 
-@property (nonatomic, strong) NSString *senderName;
-@property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
-
-+ (CGFloat)height;
++ (CGFloat)heightForMaxWidth:(CGFloat)maxWidth;
 
 @end

@@ -30,10 +30,9 @@
 
 @property (nonatomic, strong) UIColor *bubbleColor;
 @property (nonatomic, strong) UIColor *insideColor;
-@property (nonatomic, readonly) CGRect contentFrame;
+@property (nonatomic, readonly) CGRect innerRect;
 @property (nonatomic, assign) BOOL shouldAlignTailToLeft;
 
-+ (CGPoint)originForInsideArea;
-+ (CGSize)sizeForContentSize:(CGSize)contentSize;
++ (CGFloat)heightForContentHeight:(CGFloat)contentHeight;
 
 @end

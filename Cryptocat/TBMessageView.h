@@ -1,8 +1,8 @@
 //
-//  TBMessageCellView.h
+//  TBMessageView.h
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 07/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -21,30 +21,33 @@
 //  along with Cryptocat for iOS.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import <UIKit/UIKit.h>
-#import "TBBubbleCellView.h"
+#import "TBBubbleView.h"
 
-@protocol TBMessageCellViewDelegate;
+@protocol TBMessageViewDelegate;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCellView : TBBubbleCellView
+@interface TBMessageView : TBBubbleView
 
-@property (nonatomic, weak) id <TBMessageCellViewDelegate> delegate;
+@property (nonatomic, weak) id <TBMessageViewDelegate> delegate;
+@property (nonatomic, strong) NSString *senderName;
 @property (nonatomic, strong) NSString *message;
+@property (nonatomic, assign) CGSize paddedSenderNameSize;
 
-+ (CGSize)sizeForText:(NSString *)text;
++ (CGFloat)heightForSenderName:(NSString *)senderName
+                       message:(NSString *)message
+                      maxWidth:(CGFloat)maxWidth;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@protocol TBMessageCellViewDelegate <NSObject>
+@protocol TBMessageViewDelegate <NSObject>
 
-- (BOOL)messageCellView:(TBMessageCellView *)cellView
-  shouldInteractWithURL:(NSURL *)URL
-                inRange:(NSRange)characterRange;
+- (BOOL)messageView:(TBMessageView *)messageView
+shouldInteractWithURL:(NSURL *)URL
+            inRange:(NSRange)characterRange;
 
 @end

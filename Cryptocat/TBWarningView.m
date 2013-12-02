@@ -70,8 +70,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)drawRect:(CGRect)rect {
-  TBLOG(@"-- drawRect : %@", NSStringFromCGRect(rect));
-  
   // colors
   UIColor *bubbleColor = [UIColor redColor];
   

@@ -1,8 +1,8 @@
 //
-//  TBMessageCell.m
+//  TBBubbleCell.m
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 07/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -21,29 +21,34 @@
 //  along with Cryptocat for iOS.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "TBMessageCell.h"
-#import "TBMessageCellView.h"
+#import "TBBubbleCell.h"
 #import "TBWarningView.h"
+#import "TBMessageView.h"
 
 #define kPaddingTop     0.0
 #define kPaddingBottom  10.0
 #define kPaddingLeft    11.0
 #define kPaddingRight   12.5
+#define kMeSpeakingColor    [UIColor colorWithRed:0.592 green:0.808 blue:0.925 alpha:1.000]
+#define kOtherSpeakingColor [UIColor colorWithRed: 0.396 green: 0.685 blue: 0.872 alpha: 1]
+#define kWarningColor       [UIColor redColor]
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCell () <TBMessageCellViewDelegate>
+@interface TBBubbleCell () <TBMessageViewDelegate>
 
-@property (nonatomic, strong) TBMessageCellView *messageView;
 @property (nonatomic, strong) TBWarningView *warningView;
+@property (nonatomic, strong) TBMessageView *messageView;
+
+- (void)updateColors;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@implementation TBMessageCell
+@implementation TBBubbleCell
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -53,12 +58,12 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-    _messageView = [[TBMessageCellView alloc] init];
+    _warningView = nil;
+    _messageView = [[TBMessageView alloc] init];
     _messageView.delegate = self;
     [self.contentView addSubview:_messageView];
-    
-    _warningView = nil;
   }
+  
   return self;
 }
 
@@ -66,13 +71,14 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
   
-  // message view
-  CGRect messageViewFrame = self.contentView.frame;
-  messageViewFrame.origin.x+=kPaddingLeft;
-  messageViewFrame.origin.y+=kPaddingTop;
-  messageViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
-  messageViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
+  [self updateColors];
 
+  CGRect messageViewFrame = self.contentView.frame;
+  messageViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
+  messageViewFrame.origin.x+=kPaddingLeft;
+  messageViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
+  messageViewFrame.origin.y+=kPaddingTop;
+  
   // warning view
   if (self.warningMessage!=nil) {
     CGRect warningViewFrame = messageViewFrame;
@@ -84,14 +90,22 @@
     messageViewFrame.origin.y+=size.height;
     [self.warningView setNeedsDisplay];
   }
-  
+
   self.messageView.frame = messageViewFrame;
+  [self.messageView setNeedsDisplay];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark Public Methods
+#pragma mark Public Properties
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setBackgroundColor:(UIColor *)backgroundColor {
+  [super setBackgroundColor:backgroundColor];
+  
+  self.messageView.backgroundColor = backgroundColor;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setSenderName:(NSString *)senderName {
@@ -106,7 +120,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMessage:(NSString *)message {
   self.messageView.message = message;
-  [self setNeedsLayout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -124,6 +137,7 @@
     self.warningView = [[TBWarningView alloc] init];
     [self.contentView addSubview:self.warningView];
     self.warningView.message = warningMessage;
+    self.warningView.backgroundColor = self.backgroundColor;
     [self setNeedsLayout];
   }
 }
@@ -135,60 +149,68 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setMeSpeaking:(BOOL)meSpeaking {
-  self.messageView.meSpeaking = meSpeaking;
+  if (self.isMeSpeaking!=meSpeaking) {
+    self.messageView.shouldAlignTailToLeft = !meSpeaking;
+  }
+  
+  [self updateColors];
+  [self.messageView setNeedsDisplay];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)isMeSpeaking {
-  return self.messageView.isMeSpeaking;
+  return !self.messageView.shouldAlignTailToLeft;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setIsErrorMessage:(BOOL)isErrorMessage {
-  self.messageView.isErrorMessage = isErrorMessage;
+- (CGSize)paddedSenderNameSize {
+  return self.messageView.paddedSenderNameSize;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)isErrorMessage {
-  return self.messageView.isErrorMessage;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForCellWithSenderName:(NSString *)senderName
-                                  text:(NSString *)text
-                           warningText:(NSString *)warningText {
-  // add the sender name and some spaces for the sender label padding
-  NSString *paddingString = @"     :     ";
-  NSString *fullText = [senderName stringByAppendingFormat:@"%@%@", paddingString, text];
-  
-  CGFloat height = [TBMessageCellView sizeForText:fullText].height + kPaddingTop + kPaddingBottom;
-
-  if (warningText!=nil) {
-    height+=[TBWarningView sizeForText:warningText].height;
++ (CGFloat)heightForSenderName:(NSString *)senderName
+                       message:(NSString *)message
+                warningMessage:(NSString *)warningMessage
+                      maxWidth:(CGFloat)maxWidth {
+  maxWidth-=(kPaddingLeft+kPaddingRight);
+  CGFloat messageViewHeight = [TBMessageView heightForSenderName:senderName
+                                                         message:message
+                                                        maxWidth:maxWidth];
+  if (warningMessage!=nil) {
+    messageViewHeight+=[TBWarningView sizeForText:warningMessage].height;
   }
   
-  return height;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
-  [super setBackgroundColor:backgroundColor];
-  self.messageView.backgroundColor = backgroundColor;
-  self.warningView.backgroundColor = backgroundColor;
+  return messageViewHeight+kPaddingTop+kPaddingBottom;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
-#pragma mark TBMessageCellViewDelegate
+#pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)messageCellView:(TBMessageCellView *)cellView
-  shouldInteractWithURL:(NSURL *)URL
-                inRange:(NSRange)characterRange {
-  if ([self.delegate respondsToSelector:@selector(messageCell:shouldInteractWithURL:inRange:)]) {
-    return [self.delegate messageCell:self shouldInteractWithURL:URL inRange:characterRange];
+- (void)updateColors {
+  if (self.isErrorMessage) {
+    self.messageView.bubbleColor = kWarningColor;
   }
+  else {
+    self.messageView.bubbleColor = self.isMeSpeaking ? kMeSpeakingColor : kOtherSpeakingColor;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBMessageViewDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)messageView:(TBMessageView *)messageView
+shouldInteractWithURL:(NSURL *)URL
+            inRange:(NSRange)characterRange {
+  if ([self.delegate respondsToSelector:@selector(bubbleCell:shouldInteractWithURL:inRange:)]) {
+    return [self.delegate bubbleCell:self shouldInteractWithURL:URL inRange:characterRange];
+  }
+  
   return NO;
 }
 

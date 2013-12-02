@@ -21,12 +21,20 @@
 //  along with Cryptocat for iOS.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#define kPaddingTop     2.0
-#define kPaddingBottom  14.5
-#define kPaddingLeft    7.0
-#define kPaddingRight   7.0
-
 #import "TBBubbleView.h"
+
+#define kLineWidth      2.0
+#define kShadowOffsetX  1.5
+#define kArrowHeight    12.0
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+@interface TBBubbleView ()
+
++ (UIEdgeInsets)contentInsets;
+
+@end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,27 +54,8 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (CGRect)contentFrame {
-  CGRect frame = self.frame;
-  frame.origin.x+=kPaddingLeft;
-  frame.origin.y+=kPaddingTop;
-  frame.size.width-=(kPaddingLeft + kPaddingRight);
-  frame.size.height-=(kPaddingTop + kPaddingBottom);
-  
-  return frame;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGPoint)originForInsideArea {
-  return CGPointMake(2.0, 2.0);
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGSize)sizeForContentSize:(CGSize)contentSize {
-  CGFloat width = contentSize.width + kPaddingLeft + kPaddingRight;
-  CGFloat height = contentSize.height + kPaddingTop + kPaddingBottom;
-  
-  return CGSizeMake(width, height);
+- (CGRect)innerRect {
+  return UIEdgeInsetsInsetRect(self.bounds, [[self class] contentInsets]);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -78,12 +67,12 @@
   CGFloat height = rect.size.height;
   
   // constant values
-  CGFloat lineWidth = 2.0;
-  CGFloat shadowOffsetX = 1.5;
+  CGFloat lineWidth = kLineWidth;
+  CGFloat shadowOffsetX = kShadowOffsetX;
   CGFloat shadowOffsetY = 3.5;
   CGSize cornerRadius = CGSizeMake(4.0, 4.0);
   CGFloat arrowWidth = 16.0;
-  CGFloat arrowHeight = 12.0;
+  CGFloat arrowHeight = kArrowHeight;
   CGFloat arrowCenterDistanceFromBorder = 34.5;
   
   // bubble
@@ -150,6 +139,22 @@
   
   [self.bubbleColor setFill];
   [arrowPath fill];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)heightForContentHeight:(CGFloat)contentHeight {
+  UIEdgeInsets contentInset = [self contentInsets];
+  return contentHeight+contentInset.top+contentInset.bottom;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark Private Methods
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (UIEdgeInsets)contentInsets {
+  return UIEdgeInsetsMake(kLineWidth, kLineWidth, kArrowHeight+1, kLineWidth + kShadowOffsetX);
 }
 
 @end

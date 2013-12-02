@@ -2,7 +2,7 @@
 //  TBComposingCell.m
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 19/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -22,19 +22,15 @@
 //
 
 #import "TBComposingCell.h"
-#import "TBComposingCellView.h"
 
-#define kPaddingTop     0.0
-#define kPaddingBottom  10.0
-#define kPaddingLeft    11.0
-#define kPaddingRight   12.5
+#define kSenderLabelPaddingRight  20.0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBComposingCell ()
 
-@property (nonatomic, strong) TBComposingCellView *composingView;
+@property (nonatomic, strong) UIImageView *composingView;
 
 @end
 
@@ -44,16 +40,33 @@
 @implementation TBComposingCell
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Lifecycle
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithStyle:(UITableViewCellStyle)style reuseIdentifier:(NSString *)reuseIdentifier {
   if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
-    _composingView = [[TBComposingCellView alloc] init];
+    self.meSpeaking = NO;
+    self.isErrorMessage = NO;
+    self.message = @" ";
+    
+    _composingView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"typing-1"]];
+    _composingView.animationImages = @[[UIImage imageNamed:@"typing-1"],
+                                       [UIImage imageNamed:@"typing-2"],
+                                       [UIImage imageNamed:@"typing-3"],
+                                       [UIImage imageNamed:@"typing-4"],
+                                       [UIImage imageNamed:@"typing-5"],
+                                       [UIImage imageNamed:@"typing-6"],
+                                       [UIImage imageNamed:@"typing-7"],
+                                       [UIImage imageNamed:@"typing-1"],  // 8 same as 1
+                                       [UIImage imageNamed:@"typing-9"],
+                                       [UIImage imageNamed:@"typing-6"],  // 10 same as 6
+                                       [UIImage imageNamed:@"typing-11"],
+                                       [UIImage imageNamed:@"typing-12"],
+                                       [UIImage imageNamed:@"typing-13"],
+                                       [UIImage imageNamed:@"typing-3"],  // 14 same as 3
+                                       [UIImage imageNamed:@"typing-15"],
+                                       [UIImage imageNamed:@"typing-16"]];
+    _composingView.animationDuration = 1.6;
     [self.contentView addSubview:_composingView];
   }
+  
   return self;
 }
 
@@ -61,48 +74,17 @@
 - (void)layoutSubviews {
   [super layoutSubviews];
   
-  CGRect composingViewFrame = self.contentView.frame;
-  composingViewFrame.origin.x+=kPaddingLeft;
-  composingViewFrame.origin.y+=kPaddingTop;
-  composingViewFrame.size.width-=(kPaddingLeft+kPaddingRight);
-  composingViewFrame.size.height-=(kPaddingTop+kPaddingBottom);
+  CGRect composingViewFrame = self.composingView.frame;
+  composingViewFrame.origin.x = self.paddedSenderNameSize.width + kSenderLabelPaddingRight;
+  composingViewFrame.origin.y = 6.0;
   self.composingView.frame = composingViewFrame;
+  
+  [self.composingView startAnimating];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Public Methods
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setSenderName:(NSString *)senderName {
-  self.composingView.senderName = senderName;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSString *)senderName {
-  return self.composingView.senderName;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setMeSpeaking:(BOOL)meSpeaking {
-  self.composingView.meSpeaking = meSpeaking;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)isMeSpeaking {
-  return self.composingView.isMeSpeaking;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setBackgroundColor:(UIColor *)backgroundColor {
-  [super setBackgroundColor:backgroundColor];
-  self.composingView.backgroundColor = backgroundColor;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)height {
-  return 51.5;
++ (CGFloat)heightForMaxWidth:(CGFloat)maxWidth {
+  return [super heightForSenderName:@"" message:@"" warningMessage:nil maxWidth:maxWidth];
 }
 
 @end

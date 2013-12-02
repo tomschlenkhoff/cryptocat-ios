@@ -1,8 +1,8 @@
 //
-//  TBMessageCellView.m
+//  TBMessageView.m
 //  Cryptocat
 //
-//  Created by Thomas Balthazar on 07/11/13.
+//  Created by Thomas Balthazar on 01/12/13.
 //  Copyright (c) 2013 Thomas Balthazar. All rights reserved.
 //
 //  This file is part of Cryptocat for iOS.
@@ -21,53 +21,74 @@
 //  along with Cryptocat for iOS.  If not, see <http://www.gnu.org/licenses/>.
 //
 
-#import "TBMessageCellView.h"
+#import "TBMessageView.h"
 
-#define kMaxWidthPortrait       	296.0
-#define kMaxWidthLandscape      	437.0
-#define kSenderLabelPaddingLeft   7.0
-#define kSenderLabelPaddingRight  7.0
+#define kFont                 [UIFont fontWithName:@"Monda-Regular" size:15.0]
+#define kTextViewInsetTop     0.0
+#define kTextViewInsetBottom  1.0
+#define kTextViewInsetLeft    7.0
+#define kTextViewInsetRight   7.0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBMessageCellView () <UITextViewDelegate>
+@interface TBMessageView () <UITextViewDelegate>
 
 @property (nonatomic, strong) UITextView *textView;
+@property (nonatomic, strong) UIView *senderNameBgView;
 
-+ (CGSize)textViewSizeForText:(NSString *)text;
+- (void)updateTextView;
 + (NSDictionary *)textAttributes;
++ (UIFont *)font;
++ (NSString *)paddedSenderName:(NSString *)senderName;
 
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@implementation TBMessageCellView
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark Lifecycle
+@implementation TBMessageView
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithFrame:(CGRect)frame {
-  self = [super initWithFrame:frame];
-  if (self) {
+  if (self=[super initWithFrame:frame]) {
+    _paddedSenderNameSize = CGSizeZero;
+
     // -- text view
     _textView = [[UITextView alloc] init];
     _textView.editable = NO;
     _textView.scrollEnabled = NO;
-    _textView.backgroundColor = [UIColor whiteColor];
+    _textView.backgroundColor = [UIColor clearColor];
     _textView.font = [[self class] font];
-    _textView.textContainerInset = UIEdgeInsetsMake(-0.5, 0.0, 0.0, 0.0);
+    _textView.textContainerInset = UIEdgeInsetsMake(kTextViewInsetTop, kTextViewInsetLeft,
+                                                    kTextViewInsetBottom, kTextViewInsetRight);
     _textView.textContainer.lineFragmentPadding = 0.0;
     _textView.dataDetectorTypes = UIDataDetectorTypeLink;
     _textView.delegate = self;
     [self addSubview:_textView];
+    
+    // -- senderNameBgView
+    _senderNameBgView = [[UIView alloc] init];
+    _senderNameBgView.backgroundColor = [UIColor yellowColor];
+    [_textView addSubview:_senderNameBgView];
+    [_textView sendSubviewToBack:_senderNameBgView];
   }
-  
   return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)layoutSubviews {
+  [super layoutSubviews];
+
+  // textView
+  CGRect textViewFrame = self.innerRect;
+  self.textView.frame = textViewFrame;
+  
+  // senderBgLabel
+  CGRect senderBgLabelFrame = CGRectZero;
+  senderBgLabelFrame.size = self.paddedSenderNameSize;
+  senderBgLabelFrame.size.height+=1.5;
+  self.senderNameBgView.frame = senderBgLabelFrame;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -76,24 +97,47 @@
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setMessage:(NSString *)message {
-  self.textView.attributedText = [[NSAttributedString alloc] initWithString:message
-                                                          attributes:[[self class] textAttributes]];
-  [self setNeedsLayout];
-  [self.bubbleView setNeedsDisplay];
+- (void)setBubbleColor:(UIColor *)bubbleColor {
+  [super setBubbleColor:bubbleColor];
+  self.senderNameBgView.backgroundColor = bubbleColor;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSString *)message {
-  return self.textView.text;
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGSize)sizeForText:(NSString *)text {
-  CGSize textViewSize = [self textViewSizeForText:text];
-  CGSize bubbleSize = [TBBubbleView sizeForContentSize:textViewSize];
+- (void)setSenderName:(NSString *)senderName {
+  _senderName = senderName;
+  self.paddedSenderNameSize = [[[self class] paddedSenderName:senderName]
+                               sizeWithAttributes:[[self class] textAttributes]];
   
-  return bubbleSize;
+  [self updateTextView];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setMessage:(NSString *)message {
+  _message = message;
+  [self updateTextView];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)heightForSenderName:(NSString *)senderName
+                       message:(NSString *)message
+                      maxWidth:(CGFloat)maxWidth {
+  maxWidth-=(kTextViewInsetLeft+kTextViewInsetRight);
+  
+	CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
+  
+  NSString *text = [[self paddedSenderName:senderName] stringByAppendingString:message];
+  
+  CGRect boundingRect = [text boundingRectWithSize:maxSize
+                                           options:
+                         (NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                        attributes:[self textAttributes]
+                                           context:nil];
+  CGFloat textHeight = ceilf(boundingRect.size.height);
+  
+  // add the inset
+  textHeight+=kTextViewInsetTop+kTextViewInsetBottom;
+  
+  return [super heightForContentHeight:textHeight];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -102,22 +146,19 @@
 #pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGSize)textViewSizeForText:(NSString *)text {
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
-  CGFloat maxWidth = isPortrait ? kMaxWidthPortrait : kMaxWidthLandscape;
-  
-	CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
-  
-  CGRect boundingRect = [text boundingRectWithSize:maxSize
-                                           options:
-                         (NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-                                        attributes:[self textAttributes]
-                                           context:nil];
-  CGFloat width = ceilf(boundingRect.size.width);
-  CGFloat height = ceilf(boundingRect.size.height);
-
-  return CGSizeMake(width, height);
+- (void)updateTextView {
+  if (self.senderName!=nil && self.message!=nil) {
+    NSString *text = [[[self class] paddedSenderName:self.senderName]
+                      stringByAppendingString:self.message];
+    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text
+                                                          attributes:[[self class] textAttributes]];
+    NSDictionary *senderAttr = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+    [attrText addAttributes:senderAttr range:NSMakeRange(0, self.senderName.length)];
+    self.textView.attributedText = attrText;
+    
+    [self setNeedsLayout];  // layout the textView
+    [self setNeedsDisplay]; // display the drawn bubble
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -129,32 +170,13 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////////////
-#pragma mark -
-#pragma mark UIView
++ (UIFont *)font {
+  return kFont;
+}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)layoutSubviews {
-  [super layoutSubviews];
-  
-  CGRect textViewFrame = self.bubbleView.contentFrame;
-
-  // adapt for 1 line bubble sender label background
-  CGRect senderLabelBackgroundFrame = self.senderLabelBackground.frame;
-  BOOL textIsOnOneLine = textViewFrame.size.height < senderLabelBackgroundFrame.size.height;
-  if (textIsOnOneLine) {
-    senderLabelBackgroundFrame.size.height+=1.0;
-    self.senderLabelBackground.frame = senderLabelBackgroundFrame;
-  }
-  
-  // textView
-  CGRect exclustionFrame = self.senderLabel.frame;
-  exclustionFrame.origin = CGPointZero;
-  exclustionFrame.size.width+=kSenderLabelPaddingLeft+kSenderLabelPaddingRight;
-  exclustionFrame.size.height-=4.0;
-  UIBezierPath *exclusionPath = [UIBezierPath bezierPathWithRect:exclustionFrame];
-  self.textView.textContainer.exclusionPaths = @[exclusionPath];
-  self.textView.frame = textViewFrame;
++ (NSString *)paddedSenderName:(NSString *)senderName {
+  return [senderName stringByAppendingString:@"    "];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -166,9 +188,8 @@
 - (BOOL)textView:(UITextView *)textView
 shouldInteractWithURL:(NSURL *)URL
          inRange:(NSRange)characterRange {
-  if ([self.delegate
-       respondsToSelector:@selector(messageCellView:shouldInteractWithURL:inRange:)]) {
-    return [self.delegate messageCellView:self shouldInteractWithURL:URL inRange:characterRange];
+  if ([self.delegate respondsToSelector:@selector(messageView:shouldInteractWithURL:inRange:)]) {
+    return [self.delegate messageView:self shouldInteractWithURL:URL inRange:characterRange];
   }
   
   return NO;
