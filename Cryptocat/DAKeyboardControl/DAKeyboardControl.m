@@ -8,7 +8,8 @@
 
 #import "DAKeyboardControl.h"
 #import <objc/runtime.h>
-
+#import "TBMessageView.h"
+#import "TBGrowingTextView.h"
 
 static inline UIViewAnimationOptions AnimationOptionsForCurve(UIViewAnimationCurve curve)
 {
@@ -271,6 +272,8 @@ static BOOL _useAutolayoutAnimationLogic = NO;
 
 - (void)inputKeyboardDidShow
 {
+  if (![self.keyboardActiveInput isKindOfClass:[TBGrowingTextView class]]) return;
+    
     // Grab the keyboard view
     self.keyboardActiveView = self.keyboardActiveInput.inputAccessoryView.superview;
     self.keyboardActiveView.hidden = NO;
@@ -533,6 +536,11 @@ static BOOL _useAutolayoutAnimationLogic = NO;
 {
     // Find first responder
     UIView *inputView = [self recursiveFindFirstResponder:self];
+  
+  if ([[inputView superview] isKindOfClass:[TBMessageView class]]) {
+    return;
+  }
+  
     if (inputView != nil)
     {
         // Re assign the focus
