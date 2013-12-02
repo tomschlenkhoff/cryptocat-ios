@@ -147,6 +147,9 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [NSObject cancelPreviousPerformRequestsWithTarget:self
                                            selector:@selector(notifyUserOfBgSessionEnd)
                                              object:nil];
+  
+  [UIApplication sharedApplication].applicationIconBadgeNumber = 0;
+  [[UIApplication sharedApplication] cancelAllLocalNotifications];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -642,6 +645,7 @@ didAskToConnectWithRoomName:(NSString *)roomName
   messageNotification.alertAction = @"Ok";
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
+  [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,6 +664,7 @@ didAskToConnectWithRoomName:(NSString *)roomName
   messageNotification.alertAction = @"Ok";
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
+  [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
 }
 
 ///
