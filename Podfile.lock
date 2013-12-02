@@ -1,10 +1,10 @@
 PODS:
   - CocoaAsyncSocket (7.3.2)
-  - CocoaLumberjack (1.6.3):
+  - CocoaLumberjack (1.6.4):
     - CocoaLumberjack/Core
     - CocoaLumberjack/Extensions
-  - CocoaLumberjack/Core (1.6.3)
-  - CocoaLumberjack/Extensions (1.6.3):
+  - CocoaLumberjack/Core (1.6.4)
+  - CocoaLumberjack/Extensions (1.6.4):
     - CocoaLumberjack/Core
   - TBMultipartyProtocolManager (0.0.1)
   - TBOTRManager (0.0.1)
@@ -140,21 +140,23 @@ PODS:
     - XMPPFramework/Core
 
 DEPENDENCIES:
-  - TBMultipartyProtocolManager (from `../TBMultipartyProtocolManager`)
-  - TBOTRManager (from `../TBOTRManager`)
+  - TBMultipartyProtocolManager (from `https://github.com/tbalthazar/TBMultipartyProtocolManager.git`, tag `0.9b1`)
+  - TBOTRManager (from `https://github.com/tbalthazar/TBOTRManager.git`, tag `0.9b1`)
   - XMPPFramework (from `https://github.com/tbalthazar/XMPPFramework.git`)
 
 EXTERNAL SOURCES:
   TBMultipartyProtocolManager:
-    :path: ../TBMultipartyProtocolManager
+    :git: https://github.com/tbalthazar/TBMultipartyProtocolManager.git
+    :tag: 0.9b1
   TBOTRManager:
-    :path: ../TBOTRManager
+    :git: https://github.com/tbalthazar/TBOTRManager.git
+    :tag: 0.9b1
   XMPPFramework:
     :git: https://github.com/tbalthazar/XMPPFramework.git
 
 SPEC CHECKSUMS:
   CocoaAsyncSocket: 977404129ec8505fee1c3701956b769e3bb10ea7
-  CocoaLumberjack: 0af89e0de15835a499fcc6ee5e0b6d396bc95976
+  CocoaLumberjack: 006187e7e3c52f505aab43d7b5ba6af35838bf23
   TBMultipartyProtocolManager: 79ecea7ca725525cb90ffc6ccc54e3c14d170e69
   TBOTRManager: 375a4a20792b60a47dc6a8572bc2719a2f4957e0
   XMPPFramework: bf818623aba272b79fcc7bf8772043de33614503
