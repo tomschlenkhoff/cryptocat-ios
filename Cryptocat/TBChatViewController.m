@@ -324,10 +324,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
-  UIInterfaceOrientation orientation = [UIApplication sharedApplication].statusBarOrientation;
-  BOOL isPortrait = orientation==UIInterfaceOrientationPortrait;
-  CGFloat maxWidth = isPortrait ? self.view.frame.size.width : self.view.frame.size.height;
-  
+  CGFloat maxWidth = self.view.frame.size.width;
   id message = [self.messages objectAtIndex:indexPath.row];
   
   // -- message
