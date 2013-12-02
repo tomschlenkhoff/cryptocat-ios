@@ -379,6 +379,8 @@ replacementString:(NSString *)string {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillShow:(NSNotification *)notification {
+  if (self.logoView.alpha==0.0) return;
+  
   NSDictionary* info = [notification userInfo];
   CGSize keyboardSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
   
