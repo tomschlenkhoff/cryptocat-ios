@@ -1,4 +1,5 @@
 platform :ios, '7.0'
+pod 'AFNetworking/Reachability', '2.0.3'
 pod 'XMPPFramework', :git => 'https://github.com/tbalthazar/XMPPFramework.git'
 pod 'TBOTRManager', :git => 'https://github.com/tbalthazar/TBOTRManager.git', :tag => '0.9b1'
 pod 'TBMultipartyProtocolManager', :git => 'https://github.com/tbalthazar/TBMultipartyProtocolManager.git', :tag => '0.9b1'
