@@ -35,7 +35,6 @@
 #import "TBMessage.h"
 #import "XMPPPresence+Cryptocat.h"
 #import "UIColor+Cryptocat.h"
-#import "TBServer.h"
 #import "TBLoginNavigationController.h"
 
 #import "TestFlight.h"
@@ -89,7 +88,7 @@ typedef void (^TBGoneSecureCompletionBlock)();
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   [TestFlight takeOff:@"63c7f9a0-ad6c-4a89-ad52-5e8f10f73e2d"];
-  
+    
   self.goneSecureCompletionBlocks = [NSMutableDictionary dictionary];
   
   // get the chatVC
@@ -232,8 +231,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)presentLoginVCAnimated:(BOOL)animated {
-  // if xmpp is not connected or connecting, show loginVC
-  if (!self.XMPPManager.xmppStream.isConnected && !self.XMPPManager.xmppStream.isConnecting) {
+  if (!self.XMPPManager.isConnected && !self.XMPPManager.isConnecting) {
     // show loginVC
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TBLoginNavigationController *loginNC = [storyboard
@@ -331,7 +329,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)logout {
   [self.chatViewController cleanupConversations];
 
-  [self.XMPPManager.xmppStream disconnect];
+  [self.XMPPManager disconnect];
   [self presentLoginVCAnimated:YES];
   
   [self.OTRManager reset];
@@ -361,6 +359,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   self.chatViewController.roomName = room.roomJID.user;
   self.chatViewController.me = XMPPManager.me;
   self.chatViewController.buddies = XMPPManager.buddies;
+  self.chatViewController.isReconnecting = NO;
 
   if ([self isLoginScreenPresented]) {
     [self.chatViewController dismissViewControllerAnimated:YES completion:NULL];
@@ -433,6 +432,16 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
                                           @"Connection failed. Error Message");
     [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManagerDidDisconnect:(TBXMPPManager *)XMPPManager {
+  [self logout];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)XMPPManagerDidStartReconnecting:(TBXMPPManager *)XMPPManager {
+  self.chatViewController.isReconnecting = YES;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -591,19 +600,7 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
 - (void)loginController:(TBLoginViewController *)controller
 didAskToConnectWithRoomName:(NSString *)roomName
                nickname:(NSString *)nickname {
-  NSString *username = [NSString tb_randomStringWithLength:16];
-  NSString *password = [NSString tb_randomStringWithLength:16];
-  
-  TBServer *currentServer = [TBServer currentServer];
-  TBLOG(@"-- currentServer is : %@ (%@ - %@)",
-        currentServer.name, currentServer.domain, currentServer.conferenceServer);
-  
-  BOOL isConnected = [self.XMPPManager connectWithUsername:username
-                                                  password:password
-                                                    domain:currentServer.domain
-                                          conferenceDomain:currentServer.conferenceServer
-                                                  roomName:roomName
-                                                  nickname:nickname];
+  BOOL isConnected = [self.XMPPManager connectToRoomName:roomName withNickname:nickname];
   self.multipartyProtocolManager.myName = self.XMPPManager.me.nickname;
   
   TBLOG(@"-- isConnected : %d", isConnected);

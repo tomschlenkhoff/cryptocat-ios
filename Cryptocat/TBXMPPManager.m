@@ -24,15 +24,20 @@
 #import "TBXMPPManager.h"
 #import "TBBuddy.h"
 #import "XMPP.h"
-#import "XMPPReconnect.h"
 #import "XMPPMUC.h"
 #import <XMPPRoom.h>
+#import <AFNetworking/AFNetworkReachabilityManager.h>
 
 #import "XMPPMessage+XEP0045.h"
 #import "XMPPMessage+Cryptocat.h"
 #import "XMPPPresence+Cryptocat.h"
 
 #import "XMPPInBandRegistration.h"
+#import "NSString+Cryptocat.h"
+#import "TBServer.h"
+
+#define kDefaultReconnectInterval 2.0
+#define kReconnectTimeout         10.0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -41,11 +46,11 @@
   XMPPStreamDelegate,
   XMPPInBandRegistrationDelegate,
   XMPPRoomDelegate,
-  XMPPRoomStorage>
+  XMPPRoomStorage
+>
 
 @property (nonatomic, strong, readwrite) TBBuddy *me;
 @property (nonatomic, strong, readwrite) XMPPStream *xmppStream;
-@property (nonatomic, strong, readwrite) XMPPReconnect *xmppReconnect;
 @property (nonatomic, strong, readwrite) XMPPInBandRegistration *xmppInBandRegistration;
 @property (nonatomic, strong, readwrite) XMPPRoom *xmppRoom;
 
@@ -53,12 +58,17 @@
 @property (nonatomic, strong) NSString *password;
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSString *conferenceDomain;
+@property (nonatomic, assign) BOOL credentialRegistered;
+@property (nonatomic, assign) NSTimeInterval reconnectInterval;
 
 // -- connection steps
 - (void)requestRegistrationFields;
 - (void)registerUsername;
 - (void)authenticate;
 - (void)joinRoom;
+
+- (void)reachabilityDidChange:(AFNetworkReachabilityStatus)status;
+- (void)reconnect;
 
 @end
 
@@ -77,26 +87,31 @@
   if (self=[super init]) {
     _me = nil;
     _xmppStream = [[XMPPStream alloc] init];
-    
+    [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
+
 #if !TARGET_IPHONE_SIMULATOR
     _xmppStream.enableBackgroundingOnSocket = YES;
 #endif
 
-    _xmppReconnect = [[XMPPReconnect alloc] init];
     _xmppInBandRegistration = [[XMPPInBandRegistration alloc] init];
-
-    [_xmppReconnect activate:_xmppStream];
     [_xmppInBandRegistration activate:_xmppStream];
-    
-    [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
     [_xmppInBandRegistration addDelegate:self delegateQueue:dispatch_get_main_queue()];
     
     _xmppRoom = nil;
+    _isConnected = NO;
+    _isConnecting = NO;
     _username = nil;
     _password = nil;
     _roomName = nil;
     _conferenceDomain = nil;
+    _credentialRegistered = NO;
+    _reconnectInterval = kDefaultReconnectInterval;
     _buddies = [NSMutableArray array];
+    
+    __weak TBXMPPManager *weakSelf = self;
+    [[AFNetworkReachabilityManager sharedManager] setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
+      [weakSelf reachabilityDidChange:status];
+    }];
   }
   
   return self;
@@ -105,7 +120,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)dealloc {
   [_xmppStream removeDelegate:self];
-  [_xmppReconnect deactivate];
   [_xmppInBandRegistration deactivate];
   [_xmppStream disconnect];
 }
@@ -116,27 +130,34 @@
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (BOOL)connectWithUsername:(NSString *)username
-                   password:(NSString *)password
-                     domain:(NSString *)domain
-           conferenceDomain:(NSString *)conferenceDomain
-                   roomName:(NSString *)roomName
-                   nickname:(NSString *)nickname {
+- (BOOL)connectToRoomName:(NSString *)roomName withNickname:(NSString *)nickname {
   TBLOGMARK;
   if (!self.xmppStream.isDisconnected) return YES;
   
+  self.isConnected = NO;
+  self.isConnecting = YES;
+  
+  // -- get the connection info
+  TBServer *currentServer = [TBServer currentServer];
+  if (self.username==nil || self.password==nil) {
+    self.username = [NSString tb_randomStringWithLength:16];
+    self.password = [NSString tb_randomStringWithLength:16];
+  }
+  
   // something like lobby@conference.crypto.cat/thomas
   XMPPJID *myRoomJID = [XMPPJID jidWithUser:roomName
-                                     domain:conferenceDomain
+                                     domain:currentServer.conferenceServer
                                    resource:nickname];
   self.me = [[TBBuddy alloc] initWithXMPPJID:myRoomJID];
-  self.username = username;
-  self.password = password;
   self.roomName = roomName;
-  self.conferenceDomain = conferenceDomain;
-  self.xmppStream.myJID = [XMPPJID jidWithUser:username domain:domain resource:nil];
-  self.xmppStream.hostName = domain;
+  self.conferenceDomain = currentServer.conferenceServer;
+  self.xmppStream.myJID = [XMPPJID jidWithUser:self.username
+                                        domain:currentServer.domain
+                                      resource:nil];
+  self.xmppStream.hostName = currentServer.domain;
   
+  [[AFNetworkReachabilityManager sharedManager] startMonitoring];
+
 	NSError *error = nil;
 	if (![self.xmppStream connectWithTimeout:XMPPStreamTimeoutNone error:&error]) {
 		TBLOG(@"Error connecting: %@", error);
@@ -148,7 +169,17 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)disconnect {
+  [[AFNetworkReachabilityManager sharedManager] stopMonitoring];
+  [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                           selector:@selector(reconnect)
+                                             object:nil];
+
 	[self.xmppStream disconnect];
+  self.credentialRegistered = NO;
+  self.reconnectInterval = kDefaultReconnectInterval;
+  self.username = nil;
+  self.password = nil;
+  self.roomName = nil;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -198,6 +229,29 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)reachabilityDidChange:(AFNetworkReachabilityStatus)status {
+  NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
+  NSLog(@"-- stream connected : %d", self.xmppStream.isConnected);
+  
+  switch (status) {
+    case AFNetworkReachabilityStatusReachableViaWWAN:
+    case AFNetworkReachabilityStatusReachableViaWiFi:
+
+      break;
+    case AFNetworkReachabilityStatusNotReachable:
+    default:
+      self.isConnected = NO;
+      [self.xmppStream disconnect];
+      break;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)reconnect {
+  [self connectToRoomName:self.roomName withNickname:self.me.nickname];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark XMPPStreamDelegate
@@ -208,7 +262,6 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-// TODO: is this method used?
 - (void)xmppStream:(XMPPStream *)sender willSecureWithSettings:(NSMutableDictionary *)settings {
 	TBLOGMARK;
 }
@@ -221,7 +274,22 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStreamDidConnect:(XMPPStream *)sender {
 	TBLOGMARK;
-  [self requestRegistrationFields];
+  self.isConnecting = NO;
+  self.isConnected = YES;
+  
+  // make sure to cancel previous reconnect timer
+  self.reconnectInterval = kDefaultReconnectInterval;
+  [NSObject cancelPreviousPerformRequestsWithTarget:self
+                                           selector:@selector(reconnect)
+                                             object:nil];
+
+  // if we connect after a deconnection, we use the same credential
+  if (self.credentialRegistered) {
+    [self authenticate];
+  }
+  else {
+    [self requestRegistrationFields];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,6 +301,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStream:(XMPPStream *)sender didNotAuthenticate:(NSXMLElement *)error {
+  self.isConnecting = NO;
+  self.isConnected = NO;
+
 	TBLOG(@"%@", error);
   if ([self.delegate respondsToSelector:@selector(XMPPManagerDidFailToAuthenticate:)]) {
     [self.delegate XMPPManagerDidFailToAuthenticate:self];
@@ -315,10 +386,46 @@
  * - Error parsing xml sent from server.
  **/
 - (void)xmppStreamDidDisconnect:(XMPPStream *)sender withError:(NSError *)error {
-	TBLOG(@"-- stream did disconnect with error : %@", error);
+  // the xmppStream just disconnected, we will determine if we try to reconnect or if we
+  // consider ourself as disconnected too
   
-  if (error!=nil && [self.delegate respondsToSelector:@selector(XMPPManagerDidFailToConnect:)]) {
-    [self.delegate XMPPManagerDidFailToConnect:self];
+  // we will try to reconnect if we already registered our credential and
+  // the reconnection timout hasn't expired
+  BOOL shouldTryToReconnect = self.credentialRegistered &&
+                              self.reconnectInterval < kReconnectTimeout;
+  
+  // -- try to reconnect
+  if (shouldTryToReconnect) {
+    self.isConnected = NO;
+    self.isConnecting = YES;
+    TBLOG(@"-- will try to reconnect in %.1f sec", self.reconnectInterval);
+    [self performSelector:@selector(reconnect) withObject:nil afterDelay:self.reconnectInterval];
+    self.reconnectInterval*=1.5;
+    if ([self.delegate respondsToSelector:@selector(XMPPManagerDidStartReconnecting:)]) {
+      [self.delegate XMPPManagerDidStartReconnecting:self];
+    }
+  }
+  
+  // -- don't try to reconnect, notify delegate
+  else {
+    // - if we were already registered -> notify of a disconnection
+    if (self.credentialRegistered) {
+      self.isConnected = NO;
+      self.isConnecting = NO;
+      if ([self.delegate respondsToSelector:@selector(XMPPManagerDidDisconnect:)]) {
+        [self.delegate XMPPManagerDidDisconnect:self];
+      }
+    }
+    // - if we weren't connected -> notify of an authentication failure
+    else {
+      self.isConnected = NO;
+      self.isConnecting = NO;
+      if ([self.delegate respondsToSelector:@selector(XMPPManagerDidFailToConnect:)]) {
+        [self.delegate XMPPManagerDidFailToConnect:self];
+      }
+    }
+    
+    [self disconnect];
   }
 }
 
@@ -335,8 +442,9 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
-           didRegisterUsername:(NSString *)username {
-  TBLOG(@"-- username registered : %@", username);
+           didRegisterUsername:(NSString *)username
+                      password:(NSString *)password {
+  self.credentialRegistered = YES;
   [self authenticate];
 }
 
@@ -344,6 +452,9 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
      didFailToRegisterUsername:(NSString *)username
                  withErrorCode:(NSInteger)errorCode {
+  self.credentialRegistered = NO;
+  self.username = nil;
+  self.password = nil;
   TBLOG(@"-- username registration error %d for %@", errorCode, username);
 }
 
@@ -355,6 +466,11 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppRoomDidJoin:(XMPPRoom *)sender {
   TBLOGMARK;
+  TBLOG(@"-- stream is secure : %d", self.xmppStream.isSecure);
+  TBLOG(@"-- stream supportsStartTLS : %d", self.xmppStream.supportsStartTLS);
+  self.isConnecting = NO;
+  self.isConnected = YES;
+  
   if ([self.delegate respondsToSelector:@selector(XMPPManager:didJoinRoom:)]) {
     [self.delegate XMPPManager:self didJoinRoom:sender];
   }

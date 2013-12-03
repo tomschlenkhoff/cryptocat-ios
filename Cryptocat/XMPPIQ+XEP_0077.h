@@ -36,6 +36,7 @@
 - (NSArray *)registrationFields;
 - (BOOL)isRegistered;
 - (NSString *)username;
+- (NSString *)password;
 - (NSInteger)errorCode;
 - (NSString *)errorType;
 

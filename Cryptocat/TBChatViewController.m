@@ -105,6 +105,7 @@
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatStateNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignInNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignOutNotification object:nil];
+  [self removeObserver:self forKeyPath:@"isReconnecting"];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -182,6 +183,7 @@
                     selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignOutNotification
                       object:nil];
+  [self addObserver:self forKeyPath:@"isReconnecting" options:0 context:NULL];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -511,6 +513,16 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillBeHidden:(NSNotification *)notification {
   [self.view layoutIfNeeded];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context {
+  if ([keyPath isEqualToString:@"isReconnecting"]) {
+    [self setChatTextViewStateEnabled:!self.isReconnecting];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

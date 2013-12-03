@@ -36,14 +36,11 @@
 @property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, readonly) XMPPStream *xmppStream;
 @property (nonatomic, readonly) XMPPRoom *xmppRoom;
+@property (nonatomic, assign) BOOL isConnected;
+@property (nonatomic, assign) BOOL isConnecting;
 
 - (id)init;
-- (BOOL)connectWithUsername:(NSString *)username
-                   password:(NSString *)password
-                     domain:(NSString *)domain
-           conferenceDomain:(NSString *)conferenceDomain
-                   roomName:(NSString *)roomName
-                   nickname:(NSString *)nickname;
+- (BOOL)connectToRoomName:(NSString *)roomName withNickname:(NSString *)nickname;
 - (void)disconnect;
 
 @end
@@ -59,6 +56,8 @@
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager didReceiveMessage:(XMPPMessage *)message;
 - (void)XMPPManagerDidFailToAuthenticate:(TBXMPPManager *)XMPPManager;
 - (void)XMPPManagerDidFailToConnect:(TBXMPPManager *)XMPPManager;
+- (void)XMPPManagerDidDisconnect:(TBXMPPManager *)XMPPManager;
+- (void)XMPPManagerDidStartReconnecting:(TBXMPPManager *)XMPPManager;
 
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidSignIn:(TBBuddy *)buddy;
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager buddyDidGoAway:(TBBuddy *)buddy;

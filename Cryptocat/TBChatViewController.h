@@ -36,6 +36,7 @@
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSMutableArray *buddies;
 @property (nonatomic, strong) TBBuddy *me;
+@property (nonatomic, assign) BOOL isReconnecting;
 
 - (void)cleanupConversations;
 

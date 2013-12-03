@@ -56,7 +56,8 @@
   // -- answer to user registration request
   else if ([iq isInBandRegistrationAnswer]) {
     NSString *username = [iq username];
-    [multicastDelegate xmppInBandRegistration:self didRegisterUsername:username];
+    NSString *password = [iq password];
+    [multicastDelegate xmppInBandRegistration:self didRegisterUsername:username password:password];
   }
   
   // -- user registration error

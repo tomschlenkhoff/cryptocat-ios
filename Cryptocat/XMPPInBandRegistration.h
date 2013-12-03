@@ -41,7 +41,8 @@
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
 didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq;
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
-           didRegisterUsername:(NSString *)username;
+           didRegisterUsername:(NSString *)username
+                      password:(NSString *)password;
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
      didFailToRegisterUsername:(NSString *)username
                  withErrorCode:(NSInteger)errorCode;
