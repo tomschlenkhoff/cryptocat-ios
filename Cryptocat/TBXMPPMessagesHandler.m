@@ -386,14 +386,16 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   TBLOG(@"-- decoded message : |%@|", decodedMessage);
   
-  TBMessage *receivedMsg = [[TBMessage alloc] init];
-  receivedMsg.sender = sender;
-  receivedMsg.text = decodedMessage;
-
-  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
-  [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
-                               object:receivedMsg
-                             userInfo:nil];
+  if (![decodedMessage isEqualToString:@""]) {
+    TBMessage *receivedMsg = [[TBMessage alloc] init];
+    receivedMsg.sender = sender;
+    receivedMsg.text = decodedMessage;
+    
+    NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+    [defaultCenter postNotificationName:TBDidReceivePrivateChatMessageNotification
+                                 object:receivedMsg
+                               userInfo:nil];
+  }  
 }
 
 @end

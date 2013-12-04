@@ -101,8 +101,6 @@
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter removeObserver:self name:TBDidReceiveGroupChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
-  [defaultCenter removeObserver:self name:TBDidReceiveGroupChatStateNotification object:nil];
-  [defaultCenter removeObserver:self name:TBDidReceivePrivateChatStateNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignInNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignOutNotification object:nil];
   [self removeObserver:self forKeyPath:@"isReconnecting"];
@@ -168,14 +166,6 @@
                         name:TBDidReceivePrivateChatMessageNotification
                       object:nil];
   [defaultCenter addObserver:self
-                    selector:@selector(didReceiveGroupStateNotification:)
-                        name:TBDidReceiveGroupChatStateNotification
-                      object:nil];
-  [defaultCenter addObserver:self
-                    selector:@selector(didReceivePrivateStateNotification:)
-                        name:TBDidReceivePrivateChatStateNotification
-                      object:nil];
-  [defaultCenter addObserver:self
                     selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignInNotification
                       object:nil];
@@ -199,6 +189,16 @@
   }
   
   [self startObservingKeyboard];
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceiveGroupStateNotification:)
+                        name:TBDidReceiveGroupChatStateNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(didReceivePrivateStateNotification:)
+                        name:TBDidReceivePrivateChatStateNotification
+                      object:nil];
+
   [self setChatTextViewStateEnabled:YES];
   TBLOGMARK;
 }
@@ -208,6 +208,9 @@
   [super viewWillDisappear:animated];
   
   [self stopObservingKeyboard];
+  NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
+  [defaultCenter removeObserver:self name:TBDidReceiveGroupChatStateNotification object:nil];
+  [defaultCenter removeObserver:self name:TBDidReceivePrivateChatStateNotification object:nil];
   TBLOGMARK;
 }
 
