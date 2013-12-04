@@ -42,10 +42,12 @@
 @property (weak, nonatomic) IBOutlet UIView *bottomToolbarView;
 @property (weak, nonatomic) IBOutlet UIImageView *logoView;
 @property (weak, nonatomic) IBOutlet UIButton *serverButton;
+@property (weak, nonatomic) IBOutlet UIButton *languageButton;
 
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
 - (BOOL)shouldConnectButtonBeEnabled;
+- (IBAction)showLanguages:(id)sender;
 
 @end
 
@@ -146,6 +148,8 @@
   // -- buttons
   [self.serverButton setTitle:NSLocalizedString(@"Server", @"Server Button Title")
                      forState:UIControlStateNormal];
+  [self.languageButton setTitle:@"Languages"
+                     forState:UIControlStateNormal];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,6 +236,20 @@
 - (BOOL)shouldConnectButtonBeEnabled {
   return ![self.conversationNameField.text isEqualToString:@""] &&
          ![self.nicknameField.text isEqualToString:@""];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (IBAction)showLanguages:(id)sender {
+  NSString *title = @"Languages";
+  NSString *cancelTitle = @"Ok";
+  NSString *message = @"For now, the app language changes with your system-wide settings. (English and French are already available.)";
+  UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
+                                               message:message
+                                              delegate:self
+                                     cancelButtonTitle:cancelTitle
+                                     otherButtonTitles:nil];
+  
+  [av show];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

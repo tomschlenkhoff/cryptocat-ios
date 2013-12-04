@@ -83,117 +83,6 @@
             </objects>
             <point key="canvasLocation" x="449" y="64"/>
         </scene>
-        <!--Login View Controller-->
-        <scene sceneID="TK7-DK-iVl">
-            <objects>
-                <tableViewController id="X1i-Rf-Km2" customClass="TBLoginViewController" sceneMemberID="viewController">
-                    <tableView key="view" opaque="NO" clipsSubviews="YES" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" alwaysBounceVertical="YES" scrollEnabled="NO" dataMode="static" style="grouped" separatorStyle="default" rowHeight="44" sectionHeaderHeight="10" sectionFooterHeight="10" id="UrY-Pg-Tfi">
-                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
-                        <view key="tableHeaderView" contentMode="scaleToFill" id="d59-bH-gfs">
-                            <rect key="frame" x="0.0" y="0.0" width="320" height="252"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="y7i-3f-QjZ">
-                                    <rect key="frame" x="79" y="18" width="163" height="163"/>
-                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                    <constraints>
-                                        <constraint firstAttribute="height" constant="163" id="RoC-HV-aHz"/>
-                                        <constraint firstAttribute="width" constant="163" id="mzM-gD-Eya"/>
-                                    </constraints>
-                                </imageView>
-                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="280" translatesAutoresizingMaskIntoConstraints="NO" id="H1S-Jz-WgW">
-                                    <rect key="frame" x="20" y="200" width="280" height="59"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <string key="text">Enter a name for your conversation.
-Share it with people you'd like to talk to.</string>
-                                    <fontDescription key="fontDescription" type="system" pointSize="12"/>
-                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                    <nil key="highlightedColor"/>
-                                </label>
-                            </subviews>
-                            <constraints>
-                                <constraint firstItem="H1S-Jz-WgW" firstAttribute="leading" secondItem="d59-bH-gfs" secondAttribute="leading" constant="20" id="6zO-LE-09d"/>
-                                <constraint firstItem="y7i-3f-QjZ" firstAttribute="top" secondItem="d59-bH-gfs" secondAttribute="top" constant="18" id="Mmn-dz-yCH"/>
-                                <constraint firstAttribute="trailing" secondItem="H1S-Jz-WgW" secondAttribute="trailing" constant="20" id="TE4-2e-VbA"/>
-                                <constraint firstItem="H1S-Jz-WgW" firstAttribute="top" secondItem="y7i-3f-QjZ" secondAttribute="bottom" constant="19" id="cjc-95-SvV"/>
-                                <constraint firstAttribute="centerX" secondItem="y7i-3f-QjZ" secondAttribute="centerX" constant="-0.5" id="g5L-p7-B0P"/>
-                                <constraint firstAttribute="centerY" secondItem="H1S-Jz-WgW" secondAttribute="centerY" constant="-103.5" id="mr8-4X-KJc"/>
-                            </constraints>
-                        </view>
-                        <view key="tableFooterView" contentMode="scaleToFill" id="fRD-MQ-w0Q">
-                            <rect key="frame" x="0.0" y="414" width="320" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <subviews>
-                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8Dp-tB-e5K">
-                                    <rect key="frame" x="20" y="7" width="45" height="30"/>
-                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                    <state key="normal" title="Server">
-                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                    </state>
-                                </button>
-                            </subviews>
-                            <color key="backgroundColor" red="0.082352943720000002" green="0.074509806930000005" blue="0.14509804549999999" alpha="1" colorSpace="deviceRGB"/>
-                        </view>
-                        <sections>
-                            <tableViewSection id="B9Q-yg-JBO">
-                                <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="Mdc-oc-XOc">
-                                        <rect key="frame" x="0.0" y="252" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Mdc-oc-XOc" id="ykn-fw-fOx">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4sp-wg-dyh">
-                                                    <rect key="frame" x="15" y="7" width="290" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="next"/>
-                                                </textField>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="87U-qT-Yzn">
-                                        <rect key="frame" x="0.0" y="296" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="87U-qT-Yzn" id="9ef-Cc-l0m">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                            <subviews>
-                                                <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="RFZ-Da-OA5">
-                                                    <rect key="frame" x="15" y="7" width="290" height="30"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="18"/>
-                                                    <textInputTraits key="textInputTraits" autocorrectionType="no"/>
-                                                </textField>
-                                            </subviews>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                            <tableViewSection id="URO-UF-ffF">
-                                <cells>
-                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" id="def-sm-u1P" customClass="TBButtonCell">
-                                        <rect key="frame" x="0.0" y="360" width="320" height="44"/>
-                                        <autoresizingMask key="autoresizingMask"/>
-                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="def-sm-u1P" id="Gce-dm-jaV">
-                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </tableViewCellContentView>
-                                    </tableViewCell>
-                                </cells>
-                            </tableViewSection>
-                        </sections>
-                    </tableView>
-                    <navigationItem key="navigationItem" id="Zjs-ds-vF5"/>
-                    <nil key="simulatedTopBarMetrics"/>
-                </tableViewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="n1F-n1-FE1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1517" y="1230"/>
-        </scene>
         <!--Servers View Controller-->
         <scene sceneID="ECp-4D-sar">
             <objects>
@@ -368,18 +257,21 @@ Share it with people you'd like to talk to.</string>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77p-KE-PZG">
-                                        <rect key="frame" x="264" y="-3" width="51" height="28"/>
+                                        <rect key="frame" x="274" y="-3" width="41" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <state key="normal" title="Button">
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <connections>
+                                            <action selector="showLanguages:" destination="fTe-6C-7DA" eventType="touchUpInside" id="ax0-ZM-leq"/>
+                                        </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.082352943720000002" green="0.074509806930000005" blue="0.14509804549999999" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="ECd-RS-wWj"/>
-                                    <constraint firstItem="77p-KE-PZG" firstAttribute="leading" secondItem="exg-LH-IFI" secondAttribute="trailing" constant="218" id="Nm7-4c-Xir"/>
+                                    <constraint firstItem="77p-KE-PZG" firstAttribute="leading" secondItem="exg-LH-IFI" secondAttribute="trailing" priority="190" constant="218" id="Nm7-4c-Xir"/>
                                     <constraint firstAttribute="centerY" secondItem="77p-KE-PZG" secondAttribute="centerY" id="bgi-4R-YgL"/>
                                     <constraint firstAttribute="centerY" secondItem="exg-LH-IFI" secondAttribute="centerY" id="blb-xj-XS8"/>
                                     <constraint firstItem="exg-LH-IFI" firstAttribute="leading" secondItem="E1M-wR-ZA7" secondAttribute="leading" constant="5" id="iYD-Ps-RZI"/>
@@ -407,6 +299,7 @@ Share it with people you'd like to talk to.</string>
                     <nil key="simulatedTopBarMetrics"/>
                     <connections>
                         <outlet property="bottomToolbarView" destination="E1M-wR-ZA7" id="fec-R1-IpE"/>
+                        <outlet property="languageButton" destination="77p-KE-PZG" id="egK-nT-lfi"/>
                         <outlet property="legendLabel" destination="ZFy-cA-V5S" id="4Sr-ba-oeh"/>
                         <outlet property="logoView" destination="R7U-8T-6Tl" id="uD0-t4-2nd"/>
                         <outlet property="serverButton" destination="exg-LH-IFI" id="fdK-0Z-GU9"/>
