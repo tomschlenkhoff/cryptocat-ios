@@ -231,7 +231,8 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)presentLoginVCAnimated:(BOOL)animated {
-  if (!self.XMPPManager.isConnected && !self.XMPPManager.isConnecting) {
+  if (![self isLoginScreenPresented] &&
+      !self.XMPPManager.isConnected && !self.XMPPManager.isConnecting) {
     // show loginVC
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TBLoginNavigationController *loginNC = [storyboard
@@ -413,6 +414,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
   if ([self isLoginScreenPresented]) {
     NSString *message = NSLocalizedString(@"Nickname in use.", @"Nickname in use. Error Message");
     [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
+    [self logout];
   }
 }
 
