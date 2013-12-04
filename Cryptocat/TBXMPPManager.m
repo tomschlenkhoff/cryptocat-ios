@@ -87,6 +87,7 @@
   if (self=[super init]) {
     _me = nil;
     _xmppStream = [[XMPPStream alloc] init];
+    _xmppStream.autoStartTLS = YES;
     [_xmppStream addDelegate:self delegateQueue:dispatch_get_main_queue()];
 
 #if !TARGET_IPHONE_SIMULATOR
