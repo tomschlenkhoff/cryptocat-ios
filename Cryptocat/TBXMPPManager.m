@@ -37,7 +37,7 @@
 #import "TBServer.h"
 
 #define kDefaultReconnectInterval 2.0
-#define kReconnectTimeout         10.0
+#define kReconnectTimeout         25.0
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -230,19 +230,12 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)reachabilityDidChange:(AFNetworkReachabilityStatus)status {
-  NSLog(@"Reachability: %@", AFStringFromNetworkReachabilityStatus(status));
-  NSLog(@"-- stream connected : %d", self.xmppStream.isConnected);
-  
-  switch (status) {
-    case AFNetworkReachabilityStatusReachableViaWWAN:
-    case AFNetworkReachabilityStatusReachableViaWiFi:
-
-      break;
-    case AFNetworkReachabilityStatusNotReachable:
-    default:
-      self.isConnected = NO;
-      [self.xmppStream disconnect];
-      break;
+  // when switching from Wi-Fi to 3G, the connections seems to be lost without the XMPP framework
+  // noticing quickly. so each time the connectivity changes, I force the reconnect
+  if (self.isConnected) {
+    self.isConnected = NO;
+    self.isConnecting = NO;
+    [self.xmppStream disconnect];
   }
 }
 
