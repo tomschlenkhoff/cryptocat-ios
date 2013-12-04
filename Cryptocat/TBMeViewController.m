@@ -197,4 +197,16 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
   }
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+  if (section==0) {
+    return NSLocalizedString(@"Group Fingerprint", @"Group Fingerprint Section Title");
+  }
+  else if (section==1) {
+    return NSLocalizedString(@"Private Fingerprint", @"Private Fingerprint Section Title");
+  }
+  
+  return nil;
+}
+
 @end

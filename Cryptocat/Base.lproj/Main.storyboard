@@ -356,8 +356,8 @@ Share it with people you'd like to talk to.</string>
                                 <rect key="frame" x="0.0" y="546" width="320" height="22"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exg-LH-IFI">
-                                        <rect key="frame" x="5" y="-4" width="46" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="exg-LH-IFI">
+                                        <rect key="frame" x="5" y="-3" width="41" height="28"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="13"/>
                                         <state key="normal" title="Button">
@@ -367,10 +367,23 @@ Share it with people you'd like to talk to.</string>
                                             <segue destination="Kd9-p3-PS4" kind="push" identifier="ServersSegueID" id="cpQ-J2-NYD"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="77p-KE-PZG">
+                                        <rect key="frame" x="264" y="-3" width="51" height="28"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                        <state key="normal" title="Button">
+                                            <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="0.082352943720000002" green="0.074509806930000005" blue="0.14509804549999999" alpha="1" colorSpace="deviceRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="22" id="ECd-RS-wWj"/>
+                                    <constraint firstItem="77p-KE-PZG" firstAttribute="leading" secondItem="exg-LH-IFI" secondAttribute="trailing" constant="218" id="Nm7-4c-Xir"/>
+                                    <constraint firstAttribute="centerY" secondItem="77p-KE-PZG" secondAttribute="centerY" id="bgi-4R-YgL"/>
+                                    <constraint firstAttribute="centerY" secondItem="exg-LH-IFI" secondAttribute="centerY" id="blb-xj-XS8"/>
+                                    <constraint firstItem="exg-LH-IFI" firstAttribute="leading" secondItem="E1M-wR-ZA7" secondAttribute="leading" constant="5" id="iYD-Ps-RZI"/>
+                                    <constraint firstAttribute="trailing" secondItem="77p-KE-PZG" secondAttribute="trailing" constant="5" id="u8q-UO-mWQ"/>
                                 </constraints>
                             </view>
                         </subviews>
