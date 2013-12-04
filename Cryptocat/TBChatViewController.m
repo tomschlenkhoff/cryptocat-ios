@@ -36,6 +36,7 @@
 #import "TBComposingCell.h"
 #import "TBPresenceCell.h"
 #import "DAKeyboardControl.h"
+#include <AudioToolbox/AudioToolbox.h>
 
 #define kPausedMessageTimer   5.0
 #define kTableViewPaddingTop  17.0
@@ -67,6 +68,13 @@
 @property (nonatomic, strong) NSString *defaultNavLeftItemTitle;
 @property (nonatomic, readonly) NSMutableArray *messages;
 
+@property (nonatomic, assign) CFURLRef userJoinFileURLRef;
+@property (nonatomic, assign) SystemSoundID userJoinFileObject;
+@property (nonatomic, assign) CFURLRef userLeaveFileURLRef;
+@property (nonatomic, assign) SystemSoundID userLeaveFileObject;
+@property (nonatomic, assign) CFURLRef msgGetFileURLRef;
+@property (nonatomic, assign) SystemSoundID msgGetFileObject;
+
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
 - (IBAction)sendMessage:(id)sender;
@@ -83,6 +91,8 @@
                              forKey:(NSString *)key;
 - (void)removeAllChatStateNotificationsForBuddy:(TBBuddy *)buddy forKey:(NSString *)key;
 - (void)setChatTextViewStateEnabled:(BOOL)enabled;
+- (void)loadSounds;
+- (void)playSound:(SystemSoundID)soundFileObject;
 
 @end
 
@@ -127,6 +137,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)viewDidLoad {
   [super viewDidLoad];
+  
+  [self loadSounds];
   
   // swipe to dismiss the keyboard
   [UIView setUseAutolayoutAnimationLogic:YES];
@@ -421,6 +433,8 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
     self.nbUnreadMessagesInRoom+=1;
     [self updateUnreadMessagesCounter];
   }
+  
+  [self playSound:self.msgGetFileObject];
   TBLOG(@"-- received message in %@ from %@: %@", roomName, message.sender.fullname, message.text);
 }
 
@@ -446,6 +460,7 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
     [self updateUnreadMessagesCounter];
   }
   
+  [self playSound:self.msgGetFileObject];
   TBLOG(@"-- received private message from %@: %@", message.sender.fullname, message.text);
 }
 
@@ -496,6 +511,10 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   // remove remaining typing notif since the user logged out
   if (!isOnline) {
     [self removeAllChatStateNotificationsForBuddy:buddy forKey:roomName];
+    [self playSound:self.userLeaveFileObject];
+  }
+  else {
+    [self playSound:self.userJoinFileObject];
   }
   
   [self addMessage:pn forKey:roomName];
@@ -702,6 +721,28 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   else {
     self.toolbarView.sendButton.enabled = NO;
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)loadSounds {
+  NSURL *userJoinSound = [[NSBundle mainBundle] URLForResource:@"userJoin" withExtension:@"caf"];
+  NSURL *userLeaveSound = [[NSBundle mainBundle] URLForResource:@"userLeave" withExtension:@"caf"];
+  NSURL *msgGetSound = [[NSBundle mainBundle] URLForResource:@"msgGet" withExtension:@"caf"];
+  
+  // Store the URL as a CFURLRef instance
+  self.userJoinFileURLRef = (__bridge CFURLRef)userJoinSound;
+  self.userLeaveFileURLRef = (__bridge CFURLRef)userLeaveSound;
+  self.msgGetFileURLRef = (__bridge CFURLRef)msgGetSound;
+  
+  // Create a system sound object representing the sound file.
+  AudioServicesCreateSystemSoundID(self.userJoinFileURLRef, &_userJoinFileObject);
+  AudioServicesCreateSystemSoundID(self.userLeaveFileURLRef, &_userLeaveFileObject);
+  AudioServicesCreateSystemSoundID(self.msgGetFileURLRef, &_msgGetFileObject);
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)playSound:(SystemSoundID)soundFileObject {
+  AudioServicesPlaySystemSound(soundFileObject);
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
