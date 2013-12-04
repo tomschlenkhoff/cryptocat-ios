@@ -26,6 +26,7 @@
 		332EBDAD184F71510074E004 /* msgGet.caf in Resources */ = {isa = PBXBuildFile; fileRef = 332EBDAA184F71510074E004 /* msgGet.caf */; };
 		332EBDAE184F71510074E004 /* userJoin.caf in Resources */ = {isa = PBXBuildFile; fileRef = 332EBDAB184F71510074E004 /* userJoin.caf */; };
 		332EBDAF184F71510074E004 /* userLeave.caf in Resources */ = {isa = PBXBuildFile; fileRef = 332EBDAC184F71510074E004 /* userLeave.caf */; };
+		332EBDB4184F7D1D0074E004 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 332EBDB6184F7D1D0074E004 /* Localizable.strings */; };
 		3346522A1828EC8B00280518 /* UIColor+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 334652291828EC8B00280518 /* UIColor+Cryptocat.m */; };
 		3346522D1829044600280518 /* TBButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 3346522C1829044600280518 /* TBButtonCell.m */; };
 		3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3379BA23181EBAE0002A316F /* TBBuddyViewController.m */; };
@@ -126,6 +127,8 @@
 		332EBDAA184F71510074E004 /* msgGet.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = msgGet.caf; path = ../msgGet.caf; sourceTree = "<group>"; };
 		332EBDAB184F71510074E004 /* userJoin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = userJoin.caf; path = ../userJoin.caf; sourceTree = "<group>"; };
 		332EBDAC184F71510074E004 /* userLeave.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = userLeave.caf; path = ../userLeave.caf; sourceTree = "<group>"; };
+		332EBDB7184F7D330074E004 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		332EBDB8184F7D4D0074E004 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		334652281828EC8B00280518 /* UIColor+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Cryptocat.h"; sourceTree = "<group>"; };
 		334652291828EC8B00280518 /* UIColor+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Cryptocat.m"; sourceTree = "<group>"; };
 		3346522B1829044600280518 /* TBButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBButtonCell.h; sourceTree = "<group>"; };
@@ -311,6 +314,7 @@
 		332EBDB0184F71790074E004 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				332EBDB6184F7D1D0074E004 /* Localizable.strings */,
 				332EBDB1184F71840074E004 /* Sound */,
 				339DD1BD17F0399400C3E8E6 /* Main.storyboard */,
 				33B936E018327EF4003497AC /* Monda-Regular.ttf */,
@@ -672,6 +676,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				332EBDB4184F7D1D0074E004 /* Localizable.strings in Resources */,
 				339DD1C717F0399400C3E8E6 /* Images.xcassets in Resources */,
 				332EBDAF184F71510074E004 /* userLeave.caf in Resources */,
 				332EBDAE184F71510074E004 /* userJoin.caf in Resources */,
@@ -817,6 +822,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		332EBDB6184F7D1D0074E004 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				332EBDB7184F7D330074E004 /* en */,
+				332EBDB8184F7D4D0074E004 /* fr */,
+			);
+			name = Localizable.strings;
+			sourceTree = SOURCE_ROOT;
+		};
 		339DD1B417F0399400C3E8E6 /* InfoPlist.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
