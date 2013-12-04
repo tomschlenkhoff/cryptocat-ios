@@ -181,6 +181,8 @@
   self.username = nil;
   self.password = nil;
   self.roomName = nil;
+  self.isConnected = NO;
+  self.isConnecting = NO;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -411,7 +413,7 @@
       }
     }
     // - if we weren't connected -> notify of an authentication failure
-    else {
+    else if (error!=nil) {
       self.isConnected = NO;
       self.isConnecting = NO;
       if ([self.delegate respondsToSelector:@selector(XMPPManagerDidFailToConnect:)]) {
