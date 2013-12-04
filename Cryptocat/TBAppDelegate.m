@@ -321,7 +321,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                                      @"Chat session expiration message");
   
   messageNotification.alertBody = body;
-  messageNotification.alertAction = @"Ok";
+  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
 }
@@ -641,7 +641,7 @@ didAskToConnectWithRoomName:(NSString *)roomName
                                      @"Sender sent you a message in roomName notification text");
   NSString *alertBody = [NSString stringWithFormat:body, nickname, roomName];
   messageNotification.alertBody = alertBody;
-  messageNotification.alertAction = @"Ok";
+  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
   [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
@@ -660,7 +660,7 @@ didAskToConnectWithRoomName:(NSString *)roomName
 
   NSString *alertBody = [NSString stringWithFormat:body, sender.nickname];
   messageNotification.alertBody = alertBody;
-  messageNotification.alertAction = @"Ok";
+  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
   [UIApplication sharedApplication].applicationIconBadgeNumber+=1;

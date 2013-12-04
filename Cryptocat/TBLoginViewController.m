@@ -156,7 +156,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)showError:(NSError *)error {
   NSString *title = NSLocalizedString(@"Error", @"Connection Error Alert Title");
-  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Error Alert View Ok Button Title");
+  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Alert View Ok Button");
   UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
                                                message:[error tb_message]
                                               delegate:self

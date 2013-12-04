@@ -303,7 +303,7 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)showErrorMessage:(NSString *)errorMessage {
   NSString *title = NSLocalizedString(@"Error", @"Server Creation/Modification Error Alert Title");
-  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Error Alert View Ok Button Title");
+  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Alert View Ok Button");
   UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
                                                message:errorMessage
                                               delegate:self
