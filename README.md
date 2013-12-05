@@ -1,5 +1,9 @@
 More info here soon!
 
+Cryptocat for iOS uses :
+- [TBMultipartyProtocolManager](https://github.com/tbalthazar/TBMultipartyProtocolManager) for mpOTR
+- [TBOTRManager](https://github.com/tbalthazar/TBOTRManager) for OTR
+
 # License
 
 Copyright 2013 Thomas Balthazar  
