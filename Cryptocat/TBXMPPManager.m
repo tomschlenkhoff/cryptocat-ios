@@ -448,6 +448,7 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
 - (void)xmppInBandRegistration:(XMPPInBandRegistration *)sender
      didFailToRegisterUsername:(NSString *)username
                  withErrorCode:(NSInteger)errorCode {
+  [self.xmppStream disconnect];
   self.credentialRegistered = NO;
   self.username = nil;
   self.password = nil;
