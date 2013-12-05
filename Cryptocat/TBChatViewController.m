@@ -285,7 +285,7 @@
     cell.senderName = msg.sender.nickname;
     cell.meSpeaking = [msg.sender isEqual:self.me];
     cell.isErrorMessage = msg.isErrorMessage;
-    cell.message = msg.text;
+    cell.attributedText = msg.attributedText;
     if (msg.isWarningMessage) {
       cell.warningMessage = msg.warningText;
     }
@@ -308,6 +308,7 @@
 
     TBChateStateNotification *csn = message;
     cell.senderName = csn.sender.nickname;
+    cell.attributedText = csn.attributedText;
     cell.backgroundColor = self.tableView.backgroundColor;
     return cell;
   }
@@ -347,10 +348,9 @@
   // -- message
   if ([message isKindOfClass:[TBMessage class]]) {
     TBMessage *msg = (TBMessage *)message;
-    return [TBBubbleCell heightForSenderName:msg.sender.nickname
-                                     message:msg.text
-                              warningMessage:msg.warningText
-                                    maxWidth:maxWidth];
+    return [TBBubbleCell heightForAttributedText:msg.attributedText
+                                  warningMessage:msg.warningText
+                                        maxWidth:maxWidth];
   }
   
   // -- chat state

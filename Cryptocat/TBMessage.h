@@ -31,6 +31,7 @@
 @interface TBMessage : NSObject
 
 @property (nonatomic, strong) NSString *text;
+@property (nonatomic, readonly) NSAttributedString *attributedText;
 @property (nonatomic, strong) NSString *warningText;
 @property (nonatomic, strong) TBBuddy *sender;
 @property (nonatomic, readonly) BOOL isWarningMessage;

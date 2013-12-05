@@ -30,6 +30,7 @@
 @interface TBChateStateNotification : NSObject
 
 @property (nonatomic, strong) TBBuddy *sender;
+@property (nonatomic, readonly) NSAttributedString *attributedText;
 @property (nonatomic, readonly) BOOL isComposingNotification;
 @property (nonatomic, readonly) BOOL isPausedNotification;
 @property (nonatomic, readonly) BOOL isActiveNotification;

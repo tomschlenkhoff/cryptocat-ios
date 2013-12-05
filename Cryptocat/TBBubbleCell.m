@@ -119,13 +119,13 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setMessage:(NSString *)message {
-  self.messageView.message = message;
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+  self.messageView.attributedText = attributedText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (NSString *)message {
-  return self.messageView.message;
+- (NSAttributedString *)attributedText {
+  return self.messageView.attributedText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -169,14 +169,13 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForSenderName:(NSString *)senderName
-                       message:(NSString *)message
-                warningMessage:(NSString *)warningMessage
-                      maxWidth:(CGFloat)maxWidth {
++ (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText
+                    warningMessage:(NSString *)warningMessage
+                          maxWidth:(CGFloat)maxWidth {
   maxWidth-=(kPaddingLeft+kPaddingRight);
-  CGFloat messageViewHeight = [TBMessageView heightForSenderName:senderName
-                                                         message:message
-                                                        maxWidth:maxWidth];
+  CGFloat messageViewHeight = [TBMessageView heightForAttributedText:attributedText
+                                                            maxWidth:maxWidth];
+
   if (warningMessage!=nil) {
     messageViewHeight+=[TBWarningView sizeForText:warningMessage].height;
   }

@@ -22,6 +22,7 @@
 //
 
 #import "TBChateStateNotification.h"
+#import "TBMessageView.h"
 
 #define kComposing  @"composing"
 #define kPaused     @"paused"
@@ -33,6 +34,8 @@
 @interface TBChateStateNotification ()
 
 @property (nonatomic, strong) NSString *notificationType;
+@property (nonatomic, strong, readwrite) NSAttributedString *attributedText;
+
 
 + (TBChateStateNotification *)notificationWithType:(NSString *)notificationType;
 
@@ -47,10 +50,20 @@
 - (id)init {
   if (self=[super init]) {
     _notificationType = nil;
+    _attributedText = nil;
     _sender = nil;
   }
   
   return self;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setSender:(TBBuddy *)sender {
+  _sender = sender;
+  
+  // I compute an attributedString cause this property is needed for composing cells to compute
+  // the cell metrics
+  self.attributedText = [TBMessageView attributedStringForSenderName:sender.nickname message:@" "];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

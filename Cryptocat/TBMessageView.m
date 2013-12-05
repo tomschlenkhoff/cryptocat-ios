@@ -37,7 +37,6 @@
 @property (nonatomic, strong) UITextView *textView;
 @property (nonatomic, strong) UIView *senderNameBgView;
 
-- (void)updateTextView;
 + (NSDictionary *)textAttributes;
 + (UIFont *)font;
 + (NSString *)paddedSenderName:(NSString *)senderName;
@@ -103,35 +102,39 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * This property is only used to determine the metrics of the senderName background frame.
+ * This property is not used to actually display the senderName. It will be displayed as
+ * part of the attributedText.
+ */
 - (void)setSenderName:(NSString *)senderName {
   _senderName = senderName;
   self.paddedSenderNameSize = [[[self class] paddedSenderName:senderName]
                                sizeWithAttributes:[[self class] textAttributes]];
   
-  [self updateTextView];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)setMessage:(NSString *)message {
-  _message = message;
-  [self updateTextView];
+- (void)setAttributedText:(NSAttributedString *)attributedText {
+  self.textView.attributedText = attributedText;
+  
+  [self setNeedsLayout];  // layout the textView
+  [self setNeedsDisplay]; // display the drawn bubble
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-+ (CGFloat)heightForSenderName:(NSString *)senderName
-                       message:(NSString *)message
-                      maxWidth:(CGFloat)maxWidth {
+- (NSAttributedString *)attributedText {
+  return self.textView.attributedText;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText maxWidth:(CGFloat)maxWidth {
   maxWidth-=(kTextViewInsetLeft+kTextViewInsetRight);
-  
 	CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
-  
-  NSString *text = [[self paddedSenderName:senderName] stringByAppendingString:message];
-  
-  CGRect boundingRect = [text boundingRectWithSize:maxSize
-                                           options:
-                         (NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
-                                        attributes:[self textAttributes]
-                                           context:nil];
+
+  CGRect boundingRect = [attributedText boundingRectWithSize:maxSize
+                     options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
+                                                     context:nil];
   CGFloat textHeight = ceilf(boundingRect.size.height);
   
   // add the inset
@@ -141,25 +144,44 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ * This method concat the senderName and the message, apply the styling attributes, and replace
+ * the smileys with images. The resulting attributedString is what's going to be displayed and used
+ * for chat cell metrics.
+ */
++ (NSAttributedString *)attributedStringForSenderName:(NSString *)senderName
+                                              message:(NSString *)message {
+  // concat the senderName + padding + message
+  NSString *text = [[[self class] paddedSenderName:senderName]
+                    stringByAppendingString:message];
+  
+  // create an attrString and add senderName specific attributes
+  NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text
+                                                         attributes:[[self class] textAttributes]];
+  NSDictionary *senderAttr = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
+  [attrText addAttributes:senderAttr range:NSMakeRange(0, senderName.length)];
+  
+  // detect smileys
+  NSRange range = [text rangeOfString:@" :) "];
+  if (range.location!=NSNotFound) {
+    range.location+=1;
+    range.length-=2;
+    UIImage *image = [UIImage imageNamed:@"cat"];
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    attachment.image = image;
+    attachment.bounds = CGRectMake(0.0, -2.0, 13.0, 13.0);
+    NSAttributedString *attrStrImg = [NSAttributedString
+                                      attributedStringWithAttachment:attachment];
+    [attrText replaceCharactersInRange:range withAttributedString:attrStrImg];
+  }
+
+  return attrText;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark -
 #pragma mark Private Methods
-
-////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)updateTextView {
-  if (self.senderName!=nil && self.message!=nil) {
-    NSString *text = [[[self class] paddedSenderName:self.senderName]
-                      stringByAppendingString:self.message];
-    NSMutableAttributedString *attrText = [[NSMutableAttributedString alloc] initWithString:text
-                                                          attributes:[[self class] textAttributes]];
-    NSDictionary *senderAttr = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
-    [attrText addAttributes:senderAttr range:NSMakeRange(0, self.senderName.length)];
-    self.textView.attributedText = attrText;
-    
-    [self setNeedsLayout];  // layout the textView
-    [self setNeedsDisplay]; // display the drawn bubble
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSDictionary *)textAttributes {

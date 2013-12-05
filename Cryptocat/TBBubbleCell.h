@@ -32,16 +32,15 @@
 
 @property (nonatomic, weak) id <TBBubbleCellDelegate> delegate;
 @property (nonatomic, strong) NSString *senderName;
-@property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSAttributedString *attributedText;
 @property (nonatomic, strong) NSString *warningMessage;
 @property (nonatomic, assign, getter=isMeSpeaking) BOOL meSpeaking;
 @property (nonatomic, assign) BOOL isErrorMessage;
 @property (nonatomic, readonly) CGSize paddedSenderNameSize;
 
-+ (CGFloat)heightForSenderName:(NSString *)senderName
-                       message:(NSString *)message
-                warningMessage:(NSString *)warningMessage
-                      maxWidth:(CGFloat)maxWidth;
++ (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText
+                    warningMessage:(NSString *)warningMessage
+                          maxWidth:(CGFloat)maxWidth;
 @end
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

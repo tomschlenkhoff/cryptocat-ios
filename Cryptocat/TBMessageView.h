@@ -32,12 +32,12 @@
 
 @property (nonatomic, weak) id <TBMessageViewDelegate> delegate;
 @property (nonatomic, strong) NSString *senderName;
-@property (nonatomic, strong) NSString *message;
+@property (nonatomic, strong) NSAttributedString *attributedText;
 @property (nonatomic, assign) CGSize paddedSenderNameSize;
 
-+ (CGFloat)heightForSenderName:(NSString *)senderName
-                       message:(NSString *)message
-                      maxWidth:(CGFloat)maxWidth;
++ (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText maxWidth:(CGFloat)maxWidth;
++ (NSAttributedString *)attributedStringForSenderName:(NSString *)senderName
+                                              message:(NSString *)message;
 
 @end
 

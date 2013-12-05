@@ -22,6 +22,7 @@
 //
 
 #import "TBComposingCell.h"
+#import "TBMessageView.h"
 
 #define kSenderLabelPaddingRight  20.0
 
@@ -44,7 +45,7 @@
   if (self=[super initWithStyle:style reuseIdentifier:reuseIdentifier]) {
     self.meSpeaking = NO;
     self.isErrorMessage = NO;
-    self.message = @" ";
+    self.attributedText = [[NSAttributedString alloc] initWithString:@" "];
     
     _composingView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"typing-1"]];
     _composingView.animationImages = @[[UIImage imageNamed:@"typing-1"],
@@ -84,7 +85,13 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGFloat)heightForMaxWidth:(CGFloat)maxWidth {
-  return [super heightForSenderName:@"" message:@"" warningMessage:nil maxWidth:maxWidth];
+  // used to get the height of a single line
+  NSAttributedString *dummyAttrText = [TBMessageView attributedStringForSenderName:@"foo"
+                                                                           message:@""];
+  
+  return [super heightForAttributedText:dummyAttrText
+                         warningMessage:nil
+                               maxWidth:maxWidth];
 }
 
 @end
