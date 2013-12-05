@@ -46,15 +46,19 @@
   
   int result = SecRandomCopyBytes(kSecRandomDefault, length, randomBytes);
 
-  // in case of error, return nil
-  if (result!=0) return nil;
+  NSMutableString *hexValue = nil;
   
-  // convert to hex string
-  NSMutableString *hexValue = [NSMutableString string];
-  for (int i=0; i < length; i++) {
-    [hexValue appendString:[NSString stringWithFormat:@"%02X", randomBytes[i]]];
+  // no error
+  if (result==0) {
+    // convert to hex string
+    hexValue = [NSMutableString string];
+    for (int i=0; i < length; i++) {
+      [hexValue appendString:[NSString stringWithFormat:@"%02X", randomBytes[i]]];
+    }
   }
-
+  
+  if (randomBytes) free(randomBytes);
+  
   return hexValue;
 }
 
