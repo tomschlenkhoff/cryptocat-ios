@@ -451,6 +451,10 @@ didReceiveRegistrationFieldsAnswer:(XMPPIQ *)iq {
   self.credentialRegistered = NO;
   self.username = nil;
   self.password = nil;
+  
+  if ([self.delegate respondsToSelector:@selector(XMPPManagerDidFailToAuthenticate:)]) {
+    [self.delegate XMPPManagerDidFailToAuthenticate:self];
+  }
   TBLOG(@"-- username registration error %d for %@", errorCode, username);
 }
 
