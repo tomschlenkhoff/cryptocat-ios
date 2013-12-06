@@ -40,6 +40,8 @@
 + (NSDictionary *)textAttributes;
 + (UIFont *)font;
 + (NSString *)paddedSenderName:(NSString *)senderName;
++ (NSAttributedString *)replaceEmoticonsInAttributedText:
+(NSMutableAttributedString *)attributedText;
 
 @end
 
@@ -130,8 +132,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText maxWidth:(CGFloat)maxWidth {
   maxWidth-=(kTextViewInsetLeft+kTextViewInsetRight);
+  // make some arbitrary adjustment to prevent height that are not big enough
+  maxWidth = floorf(maxWidth) - 2.0;
 	CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
-
   CGRect boundingRect = [attributedText boundingRectWithSize:maxSize
                      options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
                                                      context:nil];
@@ -161,21 +164,7 @@
   NSDictionary *senderAttr = @{NSForegroundColorAttributeName: [UIColor whiteColor]};
   [attrText addAttributes:senderAttr range:NSMakeRange(0, senderName.length)];
   
-  // detect smileys
-  NSRange range = [text rangeOfString:@" :) "];
-  if (range.location!=NSNotFound) {
-    range.location+=1;
-    range.length-=2;
-    UIImage *image = [UIImage imageNamed:@"cat"];
-    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
-    attachment.image = image;
-    attachment.bounds = CGRectMake(0.0, -2.0, 13.0, 13.0);
-    NSAttributedString *attrStrImg = [NSAttributedString
-                                      attributedStringWithAttachment:attachment];
-    [attrText replaceCharactersInRange:range withAttributedString:attrStrImg];
-  }
-
-  return attrText;
+  return [self replaceEmoticonsInAttributedText:attrText];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -199,6 +188,85 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSString *)paddedSenderName:(NSString *)senderName {
   return [senderName stringByAppendingString:@"    "];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
++ (NSAttributedString *)replaceEmoticonsInAttributedText:
+(NSMutableAttributedString *)attributedText {
+  NSError *error;
+  /*
+   *  (\\s|^) : whitespace OR beginning of string
+   *  (:|=)   : eyes, either : OR =
+   *  (-?)    : nose, 1 OR 0
+   *  (3)     : mouth, 3
+   *  (\\s|$) : whitespace OR end of string
+   */
+  NSString *catPattern = @"(\\s|^)(:|=)(-?)(3)(\\s|$)?";
+  NSString *cryPattern = @"(\\s|^)(:|=)(’|‘|')(-?)(\\)|3)(\\s|$)?";
+  NSString *gaspPattern = @"(\\s|^)(:|=)(-?)(o)(\\s|$)?";
+  NSString *grinPattern = @"(\\s|^)(:|=)(-?)(D)(\\s|$)?";
+  NSString *sadPattern = @"(\\s|^)(:|=)(-?)(\\()(\\s|$)?";
+  NSString *smilePattern = @"(\\s|^)(:|=)(-?)(\\))(\\s|$)?";
+  NSString *squintPattern = @"(\\s|^)-_-(\\s|$)?";
+  NSString *tonguePattern = @"(\\s|^)(:|=)(-?)(p)(\\s|$)?";
+  NSString *unsurePattern = @"(\\s|^)(:|=)(-?)(\\/|s)(\\s|$)?";
+  NSString *winkPattern = @"(\\s|^)(;)(-?)(\\))(\\s|$)?";
+  NSString *winkTonguePattern = @"(\\s|^)(;)(-?)(p)(\\s|$)?";
+  NSString *happyPattern = @"(\\s|^)(\\^)(_|\\.)(\\^)(\\s|$)?";
+  NSString *shutPattern = @"(\\s|^)(:|=)(-?)(x)(\\s|$)?";
+  
+  NSDictionary *patternsForImages = @{  catPattern:         [UIImage imageNamed:@"cat"],
+                                        cryPattern:         [UIImage imageNamed:@"cry"],
+                                        gaspPattern:        [UIImage imageNamed:@"gasp"],
+                                        grinPattern:        [UIImage imageNamed:@"grin"],
+                                        sadPattern:         [UIImage imageNamed:@"sad"],
+                                        smilePattern:       [UIImage imageNamed:@"smile"],
+                                        squintPattern:      [UIImage imageNamed:@"squint"],
+                                        tonguePattern:      [UIImage imageNamed:@"tongue"],
+                                        unsurePattern:      [UIImage imageNamed:@"unsure"],
+                                        winkPattern:        [UIImage imageNamed:@"wink"],
+                                        winkTonguePattern:  [UIImage imageNamed:@"winkTongue"],
+                                        happyPattern:       [UIImage imageNamed:@"happy"],
+                                        shutPattern:        [UIImage imageNamed:@"shut"]
+                                        };
+  
+  for (NSString *pattern  in patternsForImages) {
+    NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:pattern
+                                                                           options:0
+                                                                             error:&error];
+    NSTextAttachment *attachment = [[NSTextAttachment alloc] init];
+    attachment.image = [patternsForImages objectForKey:pattern];
+    attachment.bounds = CGRectMake(0.0, -2.0, 13.0, 13.0);
+    NSAttributedString *attrStrImg = [NSAttributedString
+                                      attributedStringWithAttachment:attachment];
+    
+    [regex enumerateMatchesInString:attributedText.string
+                            options:0
+                              range:NSMakeRange(0, [attributedText.string length])
+                         usingBlock:^(NSTextCheckingResult *match, NSMatchingFlags flags,
+                                      BOOL *stop)
+     {
+       NSRange range = match.range;
+       NSString *matchingString = [attributedText.string substringWithRange:range];
+       
+       // if the matchingString is " :) ", just replace ":)" by the image (leave the spaces)
+       NSString *firstChar = [matchingString substringWithRange:NSMakeRange(0, 1)];
+       NSString *lastChar = [matchingString
+                             substringWithRange:NSMakeRange([matchingString length] -1, 1)];
+       if ([firstChar isEqualToString:@" "]) {
+         range.location+=1;
+         range.length-=1;
+       }
+       if ([lastChar isEqualToString:@" "]) {
+         range.length-=1;
+       }
+       
+       [attributedText replaceCharactersInRange:range withAttributedString:attrStrImg];
+     }];
+  }
+  
+  
+  return attributedText;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
