@@ -93,6 +93,7 @@
 
   self.messageView.frame = messageViewFrame;
   [self.messageView setNeedsDisplay];
+  [self.messageView setNeedsLayout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -121,6 +122,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)setAttributedText:(NSAttributedString *)attributedText {
   self.messageView.attributedText = attributedText;
+  [self setNeedsLayout];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -173,6 +175,8 @@
                     warningMessage:(NSString *)warningMessage
                           maxWidth:(CGFloat)maxWidth {
   maxWidth-=(kPaddingLeft+kPaddingRight);
+  // make some arbitrary adjustment to prevent height that are not big enough
+  maxWidth = floorf(maxWidth) - 5.0;
   CGFloat messageViewHeight = [TBMessageView heightForAttributedText:attributedText
                                                             maxWidth:maxWidth];
 

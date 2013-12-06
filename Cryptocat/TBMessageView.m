@@ -132,8 +132,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (CGFloat)heightForAttributedText:(NSAttributedString *)attributedText maxWidth:(CGFloat)maxWidth {
   maxWidth-=(kTextViewInsetLeft+kTextViewInsetRight);
-  // make some arbitrary adjustment to prevent height that are not big enough
-  maxWidth = floorf(maxWidth) - 2.0;
+  maxWidth = floorf(maxWidth);
 	CGSize maxSize = CGSizeMake(maxWidth, CGFLOAT_MAX);
   CGRect boundingRect = [attributedText boundingRectWithSize:maxSize
                      options:(NSStringDrawingUsesLineFragmentOrigin|NSStringDrawingUsesFontLeading)
