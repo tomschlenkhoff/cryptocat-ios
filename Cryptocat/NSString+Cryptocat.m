@@ -41,15 +41,25 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 + (NSString *)tb_randomStringWithLength:(NSInteger)length {
-  NSString *letters = @"abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  NSMutableString *randomString = [NSMutableString stringWithCapacity:length];
+  uint8_t *randomBytes = malloc(length * sizeof(uint8_t));
+  memset((void *)randomBytes, 0x0, length);
   
-  for (NSInteger i=0; i < length; i++) {
-    NSUInteger index = arc4random() % [letters length];
-    [randomString appendFormat: @"%C", [letters characterAtIndex:index]];
+  int result = SecRandomCopyBytes(kSecRandomDefault, length, randomBytes);
+
+  NSMutableString *hexValue = nil;
+  
+  // no error
+  if (result==0) {
+    // convert to hex string
+    hexValue = [NSMutableString string];
+    for (int i=0; i < length; i++) {
+      [hexValue appendString:[NSString stringWithFormat:@"%02X", randomBytes[i]]];
+    }
   }
   
-  return randomString;
+  if (randomBytes) free(randomBytes);
+  
+  return hexValue;
 }
 
 @end
