@@ -16,4 +16,5 @@
 
   #import "TBMacros.h"
   #import "TBConstants.h"
+  #import "TBUserLanguageHelper.h"
 #endif

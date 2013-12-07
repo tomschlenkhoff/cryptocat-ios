@@ -150,10 +150,10 @@
   
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 	 
-  self.defaultNavLeftItemTitle = NSLocalizedString(@"Buddies",
+  self.defaultNavLeftItemTitle = TBLocalizedString(@"Buddies",
                                                    @"Buddies Button Title on Chat Screen");
   self.navigationItem.leftBarButtonItem.title = self.defaultNavLeftItemTitle;
-  self.navigationItem.rightBarButtonItem.title = NSLocalizedString(@"Me",
+  self.navigationItem.rightBarButtonItem.title = TBLocalizedString(@"Me",
                                                                 @"Me Button Title on Chat Screen");
   
   
@@ -397,7 +397,7 @@
     if (error!=nil &&
         [error.domain isEqualToString:TBErrorDomainGroupChatMessage] &&
         error.code==TBErrorCodeUnreadableMessage) {
-      NSString *errorMessage = NSLocalizedString(@"Warning: You have received an unreadable \
+      NSString *errorMessage = TBLocalizedString(@"Warning: You have received an unreadable \
 message from %@. This may indicate an untrustworthy user or messages that \
 failed to be received. You may also be running an outdated \
 version of Cryptocat. Please check for updates.", @"Error Message Text");
@@ -413,7 +413,7 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
            [error.domain isEqualToString:@"TBErrorDomainGroupChatMessage"] &&
            error.code==TBErrorCodeMissingRecipients) {
     NSArray *missingRecipients = [error.userInfo objectForKey:TBErrorCodeMissingRecipientsKey];
-    NSString *warningMessage = NSLocalizedString(@"Warning: this message was not sent to: %@",
+    NSString *warningMessage = TBLocalizedString(@"Warning: this message was not sent to: %@",
                                   @"Warning message when a message is not sent to all recipients");
     NSString *missingRecipientsString = [missingRecipients componentsJoinedByString:@", "];
     message.warningText = [NSString stringWithFormat:warningMessage, missingRecipientsString];

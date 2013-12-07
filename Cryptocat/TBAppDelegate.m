@@ -316,12 +316,12 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
   UILocalNotification *messageNotification = [[UILocalNotification alloc] init];
   if (messageNotification==nil) return;
   
-  NSString *body = NSLocalizedString(
+  NSString *body = TBLocalizedString(
                                      @"Your chat session will end in a minute if you don't come back",
                                      @"Chat session expiration message");
   
   messageNotification.alertBody = body;
-  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
+  messageNotification.alertAction = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
 }
@@ -412,7 +412,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 - (void)XMPPManager:(TBXMPPManager *)XMPPManager
 didTryToRegisterAlreadyInUseUsername:(NSString *)username {
   if ([self isLoginScreenPresented]) {
-    NSString *message = NSLocalizedString(@"Nickname in use.", @"Nickname in use. Error Message");
+    NSString *message = TBLocalizedString(@"Nickname in use.", @"Nickname in use. Error Message");
     [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
     [self logout];
   }
@@ -421,7 +421,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManagerDidFailToAuthenticate:(TBXMPPManager *)XMPPManager {
   if ([self isLoginScreenPresented]) {
-    NSString *message = NSLocalizedString(@"Authentication failure.",
+    NSString *message = TBLocalizedString(@"Authentication failure.",
                                           @"Authentication failure. Error Message");
     [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
   }
@@ -430,7 +430,7 @@ didTryToRegisterAlreadyInUseUsername:(NSString *)username {
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)XMPPManagerDidFailToConnect:(TBXMPPManager *)XMPPManager {
   if ([self isLoginScreenPresented]) {
-    NSString *message = NSLocalizedString(@"Connection failed.",
+    NSString *message = TBLocalizedString(@"Connection failed.",
                                           @"Connection failed. Error Message");
     [self.loginViewController showError:[NSError tb_errorWithMessage:message]];
   }
@@ -637,11 +637,11 @@ didAskToConnectWithRoomName:(NSString *)roomName
   
   NSString *roomName = sender.roomName;
   NSString *nickname = sender.nickname;
-  NSString *body = NSLocalizedString(@"%@ sent you a message in %@",
+  NSString *body = TBLocalizedString(@"%@ sent you a message in %@",
                                      @"Sender sent you a message in roomName notification text");
   NSString *alertBody = [NSString stringWithFormat:body, nickname, roomName];
   messageNotification.alertBody = alertBody;
-  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
+  messageNotification.alertAction = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
   [UIApplication sharedApplication].applicationIconBadgeNumber+=1;
@@ -655,12 +655,12 @@ didAskToConnectWithRoomName:(NSString *)roomName
   TBMessage *message = notification.object;
   TBBuddy *sender = message.sender;
 
-  NSString *body = NSLocalizedString(@"%@ sent you a message",
+  NSString *body = TBLocalizedString(@"%@ sent you a message",
                                      @"Sender sent you a message notification text");
 
   NSString *alertBody = [NSString stringWithFormat:body, sender.nickname];
   messageNotification.alertBody = alertBody;
-  messageNotification.alertAction = NSLocalizedString(@"Ok", @"Alert View Ok Button");
+  messageNotification.alertAction = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   messageNotification.soundName = UILocalNotificationDefaultSoundName;
   [[UIApplication sharedApplication] presentLocalNotificationNow:messageNotification];
   [UIApplication sharedApplication].applicationIconBadgeNumber+=1;

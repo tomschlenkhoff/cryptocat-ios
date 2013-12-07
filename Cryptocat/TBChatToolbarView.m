@@ -57,7 +57,7 @@
     
     // -- button
     _sendButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    [_sendButton setTitle:NSLocalizedString(@"Send", @"Send Button Title")
+    [_sendButton setTitle:TBLocalizedString(@"Send", @"Send Button Title")
                  forState:UIControlStateNormal];
     _sendButton.enabled = NO;
     [_sendButton sizeToFit];

@@ -57,12 +57,13 @@
 		33B936E91835082E003497AC /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 33B936E81835082E003497AC /* MobileCoreServices.framework */; };
 		33B936EC18362455003497AC /* TBChateStateNotification.m in Sources */ = {isa = PBXBuildFile; fileRef = 33B936EB18362455003497AC /* TBChateStateNotification.m */; };
 		33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33C3651318102413003EAF93 /* TBBuddiesViewController.m */; };
+		33D08F7A18537B37003673FC /* TBLanguagesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D08F7918537B37003673FC /* TBLanguagesViewController.m */; };
+		33D08F7D1853813B003673FC /* TBUserLanguageHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = 33D08F7C1853813B003673FC /* TBUserLanguageHelper.m */; };
 		33D715DF1836808D003FA973 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 33D715DE1836808D003FA973 /* Settings.bundle */; };
 		33D715ED18368A22003FA973 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715EC18368A22003FA973 /* libz.dylib */; };
 		33D715F518368B48003FA973 /* libTestFlight.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 33D715EF18368B48003FA973 /* libTestFlight.a */; };
 		33E6C7FC181512FD009EC642 /* TBLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FB181512FD009EC642 /* TBLoginViewController.m */; };
 		33E6C7FF18155870009EC642 /* NSError+Cryptocat.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */; };
-		33E8FA1B183B95FC007DDAAB /* SVWebViewController.strings in Resources */ = {isa = PBXBuildFile; fileRef = 33E8F9FE183B95FC007DDAAB /* SVWebViewController.strings */; };
 		33E8FA1C183B95FC007DDAAB /* SVModalWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8FA06183B95FC007DDAAB /* SVModalWebViewController.m */; };
 		33E8FA1D183B95FC007DDAAB /* SVWebViewController.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 33E8FA07183B95FC007DDAAB /* SVWebViewController.bundle */; };
 		33E8FA1E183B95FC007DDAAB /* SVWebViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 33E8FA09183B95FC007DDAAB /* SVWebViewController.m */; };
@@ -106,6 +107,7 @@
 		3306B7A318434CC3005B81DA /* TBServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBServerViewController.m; sourceTree = "<group>"; };
 		3306B7A518434EE0005B81DA /* TBTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBTextFieldCell.h; sourceTree = "<group>"; };
 		3306B7A618434EE0005B81DA /* TBTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBTextFieldCell.m; sourceTree = "<group>"; };
+		3315C2B9185391DD002F6A5A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/Main.storyboard; sourceTree = "<group>"; };
 		3317DCD8181FD39E008353E5 /* TBConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBConstants.h; sourceTree = "<group>"; };
 		3317DCD9181FD39E008353E5 /* TBConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBConstants.m; sourceTree = "<group>"; };
 		332CA4CB1819108C00233E92 /* TBMeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBMeViewController.h; sourceTree = "<group>"; };
@@ -127,8 +129,8 @@
 		332EBDAA184F71510074E004 /* msgGet.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = msgGet.caf; path = ../msgGet.caf; sourceTree = "<group>"; };
 		332EBDAB184F71510074E004 /* userJoin.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = userJoin.caf; path = ../userJoin.caf; sourceTree = "<group>"; };
 		332EBDAC184F71510074E004 /* userLeave.caf */ = {isa = PBXFileReference; lastKnownFileType = file; name = userLeave.caf; path = ../userLeave.caf; sourceTree = "<group>"; };
-		332EBDB7184F7D330074E004 /* en */ = {isa = PBXFileReference; lastKnownFileType = file; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
-		332EBDB8184F7D4D0074E004 /* fr */ = {isa = PBXFileReference; lastKnownFileType = file; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		332EBDB7184F7D330074E004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
+		332EBDB8184F7D4D0074E004 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		334652281828EC8B00280518 /* UIColor+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+Cryptocat.h"; sourceTree = "<group>"; };
 		334652291828EC8B00280518 /* UIColor+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+Cryptocat.m"; sourceTree = "<group>"; };
 		3346522B1829044600280518 /* TBButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBButtonCell.h; sourceTree = "<group>"; };
@@ -155,7 +157,6 @@
 		339DD1B917F0399400C3E8E6 /* Cryptocat-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Cryptocat-Prefix.pch"; sourceTree = "<group>"; };
 		339DD1BA17F0399400C3E8E6 /* TBAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TBAppDelegate.h; sourceTree = "<group>"; };
 		339DD1BB17F0399400C3E8E6 /* TBAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TBAppDelegate.m; sourceTree = "<group>"; };
-		339DD1BE17F0399400C3E8E6 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		339DD1C617F0399400C3E8E6 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		339DD1CC17F0399400C3E8E6 /* CryptocatTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CryptocatTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		339DD1CD17F0399400C3E8E6 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
@@ -179,6 +180,10 @@
 		33B936EB18362455003497AC /* TBChateStateNotification.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBChateStateNotification.m; sourceTree = "<group>"; };
 		33C3651218102413003EAF93 /* TBBuddiesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBBuddiesViewController.h; sourceTree = "<group>"; };
 		33C3651318102413003EAF93 /* TBBuddiesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBBuddiesViewController.m; sourceTree = "<group>"; };
+		33D08F7818537B37003673FC /* TBLanguagesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBLanguagesViewController.h; sourceTree = "<group>"; };
+		33D08F7918537B37003673FC /* TBLanguagesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLanguagesViewController.m; sourceTree = "<group>"; };
+		33D08F7B1853813A003673FC /* TBUserLanguageHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBUserLanguageHelper.h; sourceTree = "<group>"; };
+		33D08F7C1853813B003673FC /* TBUserLanguageHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBUserLanguageHelper.m; sourceTree = "<group>"; };
 		33D715DE1836808D003FA973 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = Settings.bundle; sourceTree = "<group>"; };
 		33D715E0183682BF003FA973 /* set_versions_into_built_product_plist.rb */ = {isa = PBXFileReference; lastKnownFileType = text.script.ruby; path = set_versions_into_built_product_plist.rb; sourceTree = "<group>"; };
 		33D715EC18368A22003FA973 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
@@ -192,12 +197,6 @@
 		33E6C7FB181512FD009EC642 /* TBLoginViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBLoginViewController.m; sourceTree = "<group>"; };
 		33E6C7FD18155870009EC642 /* NSError+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSError+Cryptocat.h"; sourceTree = "<group>"; };
 		33E6C7FE18155870009EC642 /* NSError+Cryptocat.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSError+Cryptocat.m"; sourceTree = "<group>"; };
-		33E8F9FF183B95FC007DDAAB /* da */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = da; path = da.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		33E8FA00183B95FC007DDAAB /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		33E8FA01183B95FC007DDAAB /* es-ES */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "es-ES"; path = "es-ES.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
-		33E8FA02183B95FC007DDAAB /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		33E8FA03183B95FC007DDAAB /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
-		33E8FA04183B95FC007DDAAB /* ja */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ja; path = ja.lproj/SVWebViewController.strings; sourceTree = "<group>"; };
 		33E8FA05183B95FC007DDAAB /* SVModalWebViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVModalWebViewController.h; sourceTree = "<group>"; };
 		33E8FA06183B95FC007DDAAB /* SVModalWebViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVModalWebViewController.m; sourceTree = "<group>"; };
 		33E8FA07183B95FC007DDAAB /* SVWebViewController.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = SVWebViewController.bundle; sourceTree = "<group>"; };
@@ -215,8 +214,6 @@
 		33E8FA16183B95FC007DDAAB /* SVWebViewControllerActivitySafari@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "SVWebViewControllerActivitySafari@2x.png"; sourceTree = "<group>"; };
 		33E8FA17183B95FC007DDAAB /* SVWebViewControllerActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SVWebViewControllerActivity.h; sourceTree = "<group>"; };
 		33E8FA18183B95FC007DDAAB /* SVWebViewControllerActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SVWebViewControllerActivity.m; sourceTree = "<group>"; };
-		33E8FA19183B95FC007DDAAB /* zh-Hans */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hans"; path = "zh-Hans.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
-		33E8FA1A183B95FC007DDAAB /* zh-Hant */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = "zh-Hant"; path = "zh-Hant.lproj/SVWebViewController.strings"; sourceTree = "<group>"; };
 		33E8FA6C183BD7D4007DDAAB /* TBGrowingTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBGrowingTextView.h; sourceTree = "<group>"; };
 		33E8FA6D183BD7D4007DDAAB /* TBGrowingTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBGrowingTextView.m; sourceTree = "<group>"; };
 		33F6831C180ED21800524C87 /* XMPPPresence+Cryptocat.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "XMPPPresence+Cryptocat.h"; sourceTree = "<group>"; };
@@ -344,6 +341,8 @@
 				3388E270183FA50200102762 /* TBServersViewController.m */,
 				3306B7A218434CC3005B81DA /* TBServerViewController.h */,
 				3306B7A318434CC3005B81DA /* TBServerViewController.m */,
+				33D08F7818537B37003673FC /* TBLanguagesViewController.h */,
+				33D08F7918537B37003673FC /* TBLanguagesViewController.m */,
 			);
 			name = Login;
 			sourceTree = "<group>";
@@ -399,6 +398,7 @@
 		339DD1B117F0399400C3E8E6 /* Cryptocat */ = {
 			isa = PBXGroup;
 			children = (
+				33D08F7E185390F1003673FC /* Helpers */,
 				33E8F9FC183B95F0007DDAAB /* Vendor */,
 				330130C317F431B800287253 /* Categories */,
 				3301304C17F18A2B00287253 /* XEP-0077 */,
@@ -514,6 +514,15 @@
 			name = "Chat Cells";
 			sourceTree = "<group>";
 		};
+		33D08F7E185390F1003673FC /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				33D08F7B1853813A003673FC /* TBUserLanguageHelper.h */,
+				33D08F7C1853813B003673FC /* TBUserLanguageHelper.m */,
+			);
+			name = Helpers;
+			sourceTree = "<group>";
+		};
 		33D715EE18368B48003FA973 /* TestFlightSDK2.1.1 */ = {
 			isa = PBXGroup;
 			children = (
@@ -540,7 +549,6 @@
 		33E8F9FD183B95FC007DDAAB /* SVWebViewController */ = {
 			isa = PBXGroup;
 			children = (
-				33E8F9FE183B95FC007DDAAB /* SVWebViewController.strings */,
 				33E8FA05183B95FC007DDAAB /* SVModalWebViewController.h */,
 				33E8FA06183B95FC007DDAAB /* SVModalWebViewController.m */,
 				33E8FA07183B95FC007DDAAB /* SVWebViewController.bundle */,
@@ -692,7 +700,6 @@
 				33E8FA26183B95FC007DDAAB /* SVWebViewControllerActivitySafari@2x.png in Resources */,
 				33B936E118327EF4003497AC /* Monda-Regular.ttf in Resources */,
 				33E8FA22183B95FC007DDAAB /* SVWebViewControllerActivityChrome@2x.png in Resources */,
-				33E8FA1B183B95FC007DDAAB /* SVWebViewController.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -775,10 +782,12 @@
 				33E8FA27183B95FC007DDAAB /* SVWebViewControllerActivity.m in Sources */,
 				332EBD9E184C78460074E004 /* TBComposingCell.m in Sources */,
 				3301305317F18F0800287253 /* XMPPIQ+XEP_0077.m in Sources */,
+				33D08F7D1853813B003673FC /* TBUserLanguageHelper.m in Sources */,
 				332EBD9C184C78460074E004 /* TBMessageView.m in Sources */,
 				3379BA24181EBAE0002A316F /* TBBuddyViewController.m in Sources */,
 				33C3651418102413003EAF93 /* TBBuddiesViewController.m in Sources */,
 				33B936DF18327EDC003497AC /* TBChatToolbarView.m in Sources */,
+				33D08F7A18537B37003673FC /* TBLanguagesViewController.m in Sources */,
 				33B936EC18362455003497AC /* TBChateStateNotification.m in Sources */,
 				33B936E71833E7D7003497AC /* TBFingerprintCell.m in Sources */,
 				332EBD9B184C78460074E004 /* TBBubbleView.m in Sources */,
@@ -842,7 +851,7 @@
 		339DD1BD17F0399400C3E8E6 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
-				339DD1BE17F0399400C3E8E6 /* Base */,
+				3315C2B9185391DD002F6A5A /* en */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";
@@ -853,21 +862,6 @@
 				339DD1D717F0399400C3E8E6 /* en */,
 			);
 			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		33E8F9FE183B95FC007DDAAB /* SVWebViewController.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				33E8F9FF183B95FC007DDAAB /* da */,
-				33E8FA00183B95FC007DDAAB /* en */,
-				33E8FA01183B95FC007DDAAB /* es-ES */,
-				33E8FA02183B95FC007DDAAB /* es */,
-				33E8FA03183B95FC007DDAAB /* fr */,
-				33E8FA04183B95FC007DDAAB /* ja */,
-				33E8FA19183B95FC007DDAAB /* zh-Hans */,
-				33E8FA1A183B95FC007DDAAB /* zh-Hant */,
-			);
-			name = SVWebViewController.strings;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

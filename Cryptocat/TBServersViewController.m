@@ -60,9 +60,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (id)initWithCoder:(NSCoder *)aDecoder {
   if (self=[super initWithCoder:aDecoder]) {
-    _serverNameConflictErrorMessage = NSLocalizedString(
+    _serverNameConflictErrorMessage = TBLocalizedString(
                             @"A server with this name already exists. Please choose another name.", @"Server Name already exists error message");
-    _serverRequiredFieldsErrorMessage = NSLocalizedString(@"All fields are required.",
+    _serverRequiredFieldsErrorMessage = TBLocalizedString(@"All fields are required.",
                                             @"All Fields are required error message for server");
     _currentServer = nil;
   }
@@ -77,7 +77,7 @@
   self.currentServer = [TBServer currentServer];
   
   [self.navigationController setNavigationBarHidden:NO animated:YES];
-  self.title = NSLocalizedString(@"Servers", @"Servers Screen Title");
+  self.title = TBLocalizedString(@"Servers", @"Servers Screen Title");
   
   self.navigationItem.rightBarButtonItem = self.editButtonItem;
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
@@ -185,7 +185,7 @@
                                                           forIndexPath:indexPath];
   TBLOG(@"-- cellForRowAtIndexPath : %@", indexPath);
   if ([indexPath isEqual:self.indexPathForAddCell]) {
-    cell.textLabel.text = NSLocalizedString(@"add server", @"add server");
+    cell.textLabel.text = TBLocalizedString(@"add server", @"add server");
     cell.editingAccessoryType = UITableViewCellAccessoryNone;
     cell.textLabel.textColor = [UIColor tb_buttonTitleColor];
   }
@@ -302,8 +302,8 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)showErrorMessage:(NSString *)errorMessage {
-  NSString *title = NSLocalizedString(@"Error", @"Server Creation/Modification Error Alert Title");
-  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Alert View Ok Button");
+  NSString *title = TBLocalizedString(@"Error", @"Server Creation/Modification Error Alert Title");
+  NSString *cancelTitle = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
                                                message:errorMessage
                                               delegate:self

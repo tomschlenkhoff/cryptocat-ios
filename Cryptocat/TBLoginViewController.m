@@ -28,11 +28,15 @@
 #import "UIColor+Cryptocat.h"
 #import "TBButtonCell.h"
 #import "TBTextFieldCell.h"
+#import "TBLanguagesViewController.h"
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-@interface TBLoginViewController () <UITextFieldDelegate>
+@interface TBLoginViewController () <
+  UITextFieldDelegate,
+  TBLanguagesViewControllerDelegate
+>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) UITextField *conversationNameField;
@@ -47,7 +51,7 @@
 - (void)connect;
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
 - (BOOL)shouldConnectButtonBeEnabled;
-- (IBAction)showLanguages:(id)sender;
+- (void)updateLanguageDependentElements;
 
 @end
 
@@ -137,19 +141,17 @@
   self.tableView.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.tableHeaderView.backgroundColor = [UIColor tb_backgroundColor];
   self.legendLabel.textColor = [UIColor tb_tableViewSectionTitleColor];
-
-  // -- labels
-  self.title = @"Cryptocat";
-  self.legendLabel.text = NSLocalizedString(
-                @"Enter a name for your conversation.\nShare it with people you'd like to talk to.",
-                @"Login Screen Legend");
-
   
-  // -- buttons
-  [self.serverButton setTitle:NSLocalizedString(@"Server", @"Server Button Title")
-                     forState:UIControlStateNormal];
-  [self.languageButton setTitle:@"Languages"
-                     forState:UIControlStateNormal];
+  [self updateLanguageDependentElements];
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+  // -- languages
+  if ([segue.identifier isEqualToString:@"LanguagesSegueID"]) {
+    TBLanguagesViewController *lvc = segue.destinationViewController;
+    lvc.delegate = self;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -159,8 +161,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)showError:(NSError *)error {
-  NSString *title = NSLocalizedString(@"Error", @"Connection Error Alert Title");
-  NSString *cancelTitle = NSLocalizedString(@"Ok", @"Alert View Ok Button");
+  NSString *title = TBLocalizedString(@"Error", @"Connection Error Alert Title");
+  NSString *cancelTitle = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
                                                message:[error tb_message]
                                               delegate:self
@@ -201,7 +203,7 @@
 
   // -- check that conversationname is not empty
   if ([conversationName isEqualToString:@""]) {
-    NSString *message = NSLocalizedString(@"Please enter a conversation name.",
+    NSString *message = TBLocalizedString(@"Please enter a conversation name.",
                                           @"Please enter a conversation name. Error Message");
     return [NSError tb_errorWithMessage:message];
   }
@@ -209,14 +211,14 @@
   // -- check that conversation name is 1..20 alphanumeric
   if (![[conversationName
          stringByTrimmingCharactersInSet:alphaNumericCharSet] isEqualToString:@""]) {
-    NSString *message = NSLocalizedString(@"Conversation name must be alphanumeric.",
+    NSString *message = TBLocalizedString(@"Conversation name must be alphanumeric.",
                                           @"Conversation name must be alphanumeric. Error Message");
     return [NSError tb_errorWithMessage:message];
   }
   
   // -- check that nickname is not empty
   if ([nickname isEqualToString:@""]) {
-    NSString *message = NSLocalizedString(@"Please enter a nickname.",
+    NSString *message = TBLocalizedString(@"Please enter a nickname.",
                                           @"Please enter a nickname. Error Message");
     return [NSError tb_errorWithMessage:message];
   }
@@ -224,7 +226,7 @@
   // -- check that conversation name is 1..16 alphanumeric
   if (![[nickname
          stringByTrimmingCharactersInSet:alphaNumericCharSet] isEqualToString:@""]) {
-    NSString *message = NSLocalizedString(@"Nickname must be alphanumeric.",
+    NSString *message = TBLocalizedString(@"Nickname must be alphanumeric.",
                                           @"Nickname must be alphanumeric. Error Message");
     return [NSError tb_errorWithMessage:message];
   }
@@ -239,17 +241,23 @@
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (IBAction)showLanguages:(id)sender {
-  NSString *title = @"Languages";
-  NSString *cancelTitle = @"Ok";
-  NSString *message = @"For now, the app language changes with your system-wide settings. (English and French are already available.)";
-  UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
-                                               message:message
-                                              delegate:self
-                                     cancelButtonTitle:cancelTitle
-                                     otherButtonTitles:nil];
+- (void)updateLanguageDependentElements {
+  self.title = @"Cryptocat";
+  self.legendLabel.text = TBLocalizedString(
+                                            @"Enter a name for your conversation.\nShare it with people you'd like to talk to.",
+                                            @"Login Screen Legend");
   
-  [av show];
+  
+  // -- buttons
+  [self.serverButton setTitle:TBLocalizedString(@"Server", @"Server Button Title")
+                     forState:UIControlStateNormal];
+  
+  NSString *currentLanguageKey = [TBUserLanguageHelper sharedUserLanguageHelper].currentLanguage;
+  [self.languageButton setTitle:[TBUserLanguageHelper languageNameForKey:currentLanguageKey]
+                       forState:UIControlStateNormal];
+  
+  // for input fields palceholder
+  [self.tableView reloadData];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -322,13 +330,13 @@ replacementString:(NSString *)string {
     // conversation name
     if (indexPath.row==0) {
       self.conversationNameField = cell.textField;
-      self.conversationNameField.placeholder = NSLocalizedString(@"conversation name",
+      self.conversationNameField.placeholder = TBLocalizedString(@"conversation name",
                                                                  @"conversation name Field Placeholder");
     }
     // nickname
     else {
       self.nicknameField = cell.textField;
-      self.nicknameField.placeholder = NSLocalizedString(@"your nickname",
+      self.nicknameField.placeholder = TBLocalizedString(@"your nickname",
                                                          @"your nickname Field Placeholder");
     }
     
@@ -341,7 +349,7 @@ replacementString:(NSString *)string {
     TBButtonCell *cell = [tableView dequeueReusableCellWithIdentifier:ButtonCellID
                                                          forIndexPath:indexPath];
     self.buttonCell = cell;
-    self.buttonCell.title = NSLocalizedString(@"Connect", @"Connect Button Title");
+    self.buttonCell.title = TBLocalizedString(@"Connect", @"Connect Button Title");
     return cell;
   }
   
@@ -388,6 +396,18 @@ replacementString:(NSString *)string {
       [self.tableView deselectRowAtIndexPath:indexPath animated:YES];
     });
   }
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
+#pragma mark -
+#pragma mark TBLanguagesViewControllerDelegate
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)languagesController:(TBLanguagesViewController *)controller
+          didSelectLanguage:(NSString *)language {
+  [self updateLanguageDependentElements];
+  [self.navigationController popViewControllerAnimated:YES];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

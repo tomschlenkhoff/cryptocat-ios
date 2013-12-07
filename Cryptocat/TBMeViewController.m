@@ -68,12 +68,12 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
-  self.title = NSLocalizedString(@"Me", @"Me Screen Title");
+  self.title = TBLocalizedString(@"Me", @"Me Screen Title");
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 
   self.groupFingerprintCell.fingerprint = self.me.groupChatFingerprint;
   self.privateFingerprintCell.fingerprint = self.me.chatFingerprint;
-  self.logoutCell.title = NSLocalizedString(@"Logout", @"Logout Button Title");
+  self.logoutCell.title = TBLocalizedString(@"Logout", @"Logout Button Title");
   self.logoutCell.titleColor = [UIColor tb_buttonTitleColor];
   
   [self.me addObserver:self forKeyPath:@"groupChatFingerprint" options:0 context:NULL];
@@ -200,10 +200,10 @@ forRowAtIndexPath:(NSIndexPath *)indexPath
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
   if (section==0) {
-    return NSLocalizedString(@"Group Fingerprint", @"Group Fingerprint Section Title");
+    return TBLocalizedString(@"Group Fingerprint", @"Group Fingerprint Section Title");
   }
   else if (section==1) {
-    return NSLocalizedString(@"Private Fingerprint", @"Private Fingerprint Section Title");
+    return TBLocalizedString(@"Private Fingerprint", @"Private Fingerprint Section Title");
   }
   
   return nil;

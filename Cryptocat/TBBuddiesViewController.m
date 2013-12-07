@@ -69,7 +69,7 @@
   [super viewDidLoad];
 
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-  self.title = NSLocalizedString(@"Buddies", @"Buddies Screen Title");
+  self.title = TBLocalizedString(@"Buddies", @"Buddies Screen Title");
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self
@@ -126,7 +126,7 @@
     else {
       cell.textLabel.textColor = [UIColor blackColor];
     }
-    NSString *conversationRoomTitle = NSLocalizedString(@"Conversation",
+    NSString *conversationRoomTitle = TBLocalizedString(@"Conversation",
                                                         @"Conversation Room Label");
     if (self.nbUnreadMessagesInRoom == 0) {
       cell.textLabel.text = conversationRoomTitle;

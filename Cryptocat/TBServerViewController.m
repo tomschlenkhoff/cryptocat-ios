@@ -67,10 +67,10 @@
   }
   
   // -- placeholder text
-  self.nameCell.textField.placeholder = NSLocalizedString(@"Name", @"Server Name Placeholder");
-  self.domainCell.textField.placeholder = NSLocalizedString(@"Domain",
+  self.nameCell.textField.placeholder = TBLocalizedString(@"Name", @"Server Name Placeholder");
+  self.domainCell.textField.placeholder = TBLocalizedString(@"Domain",
                                                             @"Server Domain Placeholder");
-  self.conferenceServerCell.textField.placeholder = NSLocalizedString(@"XMPP Conference Server",
+  self.conferenceServerCell.textField.placeholder = TBLocalizedString(@"XMPP Conference Server",
                                                             @"Server XMPP Conference Placeholder");
   
   // -- textfield config
@@ -83,7 +83,7 @@
   
   NSString *screenTitle;
   if (self.isAddVC) {
-    screenTitle = NSLocalizedString(@"New Server", @"New Server Screen Title");
+    screenTitle = TBLocalizedString(@"New Server", @"New Server Screen Title");
     UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
                                      initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
                                      target:self
