@@ -31,8 +31,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 @interface TBBuddiesViewController ()
 
-- (IBAction)done:(id)sender;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
+- (IBAction)done:(id)sender;
 - (TBBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath;
 
 @end
@@ -70,6 +71,7 @@
 
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
   self.title = TBLocalizedString(@"Buddies", @"Buddies Screen Title");
+  self.doneButton.title = TBLocalizedString(@"Done", @"Done Button Title");
 
   NSNotificationCenter *defaultCenter = [NSNotificationCenter defaultCenter];
   [defaultCenter addObserver:self

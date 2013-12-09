@@ -36,6 +36,7 @@
 @property (weak, nonatomic) IBOutlet TBFingerprintCell *groupFingerprintCell;
 @property (weak, nonatomic) IBOutlet TBFingerprintCell *privateFingerprintCell;
 @property (weak, nonatomic) IBOutlet TBButtonCell *logoutCell;
+@property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
 
 - (IBAction)done:(id)sender;
 - (void)logout;
@@ -70,6 +71,7 @@
   
   self.title = TBLocalizedString(@"Me", @"Me Screen Title");
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
+  self.doneButton.title = TBLocalizedString(@"Done", @"Done Button Title");
 
   self.groupFingerprintCell.fingerprint = self.me.groupChatFingerprint;
   self.privateFingerprintCell.fingerprint = self.me.chatFingerprint;

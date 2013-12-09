@@ -386,12 +386,15 @@ Share it with people you'd like to talk to.</string>
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" id="hYp-H1-bmC">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="fRg-H3-u40">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="fRg-H3-u40">
                             <connections>
                                 <action selector="done:" destination="Sb9-pC-6Sy" id="nMH-iU-kBz"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
+                    <connections>
+                        <outlet property="doneButton" destination="fRg-H3-u40" id="yfV-pW-lao"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="8jw-Sv-8kt" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -494,13 +497,14 @@ Share it with people you'd like to talk to.</string>
                         </sections>
                     </tableView>
                     <navigationItem key="navigationItem" id="4YB-OB-OqP">
-                        <barButtonItem key="rightBarButtonItem" systemItem="done" id="owA-Vg-0Xu">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="owA-Vg-0Xu">
                             <connections>
                                 <action selector="done:" destination="kz1-vj-WcI" id="o4R-Ft-fAg"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <connections>
+                        <outlet property="doneButton" destination="owA-Vg-0Xu" id="h33-0I-UU6"/>
                         <outlet property="groupFingerprintCell" destination="9dK-U1-s6Q" id="lYC-7t-U8A"/>
                         <outlet property="logoutCell" destination="UgQ-FY-2ge" id="Jn2-87-Z00"/>
                         <outlet property="privateFingerprintCell" destination="W5i-OI-aBH" id="q82-tF-Fvx"/>
