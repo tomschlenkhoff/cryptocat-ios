@@ -28,10 +28,12 @@
 - (id)initWithURL:(NSURL *)URL {
     self.webViewController = [[SVWebViewController alloc] initWithURL:URL];
     if (self = [super initWithRootViewController:self.webViewController]) {
-        UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
-                                                                                    target:self.webViewController
-                                                                                    action:@selector(doneButtonClicked:)];
-        
+      NSString *doneTitle = TBLocalizedString(@"Done", @"Done Button Title");
+      UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:doneTitle
+                                                                     style:UIBarButtonItemStyleDone
+                                                                    target:self.webViewController
+                                                                    action:@selector(doneButtonClicked:)];
+
         if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
             self.webViewController.navigationItem.leftBarButtonItem = doneButton;
         else
