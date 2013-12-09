@@ -33,6 +33,7 @@
 #import "XMPPMessage+XEP_0085.h"
 #import "XMPPMessage+Cryptocat.h"
 #import "TBChateStateNotification.h"
+#import "NSString+Cryptocat.h"
 
 NSString * const TBMessagingProtocol = @"xmpp";
 
@@ -386,7 +387,7 @@ multipartyProtocolManager:(TBMultipartyProtocolManager *)multipartyProtocolManag
   
   TBLOG(@"-- decoded message : |%@|", decodedMessage);
   
-  if (![decodedMessage isEqualToString:@""]) {
+  if (![decodedMessage isEqualToString:@""] && ![decodedMessage tb_containsString:@"?OTR Error:"]) {
     TBMessage *receivedMsg = [[TBMessage alloc] init];
     receivedMsg.sender = sender;
     receivedMsg.text = decodedMessage;

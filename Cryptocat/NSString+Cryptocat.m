@@ -62,4 +62,11 @@
   return hexValue;
 }
 
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (BOOL)tb_containsString:(NSString *)string {
+  NSRange range = [self rangeOfString:string];
+  
+  return range.location!=NSNotFound;
+}
+
 @end

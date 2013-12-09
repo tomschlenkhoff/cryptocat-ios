@@ -31,5 +31,6 @@
 - (id)tb_JSONObject;
 - (NSString *)tb_trim;
 + (NSString *)tb_randomStringWithLength:(NSInteger)length;
+- (BOOL)tb_containsString:(NSString *)string;
 
 @end

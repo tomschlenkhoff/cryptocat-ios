@@ -143,14 +143,14 @@ PODS:
 DEPENDENCIES:
   - AFNetworking/Reachability (= 2.0.3)
   - TBMultipartyProtocolManager (from `https://github.com/tbalthazar/TBMultipartyProtocolManager.git`)
-  - TBOTRManager (from `https://github.com/tbalthazar/TBOTRManager.git`)
+  - TBOTRManager (from `../TBOTRManager`)
   - XMPPFramework (from `https://github.com/tbalthazar/XMPPFramework.git`)
 
 EXTERNAL SOURCES:
   TBMultipartyProtocolManager:
     :git: https://github.com/tbalthazar/TBMultipartyProtocolManager.git
   TBOTRManager:
-    :git: https://github.com/tbalthazar/TBOTRManager.git
+    :path: ../TBOTRManager
   XMPPFramework:
     :git: https://github.com/tbalthazar/XMPPFramework.git
 
