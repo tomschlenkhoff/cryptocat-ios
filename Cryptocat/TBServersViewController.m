@@ -36,6 +36,8 @@
 @property (nonatomic, readonly) NSIndexPath *indexPathForAddCell;
 @property (nonatomic, strong) NSString *serverNameConflictErrorMessage;
 @property (nonatomic, strong) NSString *serverRequiredFieldsErrorMessage;
+@property (nonatomic, strong) UIBarButtonItem *editButton;
+@property (nonatomic, strong) UIBarButtonItem *doneButton;
 
 - (void)showErrorMessage:(NSString *)errorMessage;
 
@@ -74,12 +76,24 @@
 - (void)viewDidLoad {
   [super viewDidLoad];
   
+  NSString *editTitle = TBLocalizedString(@"Edit", @"Edit Button Title");
+  NSString *doneTitle = TBLocalizedString(@"Done", @"Done Button Title");
+  
+  self.editButton = [[UIBarButtonItem alloc] initWithTitle:editTitle
+                                                     style:UIBarButtonItemStylePlain
+                                                    target:self
+                                                    action:@selector(toggleEditingMode)];
+  self.doneButton = [[UIBarButtonItem alloc] initWithTitle:doneTitle
+                                                     style:UIBarButtonItemStyleDone
+                                                    target:self
+                                                    action:@selector(toggleEditingMode)];
+  
   self.currentServer = [TBServer currentServer];
   
   [self.navigationController setNavigationBarHidden:NO animated:YES];
   self.title = TBLocalizedString(@"Servers", @"Servers Screen Title");
   
-  self.navigationItem.rightBarButtonItem = self.editButtonItem;
+  self.navigationItem.rightBarButtonItem = self.editButton;
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
 }
 
@@ -115,10 +129,12 @@
   [super setEditing:editing animated:animated];
   
   if (editing) {
+    [self.navigationItem setRightBarButtonItem:self.doneButton animated:YES];
     [self.tableView insertRowsAtIndexPaths:@[self.indexPathForAddCell]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
   }
   else {
+    [self.navigationItem setRightBarButtonItem:self.editButton animated:YES];
     [self.tableView deleteRowsAtIndexPaths:@[self.indexPathForAddCell]
                           withRowAnimation:UITableViewRowAnimationAutomatic];
   }
@@ -310,6 +326,11 @@ forRowAtIndexPath:(NSIndexPath *)indexPath {
                                      cancelButtonTitle:cancelTitle
                                      otherButtonTitles:nil];
   [av show];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)toggleEditingMode {
+  [self setEditing:!self.editing animated:YES];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
