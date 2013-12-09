@@ -59,10 +59,11 @@
   
   // -- save button (for New or Edit not readonly)
   if (self.server==nil || !self.server.isReadonly) {
-    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc]
-                                   initWithBarButtonSystemItem:UIBarButtonSystemItemSave
-                                   target:self
-                                   action:@selector(save)];
+    NSString *saveTitle = TBLocalizedString(@"Save", @"Save Button Title");
+    UIBarButtonItem *saveButton = [[UIBarButtonItem alloc] initWithTitle:saveTitle
+                                                                   style:UIBarButtonItemStyleDone
+                                                                  target:self
+                                                                  action:@selector(save)];
     self.navigationItem.rightBarButtonItem = saveButton;
   }
   
@@ -84,10 +85,11 @@
   NSString *screenTitle;
   if (self.isAddVC) {
     screenTitle = TBLocalizedString(@"New Server", @"New Server Screen Title");
-    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc]
-                                     initWithBarButtonSystemItem:UIBarButtonSystemItemCancel
-                                     target:self
-                                     action:@selector(cancel)];
+    NSString *cancelTitle = TBLocalizedString(@"Cancel", @"Cancel Button Title");
+    UIBarButtonItem *cancelButton = [[UIBarButtonItem alloc] initWithTitle:cancelTitle
+                                                                     style:UIBarButtonItemStylePlain
+                                                                    target:self
+                                                                    action:@selector(cancel)];
     self.navigationItem.leftBarButtonItem = cancelButton;
     [self.nameCell.textField becomeFirstResponder];
   }
