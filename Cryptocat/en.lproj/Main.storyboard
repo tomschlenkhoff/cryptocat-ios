@@ -386,7 +386,7 @@ Share it with people you'd like to talk to.</string>
                         </prototypes>
                     </tableView>
                     <navigationItem key="navigationItem" id="hYp-H1-bmC">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="fRg-H3-u40">
+                        <barButtonItem key="rightBarButtonItem" title="Item" style="done" id="fRg-H3-u40">
                             <connections>
                                 <action selector="done:" destination="Sb9-pC-6Sy" id="nMH-iU-kBz"/>
                             </connections>
@@ -497,7 +497,7 @@ Share it with people you'd like to talk to.</string>
                         </sections>
                     </tableView>
                     <navigationItem key="navigationItem" id="4YB-OB-OqP">
-                        <barButtonItem key="rightBarButtonItem" title="Item" id="owA-Vg-0Xu">
+                        <barButtonItem key="rightBarButtonItem" title="Item" style="done" id="owA-Vg-0Xu">
                             <connections>
                                 <action selector="done:" destination="kz1-vj-WcI" id="o4R-Ft-fAg"/>
                             </connections>
