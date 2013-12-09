@@ -44,5 +44,7 @@
 - (void)loginController:(TBLoginViewController *)controller
 didAskToConnectWithRoomName:(NSString *)roomName
                nickname:(NSString *)nickname;
+- (void)loginController:(TBLoginViewController *)controller
+      didChangeLanguage:(NSString *)language;
 
 @end

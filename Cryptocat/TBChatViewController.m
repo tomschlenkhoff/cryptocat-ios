@@ -149,13 +149,6 @@
   }];
   
   self.navigationController.navigationBar.barStyle = UIBarStyleBlack;
-	 
-  self.defaultNavLeftItemTitle = TBLocalizedString(@"Buddies",
-                                                   @"Buddies Button Title on Chat Screen");
-  self.navigationItem.leftBarButtonItem.title = self.defaultNavLeftItemTitle;
-  self.navigationItem.rightBarButtonItem.title = TBLocalizedString(@"Me",
-                                                                @"Me Button Title on Chat Screen");
-  
   
   self.view.backgroundColor = [UIColor tb_backgroundColor];
   self.tableView.backgroundColor = self.view.backgroundColor;
@@ -186,6 +179,8 @@
                         name:TBBuddyDidSignOutNotification
                       object:nil];
   [self addObserver:self forKeyPath:@"isReconnecting" options:0 context:NULL];
+  
+  [self updateLanguageDependentElements];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -258,6 +253,18 @@
 - (void)cleanupConversations {
   self.messagesForConversation = [NSMutableDictionary dictionary];
   [self.tableView reloadData];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)updateLanguageDependentElements {
+  self.defaultNavLeftItemTitle = TBLocalizedString(@"Buddies",
+                                                   @"Buddies Button Title on Chat Screen");
+  self.navigationItem.leftBarButtonItem.title = self.defaultNavLeftItemTitle;
+  self.navigationItem.rightBarButtonItem.title = TBLocalizedString(@"Me",
+                                                                   @"Me Button Title on Chat Screen");
+  
+  [self.toolbarView.sendButton setTitle:TBLocalizedString(@"Send", @"Send Button Title")
+                               forState:UIControlStateNormal];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

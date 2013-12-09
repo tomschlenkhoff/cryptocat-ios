@@ -39,6 +39,7 @@
 @property (nonatomic, assign) BOOL isReconnecting;
 
 - (void)cleanupConversations;
+- (void)updateLanguageDependentElements;
 
 @end
 

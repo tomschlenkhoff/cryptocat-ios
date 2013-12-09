@@ -408,6 +408,10 @@ replacementString:(NSString *)string {
           didSelectLanguage:(NSString *)language {
   [self updateLanguageDependentElements];
   [self.navigationController popViewControllerAnimated:YES];
+  
+  if ([self.delegate respondsToSelector:@selector(loginController:didChangeLanguage:)]) {
+    [self.delegate loginController:self didChangeLanguage:language];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
