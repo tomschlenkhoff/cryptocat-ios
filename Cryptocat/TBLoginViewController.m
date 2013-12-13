@@ -277,6 +277,7 @@
   self.languageButton.enabled = enabled;
 
   NSInteger spinnerTag = 333;
+  NSTimeInterval animationDuration = 0.10;
   if (connecting) {
     UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
                                         initWithActivityIndicatorStyle:
@@ -291,13 +292,18 @@
     spinnerFrame.origin.x = x;
     spinnerFrame.origin.y = y;
     spinner.frame = spinnerFrame;
-    self.logoView.alpha = 0.3;
+    
+    [UIView animateWithDuration:animationDuration animations:^{
+      self.logoView.alpha = 0.3;
+    }];
 
     [spinner startAnimating];
   }
   else {
     [[self.view viewWithTag:spinnerTag] removeFromSuperview];
-    self.logoView.alpha = 1.0;
+    [UIView animateWithDuration:animationDuration animations:^{
+      self.logoView.alpha = 1.0;
+    }];
   }
   
 }
