@@ -237,7 +237,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"Main" bundle:nil];
     TBLoginNavigationController *loginNC = [storyboard
                                        instantiateViewControllerWithIdentifier:@"LoginNCID"];
-    loginNC.modalTransitionStyle = UIModalTransitionStyleFlipHorizontal;
+    loginNC.modalTransitionStyle = UIModalTransitionStyleCrossDissolve;
     self.loginViewController = (TBLoginViewController *)loginNC.topViewController;
     self.loginViewController.delegate = self;
     [self.chatViewController presentViewController:loginNC
