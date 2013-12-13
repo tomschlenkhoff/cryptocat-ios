@@ -52,6 +52,7 @@
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname;
 - (BOOL)shouldConnectButtonBeEnabled;
 - (void)updateLanguageDependentElements;
+- (void)setConnecting:(BOOL)connecting;
 
 @end
 
@@ -145,7 +146,7 @@
   [self updateLanguageDependentElements];
 }
 
-//////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
   // -- languages
   if ([segue.identifier isEqualToString:@"LanguagesSegueID"]) {
@@ -161,6 +162,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)showError:(NSError *)error {
+  [self setConnecting:NO];
+
   NSString *title = TBLocalizedString(@"Error", @"Connection Error Alert Title");
   NSString *cancelTitle = TBLocalizedString(@"Ok", @"Alert View Ok Button");
   UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
@@ -182,6 +185,11 @@
   NSString *nickname = [[self.nicknameField.text tb_trim] lowercaseString];
   self.conversationNameField.text = conversationName;
   self.nicknameField.text = nickname;
+  
+  [self.conversationNameField resignFirstResponder];
+  [self.nicknameField resignFirstResponder];
+  
+  [self setConnecting:YES];
   
   NSError *error = [self errorForConversationName:conversationName nickname:nickname];
   if (error!=nil) {
@@ -258,6 +266,40 @@
   
   // for input fields palceholder
   [self.tableView reloadData];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)setConnecting:(BOOL)connecting {
+  BOOL enabled = !connecting;
+  
+  self.buttonCell.enabled = enabled;
+  self.serverButton.enabled = enabled;
+  self.languageButton.enabled = enabled;
+
+  NSInteger spinnerTag = 333;
+  if (connecting) {
+    UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc]
+                                        initWithActivityIndicatorStyle:
+                                        UIActivityIndicatorViewStyleGray];
+    spinner.tag = spinnerTag;
+    [self.view addSubview:spinner];
+    
+    CGRect logoFrame = self.logoView.frame;
+    CGRect spinnerFrame = spinner.frame;
+    CGFloat x = logoFrame.origin.x + (logoFrame.size.width/2) - (spinnerFrame.size.width/2);
+    CGFloat y = logoFrame.origin.y + (logoFrame.size.height/2) - (spinnerFrame.size.height/2);
+    spinnerFrame.origin.x = x;
+    spinnerFrame.origin.y = y;
+    spinner.frame = spinnerFrame;
+    self.logoView.alpha = 0.3;
+
+    [spinner startAnimating];
+  }
+  else {
+    [[self.view viewWithTag:spinnerTag] removeFromSuperview];
+    self.logoView.alpha = 1.0;
+  }
+  
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
