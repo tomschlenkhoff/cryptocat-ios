@@ -907,7 +907,8 @@ shouldChangeTextInRange:(NSRange)range
 - (BOOL)bubbleCell:(TBBubbleCell *)bubbleCell
 shouldInteractWithURL:(NSURL *)URL
            inRange:(NSRange)characterRange {
-  if ([URL.scheme isEqualToString:@"http"] || [URL.scheme isEqualToString:@"https"]) {
+  if ([[URL.scheme lowercaseString] isEqualToString:@"http"] ||
+      [[URL.scheme lowercaseString] isEqualToString:@"https"]) {
     SVModalWebViewController *wvc = [[SVModalWebViewController alloc] initWithURL:URL];
     wvc.navigationBar.barStyle = UIBarStyleBlack;
     [self presentViewController:wvc animated:YES completion:NULL];
