@@ -38,5 +38,6 @@
 @property (nonatomic, readonly) XMPPJID *XMPPJID;
 
 - (id)initWithXMPPJID:(XMPPJID *)XMPPJID;
+- (id)initWithFullname:(NSString *)fullname;
 
 @end

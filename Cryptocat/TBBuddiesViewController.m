@@ -32,6 +32,8 @@
 @interface TBBuddiesViewController ()
 
 @property (weak, nonatomic) IBOutlet UIBarButtonItem *doneButton;
+@property (nonatomic, strong) NSMutableArray *offlineBuddiesWithUnreadMessages;
+@property (nonatomic, readonly) NSArray *allBuddies;
 
 - (IBAction)done:(id)sender;
 - (TBBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath;
@@ -82,6 +84,18 @@
                     selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignOutNotification
                       object:nil];
+  
+  // check if there are unread messages for offline buddies
+  self.offlineBuddiesWithUnreadMessages = [NSMutableArray array];
+  for (NSString *key in self.nbUnreadMessagesForBuddy) {
+    NSInteger nbUnreadMessages = [[self.nbUnreadMessagesForBuddy objectForKey:key] integerValue];
+    if (nbUnreadMessages > 0) {
+      TBBuddy *buddyWithUnreadMessages = [[TBBuddy alloc] initWithFullname:key];
+      if (![self.buddies containsObject:buddyWithUnreadMessages]) {
+        [self.offlineBuddiesWithUnreadMessages addObject:buddyWithUnreadMessages];
+      }
+    }
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -110,7 +124,7 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-  return [self.buddies count] + 1;
+  return [self.allBuddies count] + 1;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,8 +227,13 @@
 #pragma mark Private Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (NSArray *)allBuddies {
+  return [self.buddies arrayByAddingObjectsFromArray:self.offlineBuddiesWithUnreadMessages];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (TBBuddy *)buddyForIndexPath:(NSIndexPath *)indexPath {
-  return [self.buddies objectAtIndex:indexPath.row-1];
+  return [self.allBuddies objectAtIndex:indexPath.row-1];
 }
 
 @end

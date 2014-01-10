@@ -1,6 +1,6 @@
 PODS:
   - AFNetworking/Reachability (2.0.3)
-  - CocoaAsyncSocket (7.3.2)
+  - CocoaAsyncSocket (7.3.3)
   - CocoaLumberjack (1.6.5.1):
     - CocoaLumberjack/Core
     - CocoaLumberjack/Extensions
@@ -156,7 +156,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
-  CocoaAsyncSocket: 977404129ec8505fee1c3701956b769e3bb10ea7
+  CocoaAsyncSocket: 50a73b79fb77f0dbb57cdc5c247c8f19e9cb3b33
   CocoaLumberjack: 17803afbade3126a377d32b8d23367264b44ced6
   TBMultipartyProtocolManager: 79ecea7ca725525cb90ffc6ccc54e3c14d170e69
   TBOTRManager: 375a4a20792b60a47dc6a8572bc2719a2f4957e0

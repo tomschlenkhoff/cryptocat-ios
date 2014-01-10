@@ -206,7 +206,12 @@
                         name:TBDidReceivePrivateChatStateNotification
                       object:nil];
 
-  [self setChatTextViewStateEnabled:YES];
+  BOOL textViewEnabled = YES;
+  if (![self isInConversationRoom] && ![self.buddies containsObject:self.currentRecipient]) {
+    textViewEnabled = NO;
+  }
+  
+  [self setChatTextViewStateEnabled:textViewEnabled];
   TBLOGMARK;
 }
 
