@@ -37,8 +37,6 @@
 #import "UIColor+Cryptocat.h"
 #import "TBLoginNavigationController.h"
 
-#import "TestFlight.h"
-
 typedef void (^TBGoneSecureCompletionBlock)();
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -87,8 +85,6 @@ typedef void (^TBGoneSecureCompletionBlock)();
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (BOOL)application:(UIApplication *)application
 didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-  [TestFlight takeOff:@"63c7f9a0-ad6c-4a89-ad52-5e8f10f73e2d"];
-    
   self.goneSecureCompletionBlocks = [NSMutableDictionary dictionary];
   
   // get the chatVC
