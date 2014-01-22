@@ -255,7 +255,11 @@
 #pragma mark Public Methods
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
-- (void)cleanupConversations {
+- (void)reset {
+  self.currentRecipient = nil;
+  self.currentRoomName = nil;
+  self.roomName = nil;
+  self.title = nil;
   self.messagesForConversation = [NSMutableDictionary dictionary];
   [self.tableView reloadData];
 }

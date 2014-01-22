@@ -38,7 +38,7 @@
 @property (nonatomic, strong) TBBuddy *me;
 @property (nonatomic, assign) BOOL isReconnecting;
 
-- (void)cleanupConversations;
+- (void)reset;
 - (void)updateLanguageDependentElements;
 
 @end

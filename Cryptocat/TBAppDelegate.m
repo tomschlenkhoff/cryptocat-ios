@@ -324,7 +324,7 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)logout {
-  [self.chatViewController cleanupConversations];
+  [self.chatViewController reset];
 
   [self.XMPPManager disconnect];
   [self presentLoginVCAnimated:YES];
