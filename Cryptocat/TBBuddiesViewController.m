@@ -153,6 +153,7 @@
     }
   }
   else {
+    cell.accessoryType = UITableViewCellAccessoryDetailButton;
     TBBuddy *buddy = [self buddyForIndexPath:indexPath];
     if ([buddy.fullname isEqualToString:self.currentRoomName]) {
       cell.textLabel.textColor = [UIColor tb_buttonTitleColor];
