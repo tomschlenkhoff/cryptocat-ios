@@ -825,8 +825,8 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   self.currentRoomName = roomName;
   self.currentRecipient = nil;
   self.nbUnreadMessagesInRoom = 0;
+  [self.tableView reloadData];
   [self dismissViewControllerAnimated:YES completion:^{
-    [self.tableView reloadData];
     [self updateUnreadMessagesCounter];
   }];
 }
@@ -838,8 +838,8 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   self.currentRoomName = buddy.fullname;
   self.currentRecipient = buddy;
   [self.nbUnreadMessagesForBuddy setObject:[NSNumber numberWithInt:0] forKey:buddy.fullname];
+  [self.tableView reloadData];
   [self dismissViewControllerAnimated:YES completion:^{
-    [self.tableView reloadData];
     [self updateUnreadMessagesCounter];
   }];
 }
