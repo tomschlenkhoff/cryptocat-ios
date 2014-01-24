@@ -111,7 +111,7 @@ static TBUserLanguageHelper *_languageHelper = nil;
   else {
     NSString *path = [[NSBundle mainBundle] pathForResource:language ofType:@"lproj"];
     
-    return [NSBundle bundleWithPath:path];
+    return path==nil ? [NSBundle mainBundle] : [NSBundle bundleWithPath:path];
   }
 }
 
@@ -124,6 +124,11 @@ static TBUserLanguageHelper *_languageHelper = nil;
   // if not set by the user, get system default
   if (defaultLanguage==nil) {
     defaultLanguage = [[defaults objectForKey:@"AppleLanguages"] objectAtIndex:0];
+    
+    // check if the default system language is in the main bundle
+    if (![[[NSBundle mainBundle] localizations] containsObject:defaultLanguage]) {
+      defaultLanguage = [[[NSBundle mainBundle] localizations] objectAtIndex:0];
+    }
   }
 
   return defaultLanguage;
