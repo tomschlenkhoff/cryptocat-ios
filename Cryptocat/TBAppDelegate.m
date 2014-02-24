@@ -132,10 +132,23 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
                afterDelay:bgTimeoutDelay];
     TBLOG(@"-- remaining time : %.1f", application.backgroundTimeRemaining);
   }
+
+  // Prevent screenshots with sensitive data from being automatically saved on device
+  UIImageView *imageView = [[UIImageView alloc] initWithFrame:self.window.bounds];
+  imageView.tag = 101;
+  imageView.backgroundColor = [UIColor colorWithRed:201 / 255.0f
+                                                green:229 / 255.0f
+                                                 blue:243 / 255.0f
+                                                alpha:1.0f];
+  [UIApplication.sharedApplication.keyWindow.subviews.lastObject addSubview:imageView];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)applicationWillEnterForeground:(UIApplication *)application {
+  // Remove view that prevents screenshots containing sensitive data
+  UIImageView *imageView = (UIImageView *)[UIApplication.sharedApplication.keyWindow.subviews.lastObject viewWithTag:101];
+  [imageView removeFromSuperview];
+
   // Called as part of the transition from the background to the inactive state;
   // here you can undo many of the changes made on entering the background.
   [self stopObservingForMessages];
