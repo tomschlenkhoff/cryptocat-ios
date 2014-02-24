@@ -624,7 +624,7 @@
 				ORGANIZATIONNAME = "Thomas Balthazar";
 				TargetAttributes = {
 					339DD1A717F0399400C3E8E6 = {
-						DevelopmentTeam = 8MS7FJ2Z9D;
+						DevelopmentTeam = HC689Z8JM4;
 					};
 					339DD1CB17F0399400C3E8E6 = {
 						TestTargetID = 339DD1A717F0399400C3E8E6;
