@@ -59,6 +59,7 @@
 @property (nonatomic, strong) NSString *roomName;
 @property (nonatomic, strong) NSString *conferenceDomain;
 @property (nonatomic, assign) BOOL credentialRegistered;
+@property (nonatomic, assign) BOOL isStartTLS;
 @property (nonatomic, assign) NSTimeInterval reconnectInterval;
 
 // -- connection steps
@@ -106,6 +107,7 @@
     _roomName = nil;
     _conferenceDomain = nil;
     _credentialRegistered = NO;
+    _isStartTLS = NO;
     _reconnectInterval = kDefaultReconnectInterval;
     _buddies = [NSMutableArray array];
     
@@ -264,7 +266,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)xmppStreamDidSecure:(XMPPStream *)sender {
-	TBLOGMARK;
+    self.isStartTLS = YES;
+    TBLOGMARK;
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,13 +281,18 @@
   [NSObject cancelPreviousPerformRequestsWithTarget:self
                                            selector:@selector(reconnect)
                                              object:nil];
-
-  // if we connect after a deconnection, we use the same credential
-  if (self.credentialRegistered) {
-    [self authenticate];
+  // Make sure we have a secure connection, otherwise abort completely
+  if (self.isStartTLS != YES) {
+    [self.delegate XMPPManagerDidFailToConnect:self];
   }
   else {
-    [self requestRegistrationFields];
+    // if we connect after a deconnection, we use the same credential
+    if (self.credentialRegistered) {
+      [self authenticate];
+    }
+    else {
+      [self requestRegistrationFields];
+    }
   }
 }
 

@@ -589,14 +589,20 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
   TBLOG(@"-- conversation with %@ is now %@", recipient, (isEncrypted ? @"secure" : @"insecure"));
   
   if (isEncrypted) {
-    [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
-    for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
-      if ([aBuddy.fullname isEqualToString:recipient]) {
-        aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
-                                                              accountName:accountName
-                                                                 protocol:TBMessagingProtocol];
-        TBLOG(@"-- %@ now has a fingerprint : %@", recipient, aBuddy.chatFingerprint);
-        break;
+    // Do not accept re-AKE
+    if ([OTRManager isConversationEncryptedForAccountName:accountName recipient:recipient protocol:protocol]) {
+        [self logout]; // Immediately logout if re-AKE (more elegant solution needed)
+    }
+    else {
+      [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
+      for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
+        if ([aBuddy.fullname isEqualToString:recipient]) {
+          aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
+                                                                accountName:accountName
+                                                                   protocol:TBMessagingProtocol];
+          TBLOG(@"-- %@ now has a fingerprint : %@", recipient, aBuddy.chatFingerprint);
+          break;
+        }
       }
     }
   }
