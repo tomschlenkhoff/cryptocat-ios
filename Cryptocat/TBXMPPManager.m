@@ -177,7 +177,10 @@
                                            selector:@selector(reconnect)
                                              object:nil];
 
-	[self.xmppStream disconnect];
+  if ([self.buddies count]) {
+    [self.buddies removeAllObjects];
+  }
+  [self.xmppStream disconnect];
   self.credentialRegistered = NO;
   self.reconnectInterval = kDefaultReconnectInterval;
   self.username = nil;
