@@ -337,6 +337,10 @@ didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)logout {
+  if([self.XMPPManager.buddies count]){
+    [self.XMPPManager.buddies removeAllObjects];
+  }
+  
   [self.chatViewController reset];
 
   [self.XMPPManager disconnect];
