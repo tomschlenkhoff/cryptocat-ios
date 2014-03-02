@@ -353,11 +353,13 @@
   
   // sign in
   else if ([presence tb_isAvailable]) {
-    if (![presenceBuddy isEqual:self.me] && ![self.buddies containsObject:presenceBuddy]) {
-      [self.buddies addObject:presenceBuddy];
-    }
-    if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignIn:)]) {
-      [self.delegate XMPPManager:self buddyDidSignIn:presenceBuddy];
+    if (![self.buddies containsObject:presenceBuddy]) {
+        if (![presenceBuddy isEqual:self.me]) {
+            [self.buddies addObject:presenceBuddy];
+        }
+        if ([self.delegate respondsToSelector:@selector(XMPPManager:buddyDidSignIn:)]) {
+            [self.delegate XMPPManager:self buddyDidSignIn:presenceBuddy];
+        }
     }
   }
   
