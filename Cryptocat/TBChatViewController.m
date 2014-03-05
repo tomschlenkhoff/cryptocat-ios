@@ -729,6 +729,9 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   self.toolbarView.textView.textColor = enabled ?
     [UIColor blackColor] : [UIColor colorWithRed:0.775 green:0.772 blue:0.779 alpha:1.000];
   self.toolbarView.textView.editable = enabled;
+    
+  // Disable autocorrect
+  self.toolbarView.textView.autocorrectionType = UITextAutocorrectionTypeNo;
   
   // if there was some text in the textView, enable the send button
   if (enabled && ![self.toolbarView.textView.text isEqualToString:@""]) {
