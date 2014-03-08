@@ -31,6 +31,7 @@
 #import "TBPresenceNotification.h"
 #import "TBChatToolbarView.h"
 #import "UIColor+Cryptocat.h"
+#import "NSError+Cryptocat.h"
 #import "SVWebViewController.h"
 #import "TBBubbleCell.h"
 #import "TBComposingCell.h"
@@ -672,6 +673,17 @@ version of Cryptocat. Please check for updates.", @"Error Message Text");
   [self.tableView scrollToRowAtIndexPath:indexPath
                         atScrollPosition:UITableViewScrollPositionBottom
                                 animated:YES];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)showError:(NSError *)error title:(NSString *)title {
+    NSString *cancelTitle = TBLocalizedString(@"Ok", @"Alert View Ok Button");
+    UIAlertView *av = [[UIAlertView alloc] initWithTitle:title
+                                                 message:[error tb_message]
+                                                delegate:self
+                                       cancelButtonTitle:cancelTitle
+                                       otherButtonTitles:nil];
+    [av show];
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

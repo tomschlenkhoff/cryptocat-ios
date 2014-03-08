@@ -589,20 +589,26 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
   TBLOG(@"-- conversation with %@ is now %@", recipient, (isEncrypted ? @"secure" : @"insecure"));
   
   if (isEncrypted) {
-    // Do not accept re-AKE
+    // Warn on re-AKE
     if ([OTRManager isConversationEncryptedForAccountName:accountName recipient:recipient protocol:protocol]) {
-        [self logout]; // Immediately logout if re-AKE (more elegant solution needed)
+      NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^.+/"
+                                                                             options:NSRegularExpressionCaseInsensitive
+                                                                               error:nil];
+      NSString *nickname = [regex stringByReplacingMatchesInString:recipient
+                                                           options:0
+                                                             range:NSMakeRange(0, [recipient length])
+                                                      withTemplate:@""];
+      NSString *message = [nickname stringByAppendingString:@" has a new fingerprint. Verify their identity by comparing the fingerprint showing on your screen with theirs. You can use a phone call or any other trusted medium."];
+      [self.chatViewController showError:[NSError tb_errorWithMessage:TBLocalizedString(message, message)] title:@"New Fingerprint"];
     }
-    else {
-      [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
-      for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
-        if ([aBuddy.fullname isEqualToString:recipient]) {
-          aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
-                                                                accountName:accountName
-                                                                   protocol:TBMessagingProtocol];
-          TBLOG(@"-- %@ now has a fingerprint : %@", recipient, aBuddy.chatFingerprint);
-          break;
-        }
+    [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
+    for (TBBuddy *aBuddy in self.XMPPManager.buddies) {
+      if ([aBuddy.fullname isEqualToString:recipient]) {
+        aBuddy.chatFingerprint = [self.OTRManager fingerprintForRecipient:recipient
+                                                              accountName:accountName
+                                                                 protocol:TBMessagingProtocol];
+        TBLOG(@"-- %@ now has a fingerprint : %@", recipient, aBuddy.chatFingerprint);
+        break;
       }
     }
   }

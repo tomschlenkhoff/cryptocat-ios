@@ -40,6 +40,7 @@
 
 - (void)reset;
 - (void)updateLanguageDependentElements;
+- (void)showError:(NSError *)error title:(NSString *)title;
 
 @end
 
