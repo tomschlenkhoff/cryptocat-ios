@@ -1,0 +1,122 @@
+/* Sender sent you a message notification text */
+"%@ sent you a message" = "%@ te ha mandado un mensaje";
+
+/* Sender sent you a message in roomName notification text */
+"%@ sent you a message in %@" = "%1$@ te ha mandado un mensaje en %2$@";
+
+/* Server Name already exists error message */
+"A server with this name already exists. Please choose another name." = "Un servidor con el mismo nombre ya existe. Por favor, elige otro nombre";
+
+/* add server */
+"add server" = "añadir servidor";
+
+/* All Fields are required error message for server */
+"All fields are required." = "Todos los campos son obligatorios";
+
+/* Authentication failure. Error Message */
+"Authentication failure." = "Error de autenticación";
+
+/* Buddies Button Title on Chat Screen
+   Buddies Screen Title */
+"Buddies" = "Contactos";
+
+/* Connect Button Title */
+"Connect" = "Conectar";
+
+/* Connection failed. Error Message */
+"Connection failed." = "Error en la conexión";
+
+/* Conversation Room Label */
+"Conversation" = "Conversación";
+
+/* conversation name Field Placeholder */
+"conversation name" = "nombre de la conversación";
+
+/* Conversation name must be alphanumeric. Error Message */
+"Conversation name must be alphanumeric." = "El nombre de la conversación debe ser alfanumérico.";
+
+/* Server Domain Placeholder */
+"Domain" = "Dominio";
+
+/* Login Screen Legend */
+"Enter a name for your conversation.\nShare it with people you'd like to talk to." = "Introduzca un nombre para tu conversación.\nCompártelo con las personas con las que quieras hablar.";
+
+/* Connection Error Alert Title
+   Server Creation/Modification Error Alert Title */
+"Error" = "Error";
+
+/* Group Fingerprint Section Title */
+"Group Fingerprint" = "Huella digital de grupo";
+
+/* Logout Button Title */
+"Logout" = "Desconexión";
+
+/* Me Button Title on Chat Screen
+   Me Screen Title */
+"Me" = "Yo";
+
+/* Server Name Placeholder */
+"Name" = "Nombre";
+
+/* New Server Screen Title */
+"New Server" = "Nuevo servidor";
+
+/* Nickname in use. Error Message */
+"Nickname in use." = "Nombre de usuario en uso.";
+
+/* Nickname must be alphanumeric. Error Message */
+"Nickname must be alphanumeric." = "Nombre de usuario debe ser alfanumérico.";
+
+/* Alert View Ok Button */
+"Ok" = "Ok";
+
+/* Please enter a conversation name. Error Message */
+"Please enter a conversation name." = "Por favor, introduzca un nombre de conversación.";
+
+/* Please enter a nickname. Error Message */
+"Please enter a nickname." = "Por favor, introduzca un nombre de usuario.";
+
+/* Private Fingerprint Section Title */
+"Private Fingerprint" = "Huella digital privada";
+
+/* Send Button Title */
+"Send" = "Enviar";
+
+/* Server Button Title */
+"Server" = "Servidor";
+
+/* Servers Screen Title */
+"Servers" = "Servidores";
+
+/* Warning message when a message is not sent to all recipients */
+"Warning: this message was not sent to: %@" = "Atención: este mensaje no ha sido enviado a: %@";
+
+/* Error Message Text */
+"Warning: You have received an unreadable \
+message from %@. This may indicate an untrustworthy user or messages that \
+failed to be received. You may also be running an outdated \
+version of Cryptocat. Please check for updates." = "Atención: Has recibido un mensaje ilegible de %@. Esto puede indicar que un usuario no es fiable o los mensajes no fueron recibidos correctamente. Puede ser que estes en una versión desactualizada de Cryptocat, compruebe si hay actualizaciones.";
+
+/* Server XMPP Conference Placeholder */
+"XMPP Conference Server" = "Servidor de conferencia XMPP";
+
+/* Chat session expiration message */
+"Your chat session will end in a minute if you don't come back" = "La sesión de tu chat terminará en un minuto si no vuelves.";
+
+/* your nickname Field Placeholder */
+"your nickname" = "tu nombre de usuario";
+
+/* Languages Selector Screen Title */
+"Languages" = "Idiomas";
+
+/* Done Button Title */
+"Done" = "OK";
+
+/* Save Button Title */
+"Save" = "Guardar";
+
+/* Cancel Button Title */
+"Cancel" = "Cancelar";
+
+/* Edit Button Title */
+"Edit" = "Editar";
