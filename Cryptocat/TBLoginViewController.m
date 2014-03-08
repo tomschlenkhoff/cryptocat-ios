@@ -207,8 +207,8 @@
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (NSError *)errorForConversationName:(NSString *)conversationName nickname:(NSString *)nickname {
-  NSCharacterSet *alphaNumericCharSet = [NSCharacterSet alphanumericCharacterSet];
-
+  NSPredicate *matchRegEx = [NSPredicate predicateWithFormat:@"SELF MATCHES %@", @"^\\w{1,20}$"];
+	
   // -- check that conversationname is not empty
   if ([conversationName isEqualToString:@""]) {
     NSString *message = TBLocalizedString(@"Please enter a conversation name.",
@@ -217,8 +217,7 @@
   }
   
   // -- check that conversation name is 1..20 alphanumeric
-  if (![[conversationName
-         stringByTrimmingCharactersInSet:alphaNumericCharSet] isEqualToString:@""]) {
+  if (![matchRegEx evaluateWithObject:conversationName]) {
     NSString *message = TBLocalizedString(@"Conversation name must be alphanumeric.",
                                           @"Conversation name must be alphanumeric. Error Message");
     return [NSError tb_errorWithMessage:message];
@@ -232,8 +231,7 @@
   }
 
   // -- check that conversation name is 1..16 alphanumeric
-  if (![[nickname
-         stringByTrimmingCharactersInSet:alphaNumericCharSet] isEqualToString:@""]) {
+  if (![matchRegEx evaluateWithObject:nickname]) {
     NSString *message = TBLocalizedString(@"Nickname must be alphanumeric.",
                                           @"Nickname must be alphanumeric. Error Message");
     return [NSError tb_errorWithMessage:message];
