@@ -23,7 +23,7 @@ Please see `SECURITY.md` for guidelines on reporting security issues.
 * [Architecture and Lifecycle](https://project.crypto.cat/documents/a&l.pdf)  
 
 ##Discussion & Blog
-* [Issue tracker](https://github.com/cryptocat/cryptocat/issues)  
+* [Issue tracker](https://github.com/cryptocat/cryptocat-ios/issues)  
 * [Development Blog](https://blog.crypto.cat)  
 
 ##Changelog
