@@ -1,0 +1,122 @@
+/* Sender sent you a message notification text */
+"%@ sent you a message" = "%@ ti ha mandato un messaggio";
+
+/* Sender sent you a message in roomName notification text */
+"%@ sent you a message in %@" = "%1$@ ti ha mandato un messaggio in %2$@";
+
+/* Server Name already exists error message */
+"A server with this name already exists. Please choose another name." = "Un server con questo nome esiste già. Per favore scegline un altro.";
+
+/* add server */
+"add server" = "aggiungi server";
+
+/* All Fields are required error message for server */
+"All fields are required." = "Tutti i campi sono obbligatori";
+
+/* Authentication failure. Error Message */
+"Authentication failure." = "Errore di autenticazione.";
+
+/* Buddies Button Title on Chat Screen
+   Buddies Screen Title */
+"Buddies" = "Contatti";
+
+/* Connect Button Title */
+"Connect" = "Connetti";
+
+/* Connection failed. Error Message */
+"Connection failed." = "Connessione fallita.";
+
+/* Conversation Room Label */
+"Conversation" = "Conversazione";
+
+/* conversation name Field Placeholder */
+"conversation name" = "nome della conversazione";
+
+/* Conversation name must be alphanumeric. Error Message */
+"Conversation name must be alphanumeric." = "Il nome della conversazione deve essere alfanumerico.";
+
+/* Server Domain Placeholder */
+"Domain" = "Dominio";
+
+/* Login Screen Legend */
+"Enter a name for your conversation.\nShare it with people you'd like to talk to." = "Inserisci un nome per la tua conversazione.\nCondividilo con le persone con cui vuoi parlare.";
+
+/* Connection Error Alert Title
+   Server Creation/Modification Error Alert Title */
+"Error" = "Errore";
+
+/* Group Fingerprint Section Title */
+"Group Fingerprint" = "Fingerprint del gruppo";
+
+/* Logout Button Title */
+"Logout" = "Disconnetti";
+
+/* Me Button Title on Chat Screen
+   Me Screen Title */
+"Me" = "Io";
+
+/* Server Name Placeholder */
+"Name" = "Nome";
+
+/* New Server Screen Title */
+"New Server" = "Nuovo server";
+
+/* Nickname in use. Error Message */
+"Nickname in use." = "Nickname già in uso.";
+
+/* Nickname must be alphanumeric. Error Message */
+"Nickname must be alphanumeric." = "Il nickname deve essere alfanumerico.";
+
+/* Alert View Ok Button */
+"Ok" = "Ok";
+
+/* Please enter a conversation name. Error Message */
+"Please enter a conversation name." = "Per favore introduci il nome della conversazione.";
+
+/* Please enter a nickname. Error Message */
+"Please enter a nickname." = "Per favore, inserisci un nickname.";
+
+/* Private Fingerprint Section Title */
+"Private Fingerprint" = "Fingerprint privato";
+
+/* Send Button Title */
+"Send" = "Invia";
+
+/* Server Button Title */
+"Server" = "Server";
+
+/* Servers Screen Title */
+"Servers" = "Servers";
+
+/* Warning message when a message is not sent to all recipients */
+"Warning: this message was not sent to: %@" = "Attenzione: questo messaggio non è stato inviato a: %@";
+
+/* Error Message Text */
+"Warning: You have received an unreadable \
+message from %@. This may indicate an untrustworthy user or messages that \
+failed to be received. You may also be running an outdated \
+version of Cryptocat. Please check for updates." = "Attenzione: Hai ricevuto un messaggio illeggibile da %@. Questo può indicare che il mittente è inaffidabile o che i messaggi sono stati ricevuti non correttamente. Oppure potresti avere una versione obsoleta di Cryptocat, verifica gli aggiornamenti.";
+
+/* Server XMPP Conference Placeholder */
+"XMPP Conference Server" = "Server di conferenza XMPP";
+
+/* Chat session expiration message */
+"Your chat session will end in a minute if you don't come back" = "La tua sessione di chat terminerà in un minuto se non torni";
+
+/* your nickname Field Placeholder */
+"your nickname" = "tuo nickname";
+
+/* Languages Selector Screen Title */
+"Languages" = "Lingua";
+
+/* Done Button Title */
+"Done" = "OK";
+
+/* Save Button Title */
+"Save" = "Salva";
+
+/* Cancel Button Title */
+"Cancel" = "Cancella";
+
+/* Edit Button Title */
+"Edit" = "Modifica";
