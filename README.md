@@ -32,4 +32,4 @@ Please review `CHANGELOG.md` for an account of the changes made with each versio
 ##License
 Copyright 2013-2014 Thomas Balthazar, Cryptocat  
 Cryptocat for iOS is released under the [GNU General Public License (GPL3)](http://www.gnu.org/licenses/gpl-3.0.html).  
-The full license text is included in `LICENSE`.  
+The full license text is included in `LICENSE.txt`.  
