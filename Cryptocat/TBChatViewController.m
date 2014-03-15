@@ -417,7 +417,10 @@
       NSString *errorMessage = TBLocalizedString(@"Warning: You have received an unreadable \
 message from %@. This may indicate an untrustworthy user or messages that \
 failed to be received. You may also be running an outdated \
-version of Cryptocat. Please check for updates.", @"Error Message Text");
+                                                 version of Cryptocat. Please check for updates.", @"Warning: You have received an unreadable \
+                                                 message from %@. This may indicate an untrustworthy user or messages that \
+                                                 failed to be received. You may also be running an outdated \
+                                                 version of Cryptocat. Please check for updates.");
       message = [[TBMessage alloc] init];
       message.sender = [error.userInfo objectForKey:TBErrorCodeUnreadableMessageSenderKey];
       message.text = [NSString stringWithFormat:errorMessage, message.sender.nickname];
