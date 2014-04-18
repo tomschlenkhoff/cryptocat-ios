@@ -598,8 +598,15 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
                                                            options:0
                                                              range:NSMakeRange(0, [recipient length])
                                                       withTemplate:@""];
-      NSString *message = [nickname stringByAppendingString:@" has a new fingerprint. Verify their identity by comparing the fingerprint showing on your screen with theirs. You can use a phone call or any other trusted medium."];
-      [self.chatViewController showError:[NSError tb_errorWithMessage:TBLocalizedString(message, message)] title:@"New Fingerprint"];
+      NSString *title = TBLocalizedString(@"New Fingerprint", @"New Fingerprint Error Title");
+      NSString *errorMessage = TBLocalizedString(@"%@ has a new fingerprint. \
+Verify their identity by comparing the fingerprint showing on your screen with theirs. \
+You can use a phone call or any other trusted medium.",
+                              @"Error message displayed when a recipient has a new private key");
+      errorMessage = [NSString stringWithFormat:errorMessage, nickname];
+
+      [self.chatViewController showError:[NSError tb_errorWithMessage:errorMessage]
+                                   title:title];
     }
     [self executeGoneSecureCompletionBlocsForUser:accountName recipient:recipient];
     for (TBBuddy *aBuddy in self.XMPPManager.buddies) {

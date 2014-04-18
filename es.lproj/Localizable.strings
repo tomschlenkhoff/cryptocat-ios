@@ -120,3 +120,11 @@ version of Cryptocat. Please check for updates." = "Atención: Has recibido un m
 
 /* Edit Button Title */
 "Edit" = "Editar";
+
+/* New Fingerprint Error Title */
+"New Fingerprint" = "New Fingerprint";
+
+/* Error message displayed when a recipient has a new private key */
+"%@ has a new fingerprint. Verify their identity by comparing the fingerprint showing on your screen with theirs. You can use a phone call or any other trusted medium." = "%@ has a new fingerprint. \
+Verify their identity by comparing the fingerprint showing on your screen with theirs. \
+You can use a phone call or any other trusted medium.";
