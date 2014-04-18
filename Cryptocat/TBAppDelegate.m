@@ -591,19 +591,15 @@ didUpdateEncryptionStatus:(BOOL)isEncrypted
   if (isEncrypted) {
     // Warn on re-AKE
     if ([OTRManager isConversationEncryptedForAccountName:accountName recipient:recipient protocol:protocol]) {
-      NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^.+/"
-                                                                             options:NSRegularExpressionCaseInsensitive
-                                                                               error:nil];
-      NSString *nickname = [regex stringByReplacingMatchesInString:recipient
-                                                           options:0
-                                                             range:NSMakeRange(0, [recipient length])
-                                                      withTemplate:@""];
+      XMPPJID *recipientJID = [XMPPJID jidWithString:recipient];
+      TBBuddy *buddy = [[TBBuddy alloc] initWithXMPPJID:recipientJID];
+
       NSString *title = TBLocalizedString(@"New Fingerprint", @"New Fingerprint Error Title");
       NSString *errorMessage = TBLocalizedString(@"%@ has a new fingerprint. \
 Verify their identity by comparing the fingerprint showing on your screen with theirs. \
 You can use a phone call or any other trusted medium.",
                               @"Error message displayed when a recipient has a new private key");
-      errorMessage = [NSString stringWithFormat:errorMessage, nickname];
+      errorMessage = [NSString stringWithFormat:errorMessage, buddy.nickname];
 
       [self.chatViewController showError:[NSError tb_errorWithMessage:errorMessage]
                                    title:title];
