@@ -91,11 +91,8 @@
 /* Warning message when a message is not sent to all recipients */
 "Warning: this message was not sent to: %@" = "Attenzione: questo messaggio non è stato inviato a: %@";
 
-/* Error Message Text */
-"Warning: You have received an unreadable \
-message from %@. This may indicate an untrustworthy user or messages that \
-failed to be received. You may also be running an outdated \
-version of Cryptocat. Please check for updates." = "Attenzione: Hai ricevuto un messaggio illeggibile da %@. Questo può indicare che il mittente è inaffidabile o che i messaggi sono stati ricevuti non correttamente. Oppure potresti avere una versione obsoleta di Cryptocat, verifica gli aggiornamenti.";
+/* Error Message displayed when an unreadable group message is received */
+"Warning: You have received an unreadable message from %@. This may indicate an untrustworthy user or messages that failed to be received. You may also be running an outdated version of Cryptocat. Please check for updates." = "Attenzione: Hai ricevuto un messaggio illeggibile da %@. Questo può indicare che il mittente è inaffidabile o che i messaggi sono stati ricevuti non correttamente. Oppure potresti avere una versione obsoleta di Cryptocat, verifica gli aggiornamenti.";
 
 /* Server XMPP Conference Placeholder */
 "XMPP Conference Server" = "Server di conferenza XMPP";
