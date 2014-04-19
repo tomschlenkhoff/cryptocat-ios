@@ -104,6 +104,7 @@
 		330131DC17FB0D6000287253 /* TBXMPPMessagesHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBXMPPMessagesHandler.m; sourceTree = "<group>"; };
 		330549141901807D00E1877B /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
 		330549151901807D00E1877B /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		33054916190288D600E1877B /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3306B7A218434CC3005B81DA /* TBServerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBServerViewController.h; sourceTree = "<group>"; };
 		3306B7A318434CC3005B81DA /* TBServerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TBServerViewController.m; sourceTree = "<group>"; };
 		3306B7A518434EE0005B81DA /* TBTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TBTextFieldCell.h; sourceTree = "<group>"; };
@@ -648,6 +649,7 @@
 				"zh-Hans",
 				"zh-Hant",
 				it,
+				pt,
 			);
 			mainGroup = 339DD19F17F0399400C3E8E6;
 			productRefGroup = 339DD1A917F0399400C3E8E6 /* Products */;
@@ -819,6 +821,7 @@
 				332EBDB8184F7D4D0074E004 /* fr */,
 				330549141901807D00E1877B /* es */,
 				330549151901807D00E1877B /* it */,
+				33054916190288D600E1877B /* pt */,
 			);
 			name = Localizable.strings;
 			sourceTree = SOURCE_ROOT;
