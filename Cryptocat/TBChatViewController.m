@@ -75,6 +75,7 @@
 @property (nonatomic, assign) SystemSoundID userLeaveFileObject;
 @property (nonatomic, assign) CFURLRef msgGetFileURLRef;
 @property (nonatomic, assign) SystemSoundID msgGetFileObject;
+@property (nonatomic, assign) BOOL shouldPlaySounds;
 
 - (void)startObservingKeyboard;
 - (void)stopObservingKeyboard;
@@ -114,6 +115,7 @@
   [defaultCenter removeObserver:self name:TBDidReceivePrivateChatMessageNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignInNotification object:nil];
   [defaultCenter removeObserver:self name:TBBuddyDidSignOutNotification object:nil];
+  [defaultCenter removeObserver:self name:NSUserDefaultsDidChangeNotification object:nil];
   [self removeObserver:self forKeyPath:@"isReconnecting"];
 }
 
@@ -140,7 +142,8 @@
   [super viewDidLoad];
   
   [self loadSounds];
-  
+  self.shouldPlaySounds = [[NSUserDefaults standardUserDefaults] boolForKey:@"PrefSounds"];
+
   // swipe to dismiss the keyboard
   [UIView setUseAutolayoutAnimationLogic:YES];
   __weak TBChatViewController *weakSelf = self;
@@ -178,6 +181,10 @@
   [defaultCenter addObserver:self
                     selector:@selector(buddiesListDidChange:)
                         name:TBBuddyDidSignOutNotification
+                      object:nil];
+  [defaultCenter addObserver:self
+                    selector:@selector(prefsDidChange:)
+                        name:NSUserDefaultsDidChangeNotification
                       object:nil];
   [self addObserver:self forKeyPath:@"isReconnecting" options:0 context:NULL];
   
@@ -545,6 +552,12 @@ version of Cryptocat. Please check for updates.",
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
+- (void)prefsDidChange:(NSNotification *)notification {
+  NSUserDefaults *defaults = notification.object;
+  self.shouldPlaySounds = [defaults boolForKey:@"PrefSounds"];
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)keyboardWillShow:(NSNotification *)notification {
   [self scrollToLatestMessage];
   [self.view layoutIfNeeded];
@@ -774,7 +787,9 @@ version of Cryptocat. Please check for updates.",
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)playSound:(SystemSoundID)soundFileObject {
-  AudioServicesPlaySystemSound(soundFileObject);
+  if (self.shouldPlaySounds) {
+    AudioServicesPlaySystemSound(soundFileObject);
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -6,17 +6,29 @@
 	<array>
 		<dict>
 			<key>Title</key>
-			<string>Version</string>
+			<string>General</string>
 			<key>Type</key>
 			<string>PSGroupSpecifier</string>
 		</dict>
 		<dict>
 			<key>Type</key>
+			<string>PSToggleSwitchSpecifier</string>
+			<key>Title</key>
+			<string>Sounds</string>
+			<key>Key</key>
+			<string>PrefSounds</string>
+			<key>DefaultValue</key>
+			<true/>
+		</dict>
+		<dict>
+			<key>Type</key>
 			<string>PSTitleValueSpecifier</string>
 			<key>Title</key>
-			<string>Cryptocat</string>
+			<string>Version</string>
 			<key>Key</key>
 			<string>AppVersion</string>
+			<key>DefaultValue</key>
+			<string>undefined</string>
 		</dict>
 	</array>
 	<key>StringsTable</key>
