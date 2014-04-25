@@ -142,7 +142,10 @@
   [super viewDidLoad];
   
   [self loadSounds];
-  self.shouldPlaySounds = [[NSUserDefaults standardUserDefaults] boolForKey:@"PrefSounds"];
+  self.shouldPlaySounds = YES;
+  if ([[NSUserDefaults standardUserDefaults] valueForKey:@"PrefSounds"]!=nil) {
+    self.shouldPlaySounds = [[NSUserDefaults standardUserDefaults] boolForKey:@"PrefSounds"];
+  }
 
   // swipe to dismiss the keyboard
   [UIView setUseAutolayoutAnimationLogic:YES];
@@ -554,7 +557,9 @@ version of Cryptocat. Please check for updates.",
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 - (void)prefsDidChange:(NSNotification *)notification {
   NSUserDefaults *defaults = notification.object;
-  self.shouldPlaySounds = [defaults boolForKey:@"PrefSounds"];
+  if ([defaults valueForKey:@"PrefSounds"]!=nil) {
+    self.shouldPlaySounds = [defaults boolForKey:@"PrefSounds"];
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
