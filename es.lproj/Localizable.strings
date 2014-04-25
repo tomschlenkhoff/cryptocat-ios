@@ -119,9 +119,9 @@
 "Edit" = "Editar";
 
 /* New Fingerprint Error Title */
-"New Fingerprint" = "New Fingerprint";
+"New Fingerprint" = "Nueva huella digital";
 
 /* Error message displayed when a recipient has a new private key */
-"%@ has a new fingerprint. Verify their identity by comparing the fingerprint showing on your screen with theirs. You can use a phone call or any other trusted medium." = "%@ has a new fingerprint. \
-Verify their identity by comparing the fingerprint showing on your screen with theirs. \
-You can use a phone call or any other trusted medium.";
+"%@ has a new fingerprint. Verify their identity by comparing the fingerprint showing on your screen with theirs. You can use a phone call or any other trusted medium." = "%@ tiene una nueva huella digital. \
+Verifica su identidad comparando la huella digital que se muestra en la pantalla con la suya. \
+Puedes utilizar una llamada telefónica u otra vía segura para comprobarlo.";
