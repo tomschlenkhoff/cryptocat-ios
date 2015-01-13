@@ -1,6 +1,6 @@
 PODS:
   - AFNetworking/Reachability (2.0.3)
-  - CocoaAsyncSocket (7.3.4)
+  - CocoaAsyncSocket (7.3.5)
   - CocoaLumberjack (1.6.5.1):
     - CocoaLumberjack/Core
     - CocoaLumberjack/Extensions
@@ -155,9 +155,9 @@ EXTERNAL SOURCES:
     :git: https://github.com/tbalthazar/XMPPFramework.git
 
 SPEC CHECKSUMS:
-  AFNetworking: e499052cbf3d743e9bb727bb37adb9dc2547ba15
-  CocoaAsyncSocket: 534d09416f992fd51efb23f534742ce70b3a7999
-  CocoaLumberjack: 17803afbade3126a377d32b8d23367264b44ced6
+  AFNetworking: a4d0e9a64de9242986620dafd1b3cee3b413ac5c
+  CocoaAsyncSocket: 45bdbbc1c0a5ed0640ff4c42af325ba43a2f099a
+  CocoaLumberjack: baf4a09a3bcbdfea3363556a90104e026d3504e2
   TBMultipartyProtocolManager: 79ecea7ca725525cb90ffc6ccc54e3c14d170e69
   TBOTRManager: 375a4a20792b60a47dc6a8572bc2719a2f4957e0
   XMPPFramework: bf818623aba272b79fcc7bf8772043de33614503
